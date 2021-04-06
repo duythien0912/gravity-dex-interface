@@ -5,7 +5,9 @@ import { lighten } from 'polished'
 import { NavLink } from 'react-router-dom'
 
 //icons
-import logo from "../../assets/logo/logo.png"
+import logoDesktop from "../../assets/logo/logo-desktop.png"
+import logoMobile from "../../assets/logo/logo-mobile.png"
+
 import wallet from '../../assets/wallets/dollar_wallet.png'
 import GearButton from "../../components/Buttons/Gear"
 import { GridSpinner } from 'react-spinners-kit'
@@ -37,8 +39,9 @@ ${({ theme }) => theme.mediaWidth.upToExtraSmall`
 `};
 `
 
-const LogoImg = styled.img`
-width: 40px;
+const Logo = styled.div`
+img {
+  width: 40px;
 height: 35px;
 ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   width: 40px;
@@ -49,8 +52,26 @@ vertical-align: middle;
 transition: transform 0.3s ease;
 
 &:hover {
-  transform: scale(1.15);
+  transform: scale(1.05);
 }
+}
+
+.mobile {
+  display:none;
+  @media(max-width: 500px) {
+    display:inline-block !important;
+  }
+}
+
+.desktop {
+  width: 200px;
+  height: auto;
+  display:none;
+  @media(min-width: 500px) {
+    display:inline-block !important;
+  }
+}
+
 `
 
 const Navigation = styled.nav`
@@ -225,10 +246,16 @@ function AppHeader() {
     }
   };
 
-  function logoFrame(src) {
+  function logoFrame(srcM, srcD) {
+
     return (
       <div>
-        <LogoImg src={src} />
+        <Logo  >
+          <img src={srcM} className="mobile" alt="mobile logo" />
+        </Logo>
+        <Logo  >
+          <img src={srcD} className="desktop" alt="desktop logo" />
+        </Logo>
       </div>
     )
   }
@@ -284,7 +311,7 @@ function AppHeader() {
 
   return (
     <HeaderFrame>
-      {logoFrame(logo)}
+      {logoFrame(logoMobile, logoDesktop)}
 
       <NavigationFrame>
         {navigationLinks()}
