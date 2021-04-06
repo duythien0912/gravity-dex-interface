@@ -2,12 +2,18 @@ import * as React from 'react';
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-
+const mobileWidth = 500
 const PoolWrapper = styled.div`
     width: calc(100% - 100px);
+    
     max-width: 640px;
     margin: 0 auto;
     padding-bottom: 60px;
+
+    @media (max-width: ${mobileWidth}px) {
+        width: calc(100% - 24px);
+    }
+    
     .info {
        
         height: auto;
@@ -75,6 +81,9 @@ const PoolWrapper = styled.div`
 
                 &:last-child{
                     margin-left: 12px;
+                    @media (max-width: ${mobileWidth}px) {
+                        margin-left: 6px !important;
+                }
 
                     border: 1px solid #4397ff;
                     background-color:#4397ff;
@@ -84,6 +93,10 @@ const PoolWrapper = styled.div`
                         border-color: transparent;
                         background-color: hsl(213deg 66% 57%);
                     }
+                }
+
+                @media (max-width: ${mobileWidth}px) {
+                   font-size: 14px !important;
                 }
             }
         }
