@@ -23,9 +23,14 @@ const AppWrapper = styled.div`
   background-color:${({ theme }) => theme.bg1};
 
   min-height: 100vh;
-  background-position: 0px -30vh;
+  /* background-position: 0px -30vh; */
   background-repeat: no-repeat;
-  background-image: radial-gradient(50% 50% at 50% 50%,rgb(3 34 255 / 20%) 0%,rgb(19 74 195 / 0) 100%);
+  background-image: radial-gradient(50% 50% at 50% 50%,rgb(78 127 236 / 41%) 0%,rgb(167 229 243 / 8%) 100%);
+
+  @media(max-width: 500px) {
+    background-image: radial-gradient(50% 50% at 50% 50%,rgb(133 177 232 / 51%) 0%,rgb(201 235 255 / 17%) 100%);
+    background-position:0px 0px !important;
+  }
 `
 
 const HeaderWrapper = styled.div`
