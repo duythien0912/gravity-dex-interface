@@ -118,6 +118,7 @@ function SwapCard() {
         const counterPairAmount = state[`${counterTargetPair}Amount`]
         const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
         const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
+        const price = targetPair === 'from' ? state.price : 1 / state.price
 
         let isOver = false
         let isEmpty = false
@@ -127,13 +128,13 @@ function SwapCard() {
 
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
-                console.log(state.fromCoin, targetPair)
-                let price = targetPair === 'from' ? state.price : 1 / state.price
+
+
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
