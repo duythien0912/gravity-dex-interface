@@ -170,11 +170,10 @@ function SwapCard() {
                 }
 
             case TYPES.CHANGE_FROM_TO_COIN:
-                // toCoin 수량 계산 및 액션버튼 검증로직
+
 
 
                 const fromToChangeObject = { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
-
 
                 if (state.status === 'create') {
                     return { ...fromToChangeObject, price: '-' }

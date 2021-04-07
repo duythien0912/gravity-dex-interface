@@ -5,15 +5,22 @@ import BasicModal from "./BasicModal"
 import styled from "styled-components"
 
 const SelectCoinWrapper = styled.div`
-
+@media(max-width: 500px) {
+      width: 360px !important; 
+}
 .header{
     display:flex;
     justify-content: space-between;
     align-items: center;
     
+    max-width: 420px;
     width: 420px;
     padding: 20px;
-
+    
+    @media(max-width: 500px) {
+      width: 360px !important; 
+    }
+    
     .title {
         font-size: 18px;
         font-weight: 500;
