@@ -7,6 +7,7 @@ import { NavLink } from 'react-router-dom'
 //icons
 import logoDesktop from "../../assets/logo/logo-desktop.png"
 import logoMobile from "../../assets/logo/logo-mobile.png"
+import DesktopLogo from "../../assets/svgs/DesktopLogo"
 
 import wallet from '../../assets/wallets/dollar_wallet.png'
 import GearButton from "../../components/Buttons/Gear"
@@ -40,35 +41,17 @@ ${({ theme }) => theme.mediaWidth.upToExtraSmall`
 `
 
 const Logo = styled.div`
-img {
-  width: 40px;
-height: 35px;
-${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  width: 40px;
-  height: 35px;
-  `};
-vertical-align: middle;
 
-transition: transform 0.3s ease;
-
-&:hover {
-  transform: scale(1.05);
-}
-}
-
-.mobile {
-  display:none;
-  @media(max-width: 499px) {
-    display:inline-block !important;
-  }
-}
-
-.desktop {
-  width: 200px;
+.logo {
+  width: 100%;
   height: auto;
-  display:none;
-  @media(min-width: 500px) {
-    display:inline-block !important;
+}
+
+@media(max-width: 500px) {
+  margin-right: 12px;
+
+  svg {
+    width: 160px;
   }
 }
 
@@ -251,14 +234,11 @@ function AppHeader() {
   function logoFrame(srcM, srcD) {
 
     return (
-      <div>
-        <Logo  >
-          <img src={srcM} className="mobile" alt="mobile logo" />
-        </Logo>
-        <Logo  >
-          <img src={srcD} className="desktop" alt="desktop logo" />
-        </Logo>
-      </div>
+      <Logo>
+        <div className="logo">
+          <DesktopLogo />
+        </div>
+      </Logo>
     )
   }
 
