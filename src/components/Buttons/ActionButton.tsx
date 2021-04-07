@@ -11,14 +11,14 @@ const Action = styled.div`
     background-color: transparent;
     cursor:pointer;
 
-    background-color:#4397ff;
+    background: linear-gradient(91.43deg, #890FA8 0%, #F6743C 100%);
     color:#fff;
     font-size: 20px;
     font-weight: 500;
 
     &.disabled {
-        background-color: rgb(237, 238, 242);
-        color: rgb(136, 141, 155);
+        background:  linear-gradient(91.43deg,#5f0e73 0%,#824226 100%);
+        color:#fff;
         pointer-events: none;
         cursor: auto;
     }
@@ -32,7 +32,7 @@ const Action = styled.div`
     }
 
     &:hover {
-        background-color:rgb(60, 132, 219);
+        background:  linear-gradient(91.43deg,#890FA8 0%,#b75b33 100%);
     }
 `
 

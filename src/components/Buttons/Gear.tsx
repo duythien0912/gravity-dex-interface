@@ -11,7 +11,7 @@ const Gear = styled.div`
     background-color: transparent;
     cursor:pointer;
 
-    background-color:#114ab3b3;
+    background-color:#F6743C;
 
     &:hover {
         opacity: 0.8;

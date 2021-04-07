@@ -89,7 +89,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text1};
+  color: #fff;
   font-size: inherit;
   width: fit-content;
   margin: 0 16px;
@@ -97,12 +97,13 @@ const StyledNavLink = styled(NavLink).attrs({
   padding: 4px 0;
 
   &.${activeClassName} {
-    border-bottom: 3px solid ${({ theme }) => theme.navActiveBorderColor};
-    color: ${({ theme }) => theme.text1};
+    border-bottom: 3px solid  #F6743C;
+    color: #fff;
   }
 
+    transition: transform 0.1s;
   :hover {
-    color: ${({ theme }) => lighten(0.3, theme.text1)};
+    transform: scale(1.1)
   }
 `
 
@@ -132,7 +133,7 @@ display:flex;
 align-items: center;
 justify-content: space-between;
 margin-left: 12px;
-background-color: #114ab3b3;
+background-color:  #813d20;
 padding: 1px 1px 1px 12px;
 border-radius: 12px;
 color: #fff;
@@ -159,7 +160,7 @@ const ConnectedWallet = styled.button`
 padding: 0.5rem;
 margin-left: 12px;
 border-radius: 12px;
-background-color: #4397ff;
+background-color: #F6743C;
 font-size: 16px;
 font-weight: 500;
 border: none;
