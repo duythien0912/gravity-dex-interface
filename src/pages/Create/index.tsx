@@ -206,9 +206,10 @@ function SwapCard() {
                         return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), status: getStatus(state) }
                     }
                 }
+
             case TYPES.SET_FROM_QUERY:
                 // toCoin 수량 계산 및 액션버튼 검증로직
-                console.log('here')
+
                 return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
             default:
                 console.log("DEFAULT: SWAP REDUCER")

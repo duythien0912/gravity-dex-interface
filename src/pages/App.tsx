@@ -11,6 +11,7 @@ import Add from "../pages/Add"
 import Redeem from "../pages/Redeem"
 import Rank from "../pages/Rank"
 
+import Background from "../assets/svgs/Background"
 //test
 import { testTxGenerator } from "../cosmos-amm/new-cosmos-amm"
 import { test2 } from "../cosmos-amm/new2-cosmos-amm"
@@ -20,17 +21,17 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
-  background-color:${({ theme }) => theme.bg1};
+  background-color:transparent;
 
   min-height: 100vh;
   /* background-position: 0px -30vh; */
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat;
   background-image: radial-gradient(50% 50% at 50% 50%,rgb(78 127 236 / 41%) 0%,rgb(167 229 243 / 8%) 100%);
 
   @media(max-width: 500px) {
     background-image: radial-gradient(50% 50% at 50% 50%,rgb(133 177 232 / 51%) 0%,rgb(201 235 255 / 17%) 100%);
     background-position:0px 0px !important;
-  }
+  } */
 `
 
 const HeaderWrapper = styled.div`
@@ -38,7 +39,19 @@ const HeaderWrapper = styled.div`
   width: 100%;
 `
 
+const BackgroundWrapper = styled.div`
+position:fixed;
+transform: translate(-50%, -50%);
+top: 50%;
+left: 50%;
+z-index: -1;
 
+background-color: black;
+
+width: 100vw;
+min-width: 1440px;
+height: 100vh;
+`
 
 
 function App() {
@@ -58,7 +71,9 @@ function App() {
 
   return (
     <AppWrapper>
-
+      <BackgroundWrapper>
+        <Background />
+      </BackgroundWrapper>
       <AppHeader />
 
       <Switch>
