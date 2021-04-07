@@ -58,7 +58,7 @@ transition: transform 0.3s ease;
 
 .mobile {
   display:none;
-  @media(max-width: 500px) {
+  @media(max-width: 499px) {
     display:inline-block !important;
   }
 }
