@@ -84,8 +84,8 @@ const Wrapper = styled.div`
 
                 margin-right: 4px;
 
-                background-color: rgba(67, 152, 255, 0.2);
-                color:#4397ff;
+                background-color: #f77e4a33;
+                color:#F6743C;
                 
                 border: 1px solid transparent;
                 border-radius: 8px;
@@ -97,7 +97,7 @@ const Wrapper = styled.div`
                 cursor: pointer;
                 
                 &:hover { 
-                    border: 1px solid #4397ff;        
+                    border: 1px solid #F6743C;        
                 }
             }
 
@@ -128,14 +128,14 @@ const Wrapper = styled.div`
             }
 
             .not-selected {
-                background-color: #4397ff;
+                background-color:#F6743C;
                 font-size: 15px;
                 padding: 6px 12px;
                 color: #fff;
                 font-weight: 500;
 
                 &:hover {
-                    background-color:  hsl(213deg 66% 57%) !important;
+                    background-color:#ce6032 !important;
                 }
             }
         }

@@ -97,7 +97,8 @@ const StyledNavLink = styled(NavLink).attrs({
   padding: 4px 0;
 
   &.${activeClassName} {
-    border-bottom: 3px solid  #F6743C;
+    border-bottom: 3px solid#890FA8;
+;
     color: #fff;
   }
 
@@ -133,7 +134,7 @@ display:flex;
 align-items: center;
 justify-content: space-between;
 margin-left: 12px;
-background-color:  #813d20;
+background-color:  #812056;
 padding: 1px 1px 1px 12px;
 border-radius: 12px;
 color: #fff;
