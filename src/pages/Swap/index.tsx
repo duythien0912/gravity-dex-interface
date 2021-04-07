@@ -113,7 +113,8 @@ function SwapCard() {
     //reducer for useReducer
     function reducer(state, action) {
         const { targetPair, counterTargetPair } = getPairs(action)
-        const selectedPairAmount = action.payload?.amount || state[`${targetPair}Amount`]
+        const selectedPairAmount = action.payload?.amount || ''
+        //state[`${targetPair}Amount`]
         const counterPairAmount = state[`${counterTargetPair}Amount`]
         const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
         const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
@@ -126,7 +127,9 @@ function SwapCard() {
 
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
+                console.log(state.fromCoin, targetPair)
+                let price = targetPair === 'from' ? state.price : 1 / state.price
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
@@ -192,9 +195,9 @@ function SwapCard() {
             if (selectedPairAmount == 0) {
                 isEmpty = true
             }
-            if (counterPairAmount === '' || counterPairAmount == 0) {
-                isCounterPairEmpty = true
-            }
+            // if (counterPairAmount === '' || counterPairAmount == 0) {
+            //     isCounterPairEmpty = true
+            // }
         }
 
         function getStatus(state) {
