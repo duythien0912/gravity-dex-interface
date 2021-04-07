@@ -171,8 +171,6 @@ function SwapCard() {
 
             case TYPES.CHANGE_FROM_TO_COIN:
 
-
-
                 const fromToChangeObject = { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
 
                 if (state.status === 'create') {

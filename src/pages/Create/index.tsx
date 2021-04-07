@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, getMyCoinBalance } from "../../utils/global-functions"
 import ChangeArrow from "../../assets/svgs/ChangeArrow"
 
 import BaseCard from "../../components/Cards/BaseCard"
@@ -118,13 +118,7 @@ const TYPES = {
 }
 
 //helpers
-function getMyCoinBalance(coin, myBalance) {
-    if (myBalance[coin.toLowerCase()] !== undefined) {
-        return Number(myBalance[coin.toLowerCase()])
-    } else {
-        return 0
-    }
-}
+
 
 function getButtonNameByStatus(status, fromCoin, toCoin) {
     if (fromCoin === '' || toCoin === '') {
@@ -134,7 +128,7 @@ function getButtonNameByStatus(status, fromCoin, toCoin) {
     } else if (status === 'empty') {
         return 'Enter an amount'
     } else {
-        return 'SWAP'
+        return 'CREATE'
     }
 }
 
@@ -162,48 +156,56 @@ function SwapCard() {
     const poolData = useSelector((state) => state.store.poolsData.pools)
 
     const history = useHistory();
+
     //reducer for useReducer
     function reducer(state, action) {
-        let target = null
-        let counterTarget = null
+        const { targetPair, counterTargetPair } = getPairs(action)
+        const selectedPairAmount = action.payload?.amount || ''
+        //state[`${targetPair}Amount`]
+        const counterPairAmount = state[`${counterTargetPair}Amount`]
+        const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
+        const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
+        const price = targetPair === 'X' ? state.price : 1 / state.price
 
-        if (action.payload?.target) {
-            target = action.payload.target === "From" ? "from" : "to"
-            counterTarget = target === 'from' ? 'to' : 'from'
-        }
+        let isOver = false
+        let isEmpty = false
+        let isCounterPairEmpty = false
 
         switch (action.type) {
+
             case TYPES.AMOUNT_CHANGE:
-                let isOver = false
-                let isEmpty = false
-                let isCounterPairEmpty = false
 
-                if (action.payload.amount > myBalance[state[`${target}Coin`]] || state[`${counterTarget}Amount`] > myBalance[state[`${counterTarget}Coin`]]) {
+                setAmountCheckVariables()
+                if (selectedPairAmount > selectedPairMyBalance) {
                     isOver = true
+                } else {
+                    isOver = false
                 }
 
-                if (action.payload.amount == 0) {
-                    isEmpty = true
-                }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
 
-                if (state[`${counterTarget}Amount`] === '' || state[`${counterTarget}Amount`] == 0) {
-                    isCounterPairEmpty = true
-                }
-
-                return { ...state, [`${target}Amount`]: action.payload.amount, status: isOver ? 'over' : (isEmpty || isCounterPairEmpty) ? 'empty' : 'normal' }
             case TYPES.SET_MAX_AMOUNT:
-                return { ...state, [`${target}Amount`]: action.payload.amount, status: 'normal' }
+                setAmountCheckVariables()
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
+
             case TYPES.SELECT_COIN:
-                let coinA = state[`${counterTarget}Coin`]
-                let coinB = action.payload.coin
-                const sortedCoins = [coinA, coinB].sort()
-                const slectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
+                const coinA = state[`${counterTargetPair}Coin`]
+                const coinB = action.payload.coin
+                const isBothCoin = coinA !== '' && coinB !== ''
 
-                if (!slectedPairsPoolData) {
-                    history.push(`/deposit?X=${coinA}&Y=${coinB}`)
+                if (!isBothCoin) {
+                    return { ...state, [`${targetPair}Coin`]: action.payload.coin }
+                } else {
+                    const selectedPooldata = getSelectedPairsPoolData(state, action, counterTargetPair, poolData)
+                    state.status = "normal"
+                    setAmountCheckVariables()
+
+                    if (!selectedPooldata) {
+                        return { ...state, status: "create", [`${targetPair}Coin`]: action.payload.coin, price: '-' }
+                    } else {
+                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), status: getStatus(state) }
+                    }
                 }
-
-                return { ...state, [`${target}Coin`]: action.payload.coin }
             case TYPES.SET_FROM_QUERY:
                 // toCoin 수량 계산 및 액션버튼 검증로직
                 console.log('here')
@@ -211,6 +213,40 @@ function SwapCard() {
             default:
                 console.log("DEFAULT: SWAP REDUCER")
                 return state;
+        }
+        //helpers
+        function getPairs(action) {
+            let targetPair = null
+            let counterTargetPair = null
+
+            if (action.payload?.target) {
+                targetPair = action.payload.target === "X" ? "from" : "to"
+                counterTargetPair = targetPair === 'from' ? 'to' : 'from'
+            } else {
+                targetPair = 'from'
+                counterTargetPair = 'to'
+            }
+            return { targetPair, counterTargetPair }
+        }
+
+        function setAmountCheckVariables() {
+            if (selectedPairAmount > selectedPairMyBalance || counterPairAmount > counterPairMyBalance) {
+                isOver = true
+            } else {
+                isOver = false
+            }
+            if (selectedPairAmount == 0) {
+                isEmpty = true
+            } else {
+                isEmpty = false
+            }
+            // if (counterPairAmount === '' || counterPairAmount == 0) {
+            //     isCounterPairEmpty = true
+            // }
+        }
+
+        function getStatus(state) {
+            return state.status === 'create' ? 'create' : (isOver ? 'over' : (isEmpty || isCounterPairEmpty) ? 'empty' : 'normal')
         }
     }
 
@@ -248,7 +284,7 @@ function SwapCard() {
 
                     {/* From */}
                     <TokenInputController
-                        header={{ title: 'From', balance: getMyCoinBalance(state.fromCoin, myBalance) }}
+                        header={{ title: 'X', balance: getMyCoinBalance(state.fromCoin, myBalance) }}
                         coin={state.fromCoin}
                         amount={state.fromAmount}
                         counterPair={state.toCoin}
@@ -265,7 +301,7 @@ function SwapCard() {
 
                     {/* To */}
                     <TokenInputController
-                        header={{ title: 'To (estimated)', balance: getMyCoinBalance(state.toCoin, myBalance) }}
+                        header={{ title: 'Y', balance: getMyCoinBalance(state.toCoin, myBalance) }}
                         coin={state.toCoin}
                         amount={state.toAmount}
                         counterPair={state.fromCoin}
