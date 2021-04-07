@@ -129,7 +129,21 @@ function SwapCard() {
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
 
-
+                console.log('targetPair', targetPair)
+                console.log('selectedPairAmount', selectedPairAmount)
+                if (targetPair === 'from') {
+                    if (selectedPairAmount > myBalance[state.fromCoin]) {
+                        isOver = true
+                    } else {
+                        isOver = false
+                    }
+                } else {
+                    if ((selectedPairAmount * price) > myBalance[state.fromCoin]) {
+                        isOver = true
+                    } else {
+                        isOver = false
+                    }
+                }
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
@@ -157,7 +171,10 @@ function SwapCard() {
 
             case TYPES.CHANGE_FROM_TO_COIN:
                 // toCoin 수량 계산 및 액션버튼 검증로직
+
+
                 const fromToChangeObject = { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
+
 
                 if (state.status === 'create') {
                     return { ...fromToChangeObject, price: '-' }
@@ -166,10 +183,11 @@ function SwapCard() {
                 if (state.toCoin === '' || state.fromCoin === '') {
                     return fromToChangeObject
                 } else {
+                    let isOver = state.fromAmount > myBalance[state.fromCoin] || state.toAmount > myBalance[state.toCoin]
                     const sortedCoins = [state.toCoin, state.fromCoin].sort()
                     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]
-                    return { ...fromToChangeObject, price }
+                    return { ...fromToChangeObject, price, status: isOver ? 'over' : state.status }
                 }
 
             default:
@@ -185,6 +203,9 @@ function SwapCard() {
             if (action.payload?.target) {
                 targetPair = action.payload.target === "From" ? "from" : "to"
                 counterTargetPair = targetPair === 'from' ? 'to' : 'from'
+            } else {
+                targetPair = 'from'
+                counterTargetPair = 'to'
             }
             return { targetPair, counterTargetPair }
         }
@@ -192,9 +213,13 @@ function SwapCard() {
         function setAmountCheckVariables() {
             if (selectedPairAmount > selectedPairMyBalance || counterPairAmount > counterPairMyBalance) {
                 isOver = true
+            } else {
+                isOver = false
             }
             if (selectedPairAmount == 0) {
                 isEmpty = true
+            } else {
+                isEmpty = false
             }
             // if (counterPairAmount === '' || counterPairAmount == 0) {
             //     isCounterPairEmpty = true
