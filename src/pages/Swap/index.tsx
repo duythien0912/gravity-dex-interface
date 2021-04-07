@@ -30,17 +30,13 @@ const SwapWrapper = styled.div`
         align-items:center;
         justify-content:center;
         padding: 16px 0;
-        transition: opacity 0.2s;
+        transition: transform 0.2s;
 
         .arrow {
             cursor: pointer;
 
-            svg {
-                stroke: #4397ff;
-            }
-
             &:hover {
-                opacity: 0.6;
+                transform: scale(1.2);
             }
         }
    }

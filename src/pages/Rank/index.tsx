@@ -32,9 +32,7 @@ const SwapWrapper = styled.div`
         .arrow {
             cursor: pointer;
 
-            svg {
-                stroke: #4397ff;
-            }
+            
 
             &:hover {
                 opacity: 0.6;
