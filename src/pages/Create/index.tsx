@@ -114,7 +114,7 @@ const TYPES = {
     AMOUNT_CHANGE: 'AMOUNT_CHANGE',
     SELECT_COIN: 'SELECT_COIN',
     SET_MAX_AMOUNT: 'SET_MAX_AMOUNT',
-    CHANGE_FROM_TO_COIN: 'CHANGE_FROM_TO_COIN'
+    SET_FROM_QUERY: 'SET_FROM_QUERY'
 }
 
 //helpers
@@ -149,8 +149,14 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 
 function SwapCard() {
     React.useEffect(() => {
-        //미로그인시 connectWallet 스테이터스 아니면 empty로
+        const searchParams = new URLSearchParams(history.location.search);
+
+        if (searchParams.has('from')) {
+            dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
+        }
+
     }, [])
+
     const myBalance = useSelector((state) => state.store.userData.balance)
     const slippage = useSelector((state) => state.store.userData.slippage)
     const poolData = useSelector((state) => state.store.poolsData.pools)
@@ -198,9 +204,10 @@ function SwapCard() {
                 }
 
                 return { ...state, [`${target}Coin`]: action.payload.coin }
-            case TYPES.CHANGE_FROM_TO_COIN:
+            case TYPES.SET_FROM_QUERY:
                 // toCoin 수량 계산 및 액션버튼 검증로직
-                return { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
+                console.log('here')
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
             default:
                 console.log("DEFAULT: SWAP REDUCER")
                 return state;
