@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+// useDispatch, 
 import { useHistory } from 'react-router-dom'
-
-import ChangeArrow from "../../assets/svgs/ChangeArrow"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -157,11 +156,11 @@ function SwapCard() {
                     isOver = true
                 }
 
-                if (action.payload.amount == 0) {
+                if (action.payload.amount === 0) {
                     isEmpty = true
                 }
 
-                if (state[`${counterTarget}Amount`] === '' || state[`${counterTarget}Amount`] == 0) {
+                if (state[`${counterTarget}Amount`] === '' || state[`${counterTarget}Amount`] === 0) {
                     isCounterPairEmpty = true
                 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
 const mobileWidth = 500
 const PoolWrapper = styled.div`
@@ -401,9 +401,9 @@ function Pool() {
 
         return result
 
-        function isEmpty(param) {
-            return Object.keys(param).length === 0;
-        }
+        // function isEmpty(param) {
+        //     return Object.keys(param).length === 0;
+        // }
 
         function cutNumber(number, digitsAfterDot) {
             const str = `${number}`;
@@ -413,9 +413,9 @@ function Pool() {
 
     }
 
-    function goUrlWithPairs(a, b) {
-        history.push('/swap')
-    }
+    // function goUrlWithPairs(a, b) {
+    //     history.push('/swap')
+    // }
 
     return (
         <>

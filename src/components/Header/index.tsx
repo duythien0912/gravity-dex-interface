@@ -1,7 +1,7 @@
 //library
 import * as React from 'react'
 import styled from "styled-components"
-import { lighten } from 'polished'
+// import { lighten } from 'polished'
 import { NavLink } from 'react-router-dom'
 
 //icons
@@ -183,11 +183,11 @@ function AppHeader() {
   const priceData = useSelector((state) => state.store.priceData)
   const walletStatus = useSelector((state) => state.store.userData.walletStatus)
   const dispatch = useDispatch()
-
+  window.onload = () => {
+    connectWallet(false)
+  }
   React.useEffect(() => {
-    window.onload = () => {
-      connectWallet(false)
-    }
+
   }, [])
 
   async function connectWallet(isToggle = true) {

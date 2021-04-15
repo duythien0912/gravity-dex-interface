@@ -13,12 +13,12 @@ import Rank from "../pages/Rank"
 
 import Background from "../assets/svgs/Background"
 //test
-import { testTxGenerator } from "../cosmos-amm/new-cosmos-amm"
-import { test2 } from "../cosmos-amm/new2-cosmos-amm"
-import { testSign } from "../cosmos-amm/new-sign-comsos-amm"
+// import { testTxGenerator } from "../cosmos-amm/new-cosmos-amm"
+// import { test2 } from "../cosmos-amm/new2-cosmos-amm"
+// import { testSign } from "../cosmos-amm/new-sign-comsos-amm"
 
 //starport liquidity js
-import { Api, HttpClient } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
+import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -35,11 +35,6 @@ const AppWrapper = styled.div`
     background-image: radial-gradient(50% 50% at 50% 50%,rgb(133 177 232 / 51%) 0%,rgb(201 235 255 / 17%) 100%);
     background-position:0px 0px !important;
   } */
-`
-
-const HeaderWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  width: 100%;
 `
 
 const BackgroundWrapper = styled.div`
@@ -64,16 +59,9 @@ function App() {
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
-    const test = new Api({ baseUrl: "https://api.testnet1.test.gravitydex.io" }).queryParams().then((res) => console.log(res.data))
+    new Api({ baseUrl: "https://api.testnet1.test.gravitydex.io" }).queryParams().then((res) => console.log(res.data))
 
-    console.log()
-    // window.onload = () => {
-    //   //test 
-    //   // testTxGenerator()
-    //   // test2()
-    //   testSign()
-    // }
-  }, [])
+  }, [history])
 
   return (
     <AppWrapper>

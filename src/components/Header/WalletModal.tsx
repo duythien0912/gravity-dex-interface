@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from "styled-components";
 
-import { useDispatch, useSelector } from "react-redux"
-
+import { useSelector } from "react-redux"
+// useDispatch,
 const Wrapper = styled.div`
 
 width: 420px;
@@ -86,7 +86,7 @@ border-top-left-radius: 12px;
 
 function ConnectWalletModal({ close, priceData, totalValue }: { close: any, priceData: {}, totalValue: any }) {
     const myBalance = useSelector((state) => state.store.userData.balance)
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
 
     function generateCoinList(balance, priceData) {
         let result = []

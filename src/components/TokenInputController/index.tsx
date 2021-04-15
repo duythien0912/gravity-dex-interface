@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from "styled-components";
 import { useToggle } from "ahooks"
-import { useDispatch, useSelector } from "react-redux";
-
+import { useSelector } from "react-redux";
+// useDispatch,
 import CoinSelectorArrow from "../../assets/svgs/CoinSelectorArrow"
 import CoinSelectModal from "../Modals/CoinSelectModal"
 const Wrapper = styled.div`
@@ -147,7 +147,7 @@ const Wrapper = styled.div`
 function TokenInputController({ header, amount, coin, counterPair, dispatch, dispatchTypes }:
     {
         header: { title: string, balance: number },
-        amount: string,
+        amount: number,
         coin: string,
         counterPair: string,
         dispatch: any,

@@ -8,7 +8,7 @@ import store from "./store/index";
 import reportWebVitals from './reportWebVitals';
 // FixedGlobalStyle, ThemedGlobalStyle
 import { ThemeProvider, FixedGlobalStyle } from './theme'
-{/* <React.StrictMode></React.StrictMode> */ }
+/* <React.StrictMode></React.StrictMode> */
 ReactDOM.render(
   <>
     <Provider store={store}>

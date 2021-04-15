@@ -209,7 +209,7 @@ function SwapCard() {
             } else {
                 isOver = false
             }
-            if (selectedPairAmount == 0) {
+            if (selectedPairAmount === 0) {
                 isEmpty = true
             } else {
                 isEmpty = false

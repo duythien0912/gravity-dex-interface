@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { useDispatch, useSelector } from "react-redux"
-
+import { useSelector } from "react-redux"
+// useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
 
@@ -117,7 +117,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
         return listPairs.map((pair, index) => {
 
             if (counterPair === pair) {
-                return
+                return null
             }
 
             return (

@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, getMyCoinBalance } from "../../utils/global-functions"
-import ChangeArrow from "../../assets/svgs/ChangeArrow"
+import { getSelectedPairsPoolData, getPoolPrice, getMyCoinBalance } from "../../utils/global-functions"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -142,6 +141,13 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 
 
 function SwapCard() {
+
+
+    const myBalance = useSelector((state) => state.store.userData.balance)
+    // const slippage = useSelector((state) => state.store.userData.slippage)
+    const poolData = useSelector((state) => state.store.poolsData.pools)
+
+    const history = useHistory();
     React.useEffect(() => {
         const searchParams = new URLSearchParams(history.location.search);
 
@@ -149,13 +155,7 @@ function SwapCard() {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
 
-    }, [])
-
-    const myBalance = useSelector((state) => state.store.userData.balance)
-    const slippage = useSelector((state) => state.store.userData.slippage)
-    const poolData = useSelector((state) => state.store.poolsData.pools)
-
-    const history = useHistory();
+    }, [history.location.search])
 
     //reducer for useReducer
     function reducer(state, action) {
@@ -165,7 +165,7 @@ function SwapCard() {
         const counterPairAmount = state[`${counterTargetPair}Amount`]
         const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
         const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
-        const price = targetPair === 'X' ? state.price : 1 / state.price
+        // const price = targetPair === 'X' ? state.price : 1 / state.price
 
         let isOver = false
         let isEmpty = false
@@ -236,7 +236,7 @@ function SwapCard() {
             } else {
                 isOver = false
             }
-            if (selectedPairAmount == 0) {
+            if (selectedPairAmount === 0) {
                 isEmpty = true
             } else {
                 isEmpty = false

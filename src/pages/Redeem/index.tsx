@@ -1,9 +1,7 @@
 import * as React from 'react'
 import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-
-import ChangeArrow from "../../assets/svgs/ChangeArrow"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -152,7 +150,7 @@ function SwapCard() {
         //미로그인시 connectWallet 스테이터스 아니면 empty로
     }, [])
     const myBalance = useSelector((state) => state.store.userData.balance)
-    const slippage = useSelector((state) => state.store.userData.slippage)
+    // const slippage = useSelector((state) => state.store.userData.slippage)
     const poolData = useSelector((state) => state.store.poolsData.pools)
 
     const history = useHistory();
@@ -176,11 +174,11 @@ function SwapCard() {
                     isOver = true
                 }
 
-                if (action.payload.amount == 0) {
+                if (action.payload.amount === 0) {
                     isEmpty = true
                 }
 
-                if (state[`${counterTarget}Amount`] === '' || state[`${counterTarget}Amount`] == 0) {
+                if (state[`${counterTarget}Amount`] === '' || state[`${counterTarget}Amount`] === 0) {
                     isCounterPairEmpty = true
                 }
 

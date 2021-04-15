@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Colors } from './styled'
-import { borderRadius, transparentize } from 'polished'
-import styled, {
+import { transparentize } from 'polished'
+import {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
