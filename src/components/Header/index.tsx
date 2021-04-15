@@ -257,7 +257,7 @@ function AppHeader() {
   function showStatusDetail() {
     //open modal below is test
 
-    dispatch({ type: 'rootStore/togglePendingStatus' })
+    dispatch({ type: 'store/togglePendingStatus' })
   }
 
   function getTotalValue(userBalance) {
