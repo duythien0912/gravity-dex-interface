@@ -1,19 +1,20 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { queryAllBalances } from '../../api/bank-rest';
-import { liquidityAction } from './slice';
+import { cosmosAction } from './slice';
 
-export function* handleQueryParams() {
-    const { queryParamsSuccess, queryParamsFail } = liquidityAction;
+function* handleQueryAllBalances({ payload: address }) {
+    const { queryAllBalancesSuccess } = cosmosAction;
     try {
-        const params = yield call(queryParams);
-        yield put(queryParamsSuccess(params));
+        const balances = yield call(queryAllBalances(address));
+        console.log('balances', balances)
+        yield put(queryAllBalancesSuccess(balances));
     } catch (err) {
-        yield put(queryParamsFail(err));
+        // yield put(console.log(err));
     }
 }
 
-export function* watchParams() {
-    const { requestQueryParams } = liquidityAction;
-    yield takeLatest(requestQueryParams, handleQueryParams);
+export function* watchAllBalances() {
+    const { requestQueryAllBalances } = cosmosAction;
+    yield takeLatest(requestQueryAllBalances, handleQueryAllBalances);
 }
 

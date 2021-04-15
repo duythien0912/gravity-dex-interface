@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { queryParams } from '../../api/liquidity-rest';
 import { liquidityAction } from './slice';
 
-export function* handleQueryParams() {
+function* handleQueryParams() {
     const { queryParamsSuccess, queryParamsFail } = liquidityAction;
     try {
         const params = yield call(queryParams);

@@ -21,6 +21,7 @@ import Background from "../assets/svgs/Background"
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
 import { useDispatch, useSelector } from "react-redux";
 import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
+import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
 
 const AppWrapper = styled.div`
   display: flex;
@@ -54,25 +55,28 @@ min-width: 1440px;
 height: 100vh;
 `
 
+const { requestQueryParams } = liquidityAction;
+const { requestQueryAllBalances } = cosmosAction;
 
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { params, pools } = useSelector(liquiditySelector.all);
-  const { requestQueryParams } = liquidityAction;
 
 
-  dispatch(requestQueryParams())
-  console.log('params', params)
-  console.log('pools', pools)
+  dispatch(requestQueryAllBalances('cosmos1vw4v73wppjrrd0u8f2uc8djgeu8mqjv5ah5ykw'))
 
+  // console.log('params', params)
+  // console.log('pools', pools)
   React.useEffect(() => {
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
+    dispatch(requestQueryParams())
+    console.log('render')
     // new Api({ baseUrl: "https://gravity.bharvest.io/rest" }).queryParams().then((res) => console.log(res.data))
 
-  }, [history])
+  }, [history, dispatch])
 
   return (
     <AppWrapper>
