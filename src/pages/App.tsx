@@ -20,7 +20,7 @@ import Background from "../assets/svgs/Background"
 //starport liquidity js
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
 import { useDispatch, useSelector } from "react-redux";
-import { restSelector, restAction } from "../modules/liquidityRest/slice"
+import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
 
 const AppWrapper = styled.div`
   display: flex;
@@ -58,11 +58,11 @@ height: 100vh;
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { params, pools } = useSelector(restSelector.all);
-  const { queryParams } = restAction;
+  const { params, pools } = useSelector(liquiditySelector.all);
+  const { requestQueryParams } = liquidityAction;
 
 
-  dispatch(queryParams())
+  dispatch(requestQueryParams())
   console.log('params', params)
   console.log('pools', pools)
 

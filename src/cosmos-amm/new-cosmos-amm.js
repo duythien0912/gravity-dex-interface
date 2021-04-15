@@ -4,12 +4,12 @@ import { MsgApiClientImpl } from "./liquidity_codecs/msg"
 
 export async function testTxGenerator() {
     // set config
-    const chainId = "swap-testnet-2001";
+    const chainId = "swap-testnet-2003";
     await window.keplr.enable(chainId);
     const wallet = window.getOfflineSigner(chainId);
     const [firstAccount] = await wallet.getAccounts();
 
-    const rpcEndpoint = "https://dev.bharvest.io/rpc/";
+    const rpcEndpoint = "https://rpc.gravity.bharvest.io/";
     const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet);
 
     const recipient = "cosmos1xv9tklw7d82sezh9haa573wufgy59vmwe6xxe5";

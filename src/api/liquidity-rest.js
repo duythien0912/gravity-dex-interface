@@ -1,12 +1,12 @@
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
 
-const BASE_URL = "https://gravity.bharvest.io/rest"
+const BASE_URL = "https://api.gravity.bharvest.io"
 const liquidityRestApi = new Api({ baseUrl: BASE_URL })
 
 export const queryParams = async () => {
     try {
         const response = await liquidityRestApi.queryParams()
-        return response.data
+        return response.data.params
     } catch (e) {
         console.log(e)
     }

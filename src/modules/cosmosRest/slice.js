@@ -1,19 +1,15 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-const name = 'liquidity';
+const name = 'cosmos';
 
 const initialState = {
-    params: null,
-    pools: null,
-    isParams: false,
-    isPools: false,
-    isLoading: false,
+    userBalance: {}
 };
 
 const reducers = {
-    requestQueryParams: (state) => {
-        state.isParams = false;
+    requestqueryAllBalances: (state) => {
+
     },
-    queryParamsSuccess: (state, { payload: params }) => {
+    queryParamsSuccess: (state, { payload: balances }) => {
         state.isParams = true;
         state.params = params
     },
@@ -39,5 +35,5 @@ export const liquiditySelector = {
 };
 
 export const LIQUIDITY = slice.name;
-export const liquidityReducer = slice.reducer;
+export const liqudityReducer = slice.reducer;
 export const liquidityAction = slice.actions;

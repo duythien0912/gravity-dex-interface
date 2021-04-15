@@ -5,14 +5,14 @@ const { SigningCosmosClient, coins, coin } = require("cosmjs-amm/launchpad");
 
 export function usePoolListInterval(interval = 8000) {
 
-    const { data, error } = useSWR("https://dev.bharvest.io/rest/liquidity/pools", Axios, { refreshInterval: interval })
+    const { data, error } = useSWR("https://api.gravity.bharvest.io/liquidity/pools", Axios, { refreshInterval: interval })
     return [data?.data.pools, error]
 }
 
 export const getWalletTokenList = async () => {
     try {
         const response = await Axios.get(
-            `https://dev.bharvest.io/rest/bank/balances/${localStorage.getItem(
+            `https://api.gravity.bharvest.io/bank/balances/${localStorage.getItem(
                 "walletAddress"
             )}`
         );
@@ -27,7 +27,7 @@ export const getWalletTokenList = async () => {
 export const getLiquidityModuleParams = async () => {
     try {
         const response = await Axios.get(
-            "https://dev.bharvest.io/rest/liquidity/params"
+            "https://api.gravity.bharvest.io/liquidity/params"
         );
         return response.data.params
     } catch (error) {
@@ -58,14 +58,14 @@ export const txGenerator = async (
     }
 
     // set config
-    const chainId = "swap-testnet-2001";
+    const chainId = "swap-testnet-2003";
     await window.keplr.enable(chainId);
     const offlineSigner = window.getOfflineSigner(chainId);
     const accounts = await offlineSigner.getAccounts();
 
     // Initialize the gaia api with the offline signer that is injected by Keplr extension.
     const cosmJS = new SigningCosmosClient(
-        "https://dev.bharvest.io/rest/",
+        "https://api.gravity.bharvest.io/",
         accounts[0].address,
         offlineSigner
     );

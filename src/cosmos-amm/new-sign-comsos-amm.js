@@ -20,7 +20,7 @@
 //     const wallet = window.getOfflineSigner(chainId);
 //     const [firstAccount] = await wallet.getAccounts();
 
-//     const rpcEndpoint = "https://dev.bharvest.io/rpc/";
+//     const rpcEndpoint = "https://rpc.gravity.bharvest.io/";
 //     const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet, {
 //         registry: new Registry({
 //             typeUrl: "tendermint.liquidity.MsgSwap", value: {
@@ -64,7 +64,7 @@ import Long from "long";
 export async function testSign() {
     // Inside an async function...
     // The Tendermint client knows how to talk to the Tendermint RPC endpoint
-    // const tendermintClient = await Tendermint34Client.connect("https://dev.bharvest.io/rpc/");
+    // const tendermintClient = await Tendermint34Client.connect("https://rpc.gravity.bharvest.io/");
 
     // // The generic Stargate query client knows how to use the Tendermint client to submit unverified ABCI queries
     // const queryClient = new QueryClient(tendermintClient);
@@ -83,12 +83,12 @@ export async function testSign() {
         ...defaultRegistryTypes,
         ["/tendermint.liquidity.MsgSwap", MsgSwap],
     ]);
-    const chainId = "swap-testnet-2001";
+    const chainId = "swap-testnet-2003";
     await window.keplr.enable(chainId);
     const wallet = window.getOfflineSigner(chainId);
 
     const [firstAccount] = await wallet.getAccounts();
-    const rpcEndpoint = "https://dev.bharvest.io/rpc/";
+    const rpcEndpoint = "https://rpc.gravity.bharvest.io/";
     const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet, { registry: myRegistry });
 
     // let number = '2.343495760438650155'

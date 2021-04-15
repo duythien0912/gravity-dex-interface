@@ -5,7 +5,7 @@ import { QueryClientImpl } from "./liquidity_codecs/query";
 export async function test2() {
     // Inside an async function...
     // The Tendermint client knows how to talk to the Tendermint RPC endpoint
-    const tendermintClient = await Tendermint34Client.connect("https://dev.bharvest.io/rpc/");
+    const tendermintClient = await Tendermint34Client.connect("https://rpc.gravity.bharvest.io/");
 
     // The generic Stargate query client knows how to use the Tendermint client to submit unverified ABCI queries
     const queryClient = new QueryClient(tendermintClient);
