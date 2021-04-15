@@ -19,6 +19,9 @@ import Background from "../assets/svgs/Background"
 
 //starport liquidity js
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
+import { useDispatch, useSelector } from "react-redux";
+import { restSelector, restAction } from "../modules/liquidityRest/slice"
+
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -54,12 +57,20 @@ height: 100vh;
 
 function App() {
   const history = useHistory();
+  const dispatch = useDispatch();
+  const { params, pools } = useSelector(restSelector.all);
+  const { queryParams } = restAction;
+
+
+  dispatch(queryParams())
+  console.log('params', params)
+  console.log('pools', pools)
 
   React.useEffect(() => {
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
-    new Api({ baseUrl: "https://api.testnet1.test.gravitydex.io" }).queryParams().then((res) => console.log(res.data))
+    // new Api({ baseUrl: "https://gravity.bharvest.io/rest" }).queryParams().then((res) => console.log(res.data))
 
   }, [history])
 

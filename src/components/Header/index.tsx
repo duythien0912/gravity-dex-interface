@@ -179,6 +179,7 @@ function AppHeader() {
   const [isSettingModalOpen, { toggle: settingModalToggle }] = useToggle();
   const [isWalletModalOpen, { toggle: walletModalToggle }] = useToggle();
   const [walletAddress, setWalletAddress] = React.useState('')
+
   const userBalance = useSelector((state) => state.store.userData.balance)
   const priceData = useSelector((state) => state.store.priceData)
   const walletStatus = useSelector((state) => state.store.userData.walletStatus)

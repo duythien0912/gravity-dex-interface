@@ -1,8 +1,16 @@
 import {
-    combineReducers,
-    configureStore,
+
     createSlice
 } from "@reduxjs/toolkit";
+import { combineReducers } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
+import { REST, restReducer } from '../modules/liquidityRest/slice';
+import { handleQueryParams } from '../modules/liquidityRest/saga';
+// combineReducers,
+// configureStore,
+// import createSagaMiddleware from 'redux-saga';
 
 //TEST DATA
 const TEST_INIT_DATA = {
@@ -51,8 +59,29 @@ export const RootReducer = createSlice({
     },
 });
 
-const reducer = combineReducers({ store: RootReducer.reducer });
+// const reducer = combineReducers({ store: RootReducer.reducer });
+// const sagaMiddleware = createSagaMiddleware();
+// export default configureStore({
+//     reducer, middleware: [sagaMiddleware],
+// });
 
-export default configureStore({
-    reducer
+export const rootReducer = combineReducers({
+    [REST]: restReducer,
+    store: RootReducer.reducer
 });
+const sagaMiddleware = createSagaMiddleware();
+function* rootSaga() {
+    yield all([
+        handleQueryParams(),
+    ])
+}
+const createStore = () => {
+    const store = configureStore({
+        reducer: rootReducer,
+        devTools: true,
+        middleware: [sagaMiddleware]
+    });
+    sagaMiddleware.run(rootSaga);
+    return store;
+}
+export default createStore;

@@ -4,11 +4,12 @@ import './index.css';
 import App from './pages/App';
 import { HashRouter } from 'react-router-dom'
 import { Provider } from "react-redux";
-import store from "./store/index";
+import createStore from "./store/index";
 import reportWebVitals from './reportWebVitals';
-// FixedGlobalStyle, ThemedGlobalStyle
 import { ThemeProvider, FixedGlobalStyle } from './theme'
+// FixedGlobalStyle, ThemedGlobalStyle
 /* <React.StrictMode></React.StrictMode> */
+const store = createStore();
 ReactDOM.render(
   <>
     <Provider store={store}>
