@@ -25,7 +25,7 @@ const Action = styled.div`
 
     &.connect-wallet {
         background-color: hsl(213deg 100% 63% / 22%);
-        color:#4397ff;
+        color:#F6743C;
         &:hover {
         background-color:hsl(213deg 100% 63% / 36%) !important;
         }

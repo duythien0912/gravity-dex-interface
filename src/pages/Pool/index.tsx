@@ -23,7 +23,7 @@ const PoolWrapper = styled.div`
 
         color: #fff;
 
-        background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgb(47 152 243) 0%, rgb(0, 0, 0) 100%);
+        background: radial-gradient(76.02% 75.41% at 1.84% 0%,rgb(129 31 86) 0%,rgb(0,0,0) 100%);
         border-radius: 16px;
 
         .title {
@@ -48,6 +48,7 @@ const PoolWrapper = styled.div`
             font-size: 20px;
             font-weight: 500;
             min-width: 125px;
+            color:#fff;
         }
 
         .buttons {
@@ -67,8 +68,8 @@ const PoolWrapper = styled.div`
                 cursor: pointer;
                 position: relative;
                 z-index: 1;
-                border: 1px solid rgb(183 197 251);
-                color: #4397ff;
+                border: 1px solid rgb(255 175 137);
+                color: #F6743C;
                 background-color: transparent;
                 font-size: 16px;
                 border-radius: 12px;
@@ -76,7 +77,7 @@ const PoolWrapper = styled.div`
                 width: fit-content;
 
                 &:hover {
-                    border-color: #4397ff;
+                    border-color: #F6743C;
                 }
 
                 &:last-child{
@@ -85,13 +86,13 @@ const PoolWrapper = styled.div`
                         margin-left: 6px !important;
                 }
 
-                    border: 1px solid #4397ff;
-                    background-color:#4397ff;
+                    border: 1px solid #F6743C;
+                    background-color:#F6743C;
                     color: #fff;
 
                     &:hover {
                         border-color: transparent;
-                        background-color: hsl(213deg 66% 57%);
+                        background-color: #b4562d;
                     }
                 }
 
@@ -115,7 +116,7 @@ const PoolWrapper = styled.div`
 
 
             &:focus {
-                border-color: #4397ff;
+                border-color: #F6743C;
             }
 
             &::placeholder {
@@ -146,7 +147,9 @@ const PoolWrapper = styled.div`
         border-radius: 20px;
         padding: 20px;
         margin-bottom: 20px;
-        background: radial-gradient(91.85% 100% at 1.84% 0%,rgb(129 157 236 / 34%) 0%,rgb(239 227 218 / 50%) 100%);
+        background: radial-gradient(91.85% 100% at 1.84% 0%,rgb(255 174 249) 0%,rgb(255 241 230) 100%);
+
+        overflow:hidden;
         
         
         .background {
@@ -191,7 +194,7 @@ const PoolWrapper = styled.div`
                 z-index: 2;
                 .button {
                     font-weight: 500;
-                    color: #4397ff;
+                    color: #F6743C;
                     cursor: pointer;
                 }
             }
@@ -242,7 +245,7 @@ const PoolWrapper = styled.div`
     }
 
     .all-pool {
-       background: radial-gradient(91.85% 100% at 1.84% 0%,rgb(33 211 229 / 20%) 0%,rgb(242 237 237) 100%);
+       background: radial-gradient(91.85% 100% at 1.84% 0%,rgb(251 186 130) 0%,rgb(242 237 237) 100%);
     }
 
     .pool-action {
@@ -271,7 +274,7 @@ const PoolWrapper = styled.div`
             cursor: pointer;
             position: relative;
             z-index: 1;
-            background-color: #4397ff;
+            background-color: #F6743C;
             color: white;
         }
     }
@@ -298,7 +301,6 @@ function Pool() {
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
                         (<div className="pool" key={pool + '*'}>
-                            <span className="background"></span>
                             <div className="pool-title">
 
                                 <div className="pool-name">
@@ -344,7 +346,6 @@ function Pool() {
 
                     result.push(
                         <div className="pool all-pool" key={pool}>
-                            <span className="background"></span>
                             <div className="pool-title">
                                 <div className="pool-name">
                                     <div className="wrapper">

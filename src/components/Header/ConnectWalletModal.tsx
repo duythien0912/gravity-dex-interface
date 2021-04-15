@@ -60,7 +60,7 @@ button {
     transition: border 0.2s;
 
     &:hover {
-        border: 1px solid #4397ff;
+        border: 1px solid #F6743C;
     }
 
     img {

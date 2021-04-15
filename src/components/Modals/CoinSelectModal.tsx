@@ -49,7 +49,7 @@ const SelectCoinWrapper = styled.div`
     border-radius: 20px;
 
     &:focus {
-        border-color: #4397ff;
+        border-color: #F6743C;
     }
 }
 

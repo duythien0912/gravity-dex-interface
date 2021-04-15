@@ -78,7 +78,7 @@ div {
         }
 
             &:focus {
-                border: 1px solid #4397ff;
+                border: 1px solid #F6743C;
             }
         }
 

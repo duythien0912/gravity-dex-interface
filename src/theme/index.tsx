@@ -90,10 +90,10 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#4397ff',
+    blue1: '#F6743C',
 
     // nav
-    navActiveBorderColor: '#4397ff',
+    navActiveBorderColor: '#F6743C',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
