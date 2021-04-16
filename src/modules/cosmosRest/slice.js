@@ -11,6 +11,8 @@ const reducers = {
         state.userAddress = userAddress
     },
     queryAllBalancesSuccess: (state, { payload: balances }) => {
+        console.log('here')
+        console.log(balances)
         state.userBalances = balances
     }
 }

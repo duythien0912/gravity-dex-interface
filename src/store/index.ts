@@ -11,8 +11,8 @@ import { watchAllBalances } from '../modules/cosmosRest/saga';
 
 const rootReducer = combineReducers({
     [LIQUIDITY]: liquidityReducer,
-    [LOCAL_STORE]: localStoreReducer,
-    [COSMOS]: cosmosReducer
+    [COSMOS]: cosmosReducer,
+    [LOCAL_STORE]: localStoreReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

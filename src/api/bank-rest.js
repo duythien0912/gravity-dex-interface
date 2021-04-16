@@ -6,9 +6,9 @@ const bankRestApi = new Api({ baseUrl: BASE_URL })
 export const queryAllBalances = async (address) => {
     try {
         const response = await bankRestApi.queryAllBalances(address)
-        console.log(response.data)
         return response.data
     } catch (e) {
         console.log(e)
+        return e
     }
 }

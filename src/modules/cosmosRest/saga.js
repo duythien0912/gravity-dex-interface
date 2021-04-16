@@ -5,8 +5,7 @@ import { cosmosAction } from './slice';
 function* handleQueryAllBalances({ payload: address }) {
     const { queryAllBalancesSuccess } = cosmosAction;
     try {
-        const balances = yield call(queryAllBalances(address));
-        console.log('balances', balances)
+        const balances = yield call(queryAllBalances, address);
         yield put(queryAllBalancesSuccess(balances));
     } catch (err) {
         // yield put(console.log(err));

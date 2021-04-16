@@ -21,11 +21,14 @@ import WalletModal from "./WalletModal"
 
 //for wallet
 import { chainInfo } from "../../cosmos-amm/config"
+import { cosmosSelector, cosmosAction } from "../../modules/cosmosRest/slice"
 
 //helpers
 import { useToggle } from "ahooks";
 import { useDispatch, useSelector } from "react-redux";
 import { toastGenerator, mobileCheck } from "../../utils/global-functions"
+
+const { requestQueryAllBalances } = cosmosAction;
 
 // styled-components
 const HeaderFrame = styled.div`
@@ -213,9 +216,11 @@ function AppHeader() {
       alert('suggest chain rejected!')
       return
     }
+
     await window.keplr.enable(chainInfo.chainId);
     const offlineSigner = window.getOfflineSigner(chainInfo.chainId);
     const accounts = await offlineSigner.getAccounts()
+
     const address = accounts[0].address
 
     if (address.length === 0) {
@@ -229,6 +234,7 @@ function AppHeader() {
         connectWalletModalToggle()
       }
       console.log(bech32Address)
+      dispatch(requestQueryAllBalances(bech32Address))
     }
   };
 

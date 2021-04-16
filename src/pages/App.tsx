@@ -56,7 +56,6 @@ height: 100vh;
 `
 
 const { requestQueryParams } = liquidityAction;
-const { requestQueryAllBalances } = cosmosAction;
 
 function App() {
   const history = useHistory();
@@ -64,7 +63,7 @@ function App() {
   const { params, pools } = useSelector(liquiditySelector.all);
 
 
-  dispatch(requestQueryAllBalances('cosmos1vw4v73wppjrrd0u8f2uc8djgeu8mqjv5ah5ykw'))
+
 
   // console.log('params', params)
   // console.log('pools', pools)
