@@ -70,13 +70,6 @@ const TYPES = {
 }
 
 //helpers
-function getMyCoinBalance(coin, myBalance) {
-    if (myBalance[coin.toLowerCase()] !== undefined) {
-        return Number(myBalance[coin.toLowerCase()])
-    } else {
-        return 0
-    }
-}
 
 function getButtonNameByStatus(status, fromCoin, toCoin) {
     if (fromCoin === '' || toCoin === '') {

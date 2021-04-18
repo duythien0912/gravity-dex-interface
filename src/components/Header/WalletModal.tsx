@@ -86,7 +86,7 @@ border-top-left-radius: 12px;
 
 function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { close: any, priceData: {}, userBalances: {}, totalValue: any }) {
     const myBalance = userBalances
-
+    console.log(myBalance)
     // const dispatch = useDispatch()
     React.useEffect(() => {
 
@@ -97,8 +97,8 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
 
         for (let pair in balance) {
             const coinName = pair.substr(1)
-            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 100000000000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-            const pairBalance = (Math.floor(balance[pair] / 100000000000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            const pairBalance = (Math.floor(balance[pair] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             result.push(
                 <div className="row"
                     onClick={() => {

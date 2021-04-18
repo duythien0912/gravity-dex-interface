@@ -147,7 +147,7 @@ const Wrapper = styled.div`
 `
 function getUserCoinBalance(coin, userBalances) {
     if (userBalances['u' + coin] !== undefined) {
-        return Math.floor(userBalances['u' + coin] / 1000000000000) / 100
+        return Math.floor(userBalances['u' + coin] / 10000) / 100
     } else {
         return '-'
     }

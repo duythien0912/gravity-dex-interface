@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 // useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
-import { cosmosSelector, cosmosAction } from "../../modules/cosmosRest/slice"
+import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 const SelectCoinWrapper = styled.div`
 @media(max-width: 500px) {
@@ -119,7 +119,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
             if (counterPair === pair) {
                 return null
             }
-            const pairBalance = Math.floor(userBalances['u' + pair] / 1000000000000) / 100
+            const pairBalance = Math.floor(userBalances['u' + pair] / 10000) / 100
             return (
                 <div className="row"
                     onClick={() => {

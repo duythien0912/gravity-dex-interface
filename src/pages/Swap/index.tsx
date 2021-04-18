@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, getMyCoinBalance } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 
 import ChangeArrow from "../../assets/svgs/ChangeArrow"
@@ -9,7 +9,7 @@ import ChangeArrow from "../../assets/svgs/ChangeArrow"
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
-
+import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -101,10 +101,11 @@ function SwapCard() {
 
     }, [])
 
-    const { balance: myBalance, slippage } = useSelector((state) => state.store.userData)
+    const { slippage } = useSelector((state) => state.store.userData)
     const poolData = useSelector((state) => state.store.poolsData.pools)
     const storeDispatch = useDispatch()
     const history = useHistory();
+    const { userBalances } = useSelector(cosmosSelector.all);
 
     //reducer for useReducer
     function reducer(state, action) {
@@ -112,9 +113,12 @@ function SwapCard() {
         const selectedPairAmount = action.payload?.amount || ''
         //state[`${targetPair}Amount`]
         const counterPairAmount = state[`${counterTargetPair}Amount`]
-        const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
-        const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
+        const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
+        const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
         const price = targetPair === 'from' ? state.price : 1 / state.price
+
+        const userFromCoinBalance = userBalances['u' + state.fromCoin] / 1000000
+        const userToCoinBalance = userBalances['u' + state.toCoin] / 1000000
 
         let isOver = false
         let isEmpty = false
@@ -128,13 +132,13 @@ function SwapCard() {
                 console.log('targetPair', targetPair)
                 console.log('selectedPairAmount', selectedPairAmount)
                 if (targetPair === 'from') {
-                    if (selectedPairAmount > myBalance[state.fromCoin]) {
+                    if (selectedPairAmount > userFromCoinBalance) {
                         isOver = true
                     } else {
                         isOver = false
                     }
                 } else {
-                    if ((selectedPairAmount * price) > myBalance[state.fromCoin]) {
+                    if ((selectedPairAmount * price) > userFromCoinBalance) {
                         isOver = true
                     } else {
                         isOver = false
@@ -176,7 +180,7 @@ function SwapCard() {
                 if (state.toCoin === '' || state.fromCoin === '') {
                     return fromToChangeObject
                 } else {
-                    let isOver = state.fromAmount > myBalance[state.fromCoin] || state.toAmount > myBalance[state.toCoin]
+                    let isOver = state.fromAmount > userFromCoinBalance || state.toAmount > userToCoinBalance
                     const sortedCoins = [state.toCoin, state.fromCoin].sort()
                     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]

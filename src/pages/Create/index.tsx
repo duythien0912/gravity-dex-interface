@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, getPoolPrice, getMyCoinBalance } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice } from "../../utils/global-functions"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"

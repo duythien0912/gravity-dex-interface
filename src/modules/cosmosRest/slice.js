@@ -15,7 +15,7 @@ const reducers = {
 
         response.balances.forEach((pair) => {
             //TEST-CODE
-            modifiedUserBalances[pair.denom] = pair.amount + Math.random() * 21340000
+            modifiedUserBalances[pair.denom] = Number(pair.amount)
         })
 
         state.userBalances = modifiedUserBalances

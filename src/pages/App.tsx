@@ -18,10 +18,13 @@ import Background from "../assets/svgs/Background"
 // import { testSign } from "../cosmos-amm/new-sign-comsos-amm"
 
 //starport liquidity js
-import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
-import { useDispatch, useSelector } from "react-redux";
-import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
-import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
+import { useDispatch } from "react-redux";
+import { liquidityAction } from "../modules/liquidityRest/slice"
+
+
+// import { useDispatch, useSelector } from "react-redux";
+// import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
+// import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
 
 const AppWrapper = styled.div`
   display: flex;
@@ -60,7 +63,7 @@ const { requestQueryParams } = liquidityAction;
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { params, pools } = useSelector(liquiditySelector.all);
+  // const { params, pools } = useSelector(liquiditySelector.all);
 
   React.useEffect(() => {
     if (window.location.hash === '#/') {
