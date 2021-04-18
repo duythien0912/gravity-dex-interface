@@ -62,18 +62,13 @@ function App() {
   const dispatch = useDispatch();
   const { params, pools } = useSelector(liquiditySelector.all);
 
-
-
-
-  // console.log('params', params)
-  // console.log('pools', pools)
   React.useEffect(() => {
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
     dispatch(requestQueryParams())
     console.log('render')
-    // new Api({ baseUrl: "https://gravity.bharvest.io/rest" }).queryParams().then((res) => console.log(res.data))
+
 
   }, [history, dispatch])
 

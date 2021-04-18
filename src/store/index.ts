@@ -3,7 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
-import { LOCAL_STORE, localStoreReducer } from '../modules/store/slice';
+import { STORE, storeReducer } from '../modules/store/slice';
 import { LIQUIDITY, liquidityReducer } from '../modules/liquidityRest/slice';
 import { COSMOS, cosmosReducer } from '../modules/cosmosRest/slice';
 import { watchParams } from '../modules/liquidityRest/saga';
@@ -12,7 +12,7 @@ import { watchAllBalances } from '../modules/cosmosRest/saga';
 const rootReducer = combineReducers({
     [LIQUIDITY]: liquidityReducer,
     [COSMOS]: cosmosReducer,
-    [LOCAL_STORE]: localStoreReducer
+    [STORE]: storeReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

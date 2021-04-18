@@ -10,10 +10,14 @@ const reducers = {
     requestQueryAllBalances: (state, { payload: userAddress }) => {
         state.userAddress = userAddress
     },
-    queryAllBalancesSuccess: (state, { payload: balances }) => {
-        console.log('here')
-        console.log(balances)
-        state.userBalances = balances
+    queryAllBalancesSuccess: (state, { payload: response }) => {
+        let modifiedUserBalances = {}
+
+        response.balances.forEach((pair) => {
+            modifiedUserBalances[pair.denom] = pair.amount
+        })
+
+        state.userBalances = modifiedUserBalances
     }
 }
 

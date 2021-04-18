@@ -183,13 +183,18 @@ function AppHeader() {
   const [isWalletModalOpen, { toggle: walletModalToggle }] = useToggle();
   const [walletAddress, setWalletAddress] = React.useState('')
 
+  const { userBalances } = useSelector(cosmosSelector.all);
+  console.log('userBalances', userBalances)
+
   const userBalance = useSelector((state) => state.store.userData.balance)
   const priceData = useSelector((state) => state.store.priceData)
   const walletStatus = useSelector((state) => state.store.userData.walletStatus)
   const dispatch = useDispatch()
+
   window.onload = () => {
     connectWallet(false)
   }
+
   React.useEffect(() => {
 
   }, [])
@@ -221,20 +226,19 @@ function AppHeader() {
     const offlineSigner = window.getOfflineSigner(chainInfo.chainId);
     const accounts = await offlineSigner.getAccounts()
 
-    const address = accounts[0].address
+    const walletAddress = accounts[0].address
 
-    if (address.length === 0) {
+    if (walletAddress.length === 0) {
       throw new Error("there is no key");
     }
 
-    const bech32Address = address;
-    if (bech32Address) {
-      setWalletAddress(bech32Address)
+
+    if (walletAddress) {
+      setWalletAddress(walletAddress)
       if (isToggle) {
         connectWalletModalToggle()
       }
-      console.log(bech32Address)
-      dispatch(requestQueryAllBalances(bech32Address))
+      dispatch(requestQueryAllBalances(walletAddress))
     }
   };
 
@@ -267,11 +271,16 @@ function AppHeader() {
   }
 
   function getTotalValue(userBalance) {
+
     let totalValue = 0
+
     for (let pair in userBalance) {
-      totalValue += Number(userBalance[pair]) * Number(priceData[pair])
+      console.log(userBalance[pair], priceData[pair.substr(1)])
+      if (userBalance[pair] !== undefined && priceData[pair.substr(1)] !== undefined)
+        totalValue += Number(userBalance[pair]) * Number(priceData[pair.substr(1)]) / 10000000
     }
-    return totalValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return (Math.floor(totalValue * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");;
   }
 
   function walletWidget() {
@@ -286,7 +295,7 @@ function AppHeader() {
             <img src={wallet} className="wallet" alt="wallet from www.flaticon" onClick={() => {
               walletModalToggle()
             }} />
-            ${getTotalValue(userBalance)}
+            ${getTotalValue(userBalances)}
           </div>
 
           <ConnectedWallet onClick={() => { showStatusDetail() }}>
@@ -319,7 +328,7 @@ function AppHeader() {
       </BasicModal>
 
       <BasicModal elementId="modal" isOpen={isWalletModalOpen} toggle={walletModalToggle}>
-        <WalletModal close={walletModalToggle} priceData={priceData} totalValue={getTotalValue(userBalance)} />
+        <WalletModal close={walletModalToggle} priceData={priceData} totalValue={getTotalValue(userBalances)} />
       </BasicModal>
 
     </HeaderFrame>

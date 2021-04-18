@@ -57,10 +57,10 @@ const selectAllState = createSelector(
     }
 );
 
-export const localStoreSelector = {
-    all: state => selectAllState(state[LOCAL_STORE])
+export const storeSelector = {
+    all: state => selectAllState(state[STORE])
 };
 
-export const LOCAL_STORE = slice.name;
-export const localStoreReducer = slice.reducer;
-export const localStoreAction = slice.actions;
+export const STORE = slice.name;
+export const storeReducer = slice.reducer;
+export const storeAction = slice.actions;
