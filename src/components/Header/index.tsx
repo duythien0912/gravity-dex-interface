@@ -184,9 +184,6 @@ function AppHeader() {
   const [walletAddress, setWalletAddress] = React.useState('')
 
   const { userBalances } = useSelector(cosmosSelector.all);
-  console.log('userBalances', userBalances)
-
-  const userBalance = useSelector((state) => state.store.userData.balance)
   const priceData = useSelector((state) => state.store.priceData)
   const walletStatus = useSelector((state) => state.store.userData.walletStatus)
   const dispatch = useDispatch()
@@ -275,12 +272,11 @@ function AppHeader() {
     let totalValue = 0
 
     for (let pair in userBalance) {
-      console.log(userBalance[pair], priceData[pair.substr(1)])
       if (userBalance[pair] !== undefined && priceData[pair.substr(1)] !== undefined)
         totalValue += Number(userBalance[pair]) * Number(priceData[pair.substr(1)]) / 10000000
     }
 
-    return (Math.floor(totalValue * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");;
+    return (Math.floor(totalValue * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
   function walletWidget() {
@@ -328,7 +324,7 @@ function AppHeader() {
       </BasicModal>
 
       <BasicModal elementId="modal" isOpen={isWalletModalOpen} toggle={walletModalToggle}>
-        <WalletModal close={walletModalToggle} priceData={priceData} totalValue={getTotalValue(userBalances)} />
+        <WalletModal close={walletModalToggle} priceData={priceData} userBalances={userBalances} totalValue={getTotalValue(userBalances)} />
       </BasicModal>
 
     </HeaderFrame>

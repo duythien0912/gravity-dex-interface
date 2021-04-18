@@ -84,8 +84,8 @@ border-top-left-radius: 12px;
 
 `
 
-function ConnectWalletModal({ close, priceData, totalValue }: { close: any, priceData: {}, totalValue: any }) {
-    const myBalance = useSelector((state) => state.store.userData.balance)
+function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { close: any, priceData: {}, userBalances: {}, totalValue: any }) {
+    const myBalance = userBalances
 
     // const dispatch = useDispatch()
     React.useEffect(() => {
@@ -96,16 +96,18 @@ function ConnectWalletModal({ close, priceData, totalValue }: { close: any, pric
         let result = []
 
         for (let pair in balance) {
-            const pairValue = (balance[pair] * priceData[pair]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            const coinName = pair.substr(1)
+            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 10000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+
             result.push(
                 <div className="row"
                     onClick={() => {
 
                     }} key={pair}>
                     <div className="coin-info">
-                        <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" />{pair.toUpperCase()}
+                        <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />{coinName.toUpperCase()}
                     </div>
-                    <div className="coin-balance">{balance[pair] || 0} <span style={{ color: '#8a8a8a' }}>(${pairValue})</span></div>
+                    <div className="coin-balance">{balance[pair] / 10000000 || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                 </div>
             )
         }
