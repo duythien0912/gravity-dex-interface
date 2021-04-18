@@ -145,29 +145,36 @@ const Wrapper = styled.div`
 
     }
 `
+function getUserCoinBalance(coin, userBalances) {
+    if (userBalances['u' + coin] !== undefined) {
+        return Math.floor(userBalances['u' + coin] / 1000000000000) / 100
+    } else {
+        return '-'
+    }
+}
 
 
 function TokenInputController({ header, amount, coin, counterPair, dispatch, dispatchTypes }:
     {
-        header: { title: string, balance: number },
+        header: { title: string },
         amount: number,
         coin: string,
         counterPair: string,
         dispatch: any,
         dispatchTypes: { amount: string, coin: string, max: string }
     }) {
+
     const isCoin = coin !== '' ? true : false
     const [isCoinSelectModalOpen, { toggle: CoinSelectModalToggle }] = useToggle()
+
     const { userBalances } = useSelector(cosmosSelector.all);
-    const myBalance = useSelector((state) => state.store.userData.balance)
-    console.log(coin)
-    console.log(userBalances)
+    const userCoinBalance = getUserCoinBalance(coin, userBalances)
     return (
         <>
             <Wrapper>
                 <div className="sub-titles">
                     <div className="left">{header.title}</div>
-                    <div className="right">Balance: {header.balance}</div>
+                    <div className="right">Balance: {userCoinBalance}</div>
                 </div>
                 <div className="input-controllers">
 
@@ -183,9 +190,9 @@ function TokenInputController({ header, amount, coin, counterPair, dispatch, dis
                     <div className="right">
                         <button
                             className="max-button"
-                            style={{ display: `${isCoin && (header.title === 'From' || header.title === 'X') && Number(amount) < Number(header.balance) ? '' : 'none'}` }}
+                            style={{ display: `${isCoin && (header.title === 'From' || header.title === 'X') && Number(amount) < Number(userCoinBalance) ? '' : 'none'}` }}
                             onClick={() => {
-                                dispatch({ type: dispatchTypes.max, payload: { target: header.title, amount: myBalance[coin] } })
+                                dispatch({ type: dispatchTypes.max, payload: { target: header.title, amount: userCoinBalance } })
                             }}
                         >MAX</button>
                         <div className={`coin-selector ${isCoin ? '' : 'not-selected'}`} onClick={() => {

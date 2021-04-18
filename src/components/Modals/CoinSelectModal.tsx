@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 // useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
+import { cosmosSelector, cosmosAction } from "../../modules/cosmosRest/slice"
 
 const SelectCoinWrapper = styled.div`
 @media(max-width: 500px) {
@@ -89,8 +90,6 @@ const SelectCoinWrapper = styled.div`
             padding-right: 20px;
         }
 
-      
-
         &:hover {
             background-color: rgba(229, 229, 231, 0.356);
         }
@@ -100,8 +99,9 @@ const SelectCoinWrapper = styled.div`
 
 function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, toggle: any, selectCoin: any }) {
     const PoolsData = useSelector((state) => state.store.poolsData)
-    const myBalance = useSelector((state) => state.store.userData.balance)
     const [searchKeyword, setSearchKeyword] = React.useState('')
+
+    const { userBalances } = useSelector(cosmosSelector.all);
 
     React.useEffect(() => {
         setSearchKeyword('')
@@ -119,7 +119,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
             if (counterPair === pair) {
                 return null
             }
-
+            const pairBalance = Math.floor(userBalances['u' + pair] / 1000000000000) / 100
             return (
                 <div className="row"
                     onClick={() => {
@@ -129,7 +129,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
                     <div className="coin-info">
                         <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" />{pair.toUpperCase()}
                     </div>
-                    <div className="coin-balance">{myBalance[pair] || 0}</div>
+                    <div className="coin-balance">{pairBalance || 0}</div>
                 </div>
             )
         })

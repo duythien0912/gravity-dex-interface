@@ -97,8 +97,8 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
 
         for (let pair in balance) {
             const coinName = pair.substr(1)
-            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 10000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-
+            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 100000000000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            const pairBalance = (Math.floor(balance[pair] / 100000000000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             result.push(
                 <div className="row"
                     onClick={() => {
@@ -107,7 +107,7 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
                     <div className="coin-info">
                         <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />{coinName.toUpperCase()}
                     </div>
-                    <div className="coin-balance">{balance[pair] / 10000000 || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
+                    <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                 </div>
             )
         }

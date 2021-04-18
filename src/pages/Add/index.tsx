@@ -208,7 +208,7 @@ function SwapCard() {
 
                     {/* From */}
                     <TokenInputController
-                        header={{ title: 'X', balance: getMyCoinBalance(state.xCoin, myBalance) }}
+                        header={{ title: 'X' }}
                         coin={state.xCoin}
                         amount={state.xAmount}
                         counterPair={state.yCoin}
@@ -225,7 +225,7 @@ function SwapCard() {
 
                     {/* To */}
                     <TokenInputController
-                        header={{ title: 'Y', balance: getMyCoinBalance(state.yCoin, myBalance) }}
+                        header={{ title: 'Y' }}
                         coin={state.yCoin}
                         amount={state.yAmount}
                         counterPair={state.xCoin}
