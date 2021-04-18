@@ -5,6 +5,9 @@ import { useSelector } from "react-redux";
 // useDispatch,
 import CoinSelectorArrow from "../../assets/svgs/CoinSelectorArrow"
 import CoinSelectModal from "../Modals/CoinSelectModal"
+
+import { cosmosSelector, cosmosAction } from "../../modules/cosmosRest/slice"
+
 const Wrapper = styled.div`
     border-radius: 20px;
     border: 1px solid rgb(247, 248, 250);
@@ -155,8 +158,10 @@ function TokenInputController({ header, amount, coin, counterPair, dispatch, dis
     }) {
     const isCoin = coin !== '' ? true : false
     const [isCoinSelectModalOpen, { toggle: CoinSelectModalToggle }] = useToggle()
+    const { userBalances } = useSelector(cosmosSelector.all);
     const myBalance = useSelector((state) => state.store.userData.balance)
-
+    console.log(coin)
+    console.log(userBalances)
     return (
         <>
             <Wrapper>

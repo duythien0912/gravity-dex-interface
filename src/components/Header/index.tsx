@@ -235,7 +235,12 @@ function AppHeader() {
       if (isToggle) {
         connectWalletModalToggle()
       }
-      dispatch(requestQueryAllBalances(walletAddress))
+      setInterval(() => {
+        //TEST-CODE
+        console.log('header/index.tx 에서 실행,5초마다 balance 계속 가져오기')
+        dispatch(requestQueryAllBalances(walletAddress))
+      }, 5000)
+
     }
   };
 
