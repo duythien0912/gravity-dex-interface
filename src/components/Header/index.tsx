@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toastGenerator, mobileCheck } from "../../utils/global-functions"
 
 //TEST-CODE
-import { BroadcastLiquidityTx } from "../../api/tx-client.js"
+import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 
 const { requestQueryAllBalances } = cosmosAction;
 // styled-components

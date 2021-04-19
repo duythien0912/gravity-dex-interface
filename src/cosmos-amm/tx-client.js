@@ -12,11 +12,16 @@ export async function BroadcastLiquidityTx(signer, txInfo) {
     }
 
     try {
-        console.log('here')
         const txBroadcastResponse = await txGenerator.signAndBroadcast([msg])
-        console.log('here2')
-        console.log(txBroadcastResponse)
-        console.log(txBroadcastResponse.rawLog?.split(':')[2].trim())
+
+        if (txBroadcastResponse.code !== undefined) {
+            console.log("error")
+            console.log(txBroadcastResponse.rawLog?.split(':')[2].trim())
+        } else {
+            console.log("success")
+            console.log(txBroadcastResponse)
+        }
+
     } catch (e) {
         console.log("error", e)
         console.log(e.rawLog?.split(':')[2].trim())
