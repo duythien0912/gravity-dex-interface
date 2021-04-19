@@ -226,13 +226,13 @@ function AppHeader() {
 
     // TEST-CODE
     BroadcastLiquidityTx(offlineSigner, {
-
+      type: 'msgCreatePool',
       data: {
         poolCreatorAddress: 'cosmos1zaylwpa8h2tsjm52xh9ylcxdw7kkaz9rsfr26a',
         poolTypeId: 1,
         depositCoins: [
-          { denom: 'atom', amount: '10000000' },
-          { denom: 'iris', amount: '10000000' }
+          { denom: 'uatom', amount: '10000000' },
+          { denom: 'uband', amount: '10000000' }
         ]
       }
     })

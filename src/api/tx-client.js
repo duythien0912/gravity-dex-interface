@@ -2,10 +2,23 @@ import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity
 
 export async function BroadcastLiquidityTx(signer, txInfo) {
     const txGenerator = await txClient(signer, { addr: "https://rpc.gravity.bharvest.io" })
-    console.log(txInfo)
-    const test = await txGenerator.msgCreatePool(txInfo.data)
+    let msg = null
+    if (txInfo.type === 'msgCreatePool') {
+        try {
+            msg = txGenerator.msgCreatePool(txInfo.data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-    console.log(test)
-    const test2 = await txGenerator.signAndBroadcast([test])
-    console.log(test2)
+    try {
+        console.log('here')
+        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg])
+        console.log('here2')
+        console.log(txBroadcastResponse)
+        console.log(txBroadcastResponse.rawLog?.split(':')[2].trim())
+    } catch (e) {
+        console.log("error", e)
+        console.log(e.rawLog?.split(':')[2].trim())
+    }
 }
