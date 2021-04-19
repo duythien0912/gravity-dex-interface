@@ -225,7 +225,17 @@ function AppHeader() {
     const offlineSigner = window.getOfflineSigner(chainInfo.chainId);
 
     // TEST-CODE
-    BroadcastLiquidityTx(offlineSigner)
+    BroadcastLiquidityTx(offlineSigner, {
+
+      data: {
+        poolCreatorAddress: 'cosmos1zaylwpa8h2tsjm52xh9ylcxdw7kkaz9rsfr26a',
+        poolTypeId: 1,
+        depositCoins: [
+          { denom: 'atom', amount: '10000000' },
+          { denom: 'iris', amount: '10000000' }
+        ]
+      }
+    })
 
 
     // TEST-CODE
