@@ -10,18 +10,22 @@ import ActionButton from "../../components/Buttons/ActionButton"
 
 //Styled-components
 const Wrapper = styled.div`
-    position: absolute;
+    /* position: absolute;
     top:0;
     left: 0;
 
     width: 100%;
-    height: 100%;
-    background-color:#fff;
+    height: 100%; */
+   
+margin-top: -50px;
+margin-bottom: 50px;
+  width: 100%;
 
-    min-height: 100vh;
-    background-position: 0px -30vh;
-    background-repeat: no-repeat;
-    background-image: radial-gradient(50% 50% at 50% 50%,rgb(3 34 255 / 20%) 0%,rgb(19 74 195 / 0) 100%);
+  @media(max-width: 500px) {
+    margin-top: -10px;
+   
+    }
+   
 `
 
 

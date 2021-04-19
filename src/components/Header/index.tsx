@@ -37,7 +37,7 @@ justify-content: space-between;
 align-items: center;
 width: 100%;
 padding: 1rem;
-
+z-index: 3;
 ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     font-size: 14px !important;
 `};
