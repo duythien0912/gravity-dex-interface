@@ -56,8 +56,8 @@ const SwapWrapper = styled.div`
         margin: 20px 0;
         min-width: 0px;
         padding: 1.25rem;
-        background-color:rgb(234 243 253);
-        color: rgb(0 124 255);
+        background-color:#f77e4a33;
+        color: #F6743C;
         border-radius: 12px;
         width: fit-content;
     }
