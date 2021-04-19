@@ -3,10 +3,12 @@ const name = 'cosmos';
 
 const initialState = {
     userAddress: null,
-    userBalances: {}
+    userBalances: {},
+    pools: {}
 };
 
 const reducers = {
+    //query all balances
     requestQueryAllBalances: (state, { payload: userAddress }) => {
         state.userAddress = userAddress
     },
@@ -19,7 +21,7 @@ const reducers = {
         })
 
         state.userBalances = modifiedUserBalances
-    }
+    },
 }
 
 const slice = createSlice({

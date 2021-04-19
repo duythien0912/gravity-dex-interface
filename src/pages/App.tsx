@@ -58,7 +58,7 @@ min-width: 1440px;
 height: 100vh;
 `
 
-const { requestQueryParams } = liquidityAction;
+const { requestQueryParams, requestQueryLiquidityPools } = liquidityAction;
 
 function App() {
   const history = useHistory();
@@ -70,6 +70,7 @@ function App() {
       history.push('/swap')
     }
     dispatch(requestQueryParams())
+    dispatch(requestQueryLiquidityPools())
     console.log('render')
 
 

@@ -2,6 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { queryAllBalances } from '../../api/bank-rest';
 import { cosmosAction } from './slice';
 
+// query all balances
 function* handleQueryAllBalances({ payload: address }) {
     const { queryAllBalancesSuccess } = cosmosAction;
     try {
@@ -16,4 +17,3 @@ export function* watchAllBalances() {
     const { requestQueryAllBalances } = cosmosAction;
     yield takeLatest(requestQueryAllBalances, handleQueryAllBalances);
 }
-

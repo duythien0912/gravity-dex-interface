@@ -10,6 +10,7 @@ const initialState = {
 };
 
 const reducers = {
+    //query params
     requestQueryParams: (state) => {
         state.isParams = false;
     },
@@ -19,6 +20,16 @@ const reducers = {
     },
     queryParamsFail: (state) => {
         state.isParams = false;
+    },
+
+    //query liquidity pools
+    requestQueryLiquidityPools: (state) => {
+    },
+    queryLiquidityPoolsSuccess: (state, { payload: response }) => {
+        state.pools = response
+    },
+    queryLiquidityPoolsFail: (state) => {
+        console.log('LiquidityPools FAIL')
     },
 }
 

@@ -6,7 +6,7 @@ import { all } from 'redux-saga/effects';
 import { STORE, storeReducer } from '../modules/store/slice';
 import { LIQUIDITY, liquidityReducer } from '../modules/liquidityRest/slice';
 import { COSMOS, cosmosReducer } from '../modules/cosmosRest/slice';
-import { watchParams } from '../modules/liquidityRest/saga';
+import { watchParams, watchLiquidityPools } from '../modules/liquidityRest/saga';
 import { watchAllBalances } from '../modules/cosmosRest/saga';
 
 const rootReducer = combineReducers({
@@ -19,7 +19,8 @@ const sagaMiddleware = createSagaMiddleware();
 function* rootSaga() {
     yield all([
         watchParams(),
-        watchAllBalances()
+        watchAllBalances(),
+        watchLiquidityPools()
     ])
 }
 const createStore = () => {
