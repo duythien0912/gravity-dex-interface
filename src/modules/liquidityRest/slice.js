@@ -26,6 +26,7 @@ const reducers = {
     requestQueryLiquidityPools: (state) => {
     },
     queryLiquidityPoolsSuccess: (state, { payload: response }) => {
+        console.log('final', response)
         state.pools = response
     },
     queryLiquidityPoolsFail: (state) => {

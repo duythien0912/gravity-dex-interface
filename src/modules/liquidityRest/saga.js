@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { queryParams, queryLiquidityPools } from '../../api/liquidity-rest';
+import { queryParams, queryLiquidityPools, queryLiquidityPool } from '../../api/liquidity-rest';
 import { liquidityAction } from './slice';
 
 
@@ -25,7 +25,10 @@ export function* watchParams() {
 function* handleQueryLiquidityPools() {
     const { queryLiquidityPoolsSuccess, queryLiquidityPoolsFail } = liquidityAction;
     try {
-        const pools = yield call(queryLiquidityPools);
+        const pools = yield call(queryLiquidityPools)
+        console.log('pools', pools)
+        // const pool = yield call(queryLiquidityPool('1'))
+        // console.log('pool', pool)
         yield put(queryLiquidityPoolsSuccess(pools));
     } catch (err) {
         yield put(queryLiquidityPoolsFail(err));
