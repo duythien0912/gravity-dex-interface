@@ -28,8 +28,10 @@ import { useToggle } from "ahooks";
 import { useDispatch, useSelector } from "react-redux";
 import { toastGenerator, mobileCheck } from "../../utils/global-functions"
 
-const { requestQueryAllBalances } = cosmosAction;
+//TEST-CODE
+import { BroadcastLiquidityTx } from "../../api/tx-client.js"
 
+const { requestQueryAllBalances } = cosmosAction;
 // styled-components
 const HeaderFrame = styled.div`
 display:flex;
@@ -221,6 +223,13 @@ function AppHeader() {
 
     await window.keplr.enable(chainInfo.chainId);
     const offlineSigner = window.getOfflineSigner(chainInfo.chainId);
+
+    // TEST-CODE
+    BroadcastLiquidityTx(offlineSigner)
+
+
+    // TEST-CODE
+
     const accounts = await offlineSigner.getAccounts()
 
     const walletAddress = accounts[0].address

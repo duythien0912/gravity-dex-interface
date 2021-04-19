@@ -16,7 +16,6 @@ const reducers = {
         let modifiedUserBalances = {}
 
         response.balances.forEach((pair) => {
-            //TEST-CODE
             modifiedUserBalances[pair.denom] = Number(pair.amount)
         })
 

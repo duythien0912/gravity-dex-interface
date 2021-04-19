@@ -16,15 +16,16 @@ import Background from "../assets/svgs/Background"
 // import { testTxGenerator } from "../cosmos-amm/new-cosmos-amm"
 // import { test2 } from "../cosmos-amm/new2-cosmos-amm"
 // import { testSign } from "../cosmos-amm/new-sign-comsos-amm"
+// import { useDispatch, useSelector } from "react-redux";
+// import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
+// import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
 
 //starport liquidity js
 import { useDispatch } from "react-redux";
 import { liquidityAction } from "../modules/liquidityRest/slice"
 
 
-// import { useDispatch, useSelector } from "react-redux";
-// import { liquiditySelector, liquidityAction } from "../modules/liquidityRest/slice"
-// import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
+
 
 const AppWrapper = styled.div`
   display: flex;
@@ -64,6 +65,7 @@ function App() {
   const history = useHistory();
   const dispatch = useDispatch();
   // const { params, pools } = useSelector(liquiditySelector.all);
+
 
   React.useEffect(() => {
     if (window.location.hash === '#/') {
