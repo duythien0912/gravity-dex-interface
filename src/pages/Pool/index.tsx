@@ -127,7 +127,7 @@ const PoolWrapper = styled.div`
 
     .no-pool {
         border: 1px solid rgb(195, 197, 203);
-        color: rgb(136, 141, 155);
+        color: #fff;
         padding: 16px 12px;
         border-radius: 12px;
         display: flex;
