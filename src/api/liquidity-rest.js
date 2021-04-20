@@ -21,9 +21,11 @@ export const queryLiquidityPools = async () => {
         let poolTokenIndexer = {}
 
         response.data.pools.forEach((pool, index) => {
+
             modifiedPoolsData[`${pool.reserve_coin_denoms[0]}-${pool.reserve_coin_denoms[1]}`] = {
                 id: pool.id,
                 pool_coin_denom: pool.pool_coin_denom,
+                pool_coin_amount: poolsData[index].pooltoken_amount.amount,
                 reserve_coin_balances: {
                     [poolsData[index].balances[0].denom]: poolsData[index].balances[0].amount,
                     [poolsData[index].balances[1].denom]: poolsData[index].balances[1].amount
@@ -51,7 +53,11 @@ export const queryLiquidityPools = async () => {
 
     //helper
     async function queryPoolReserveTokens(pool) {
-        const response = await queryAllBalances(pool.reserve_account_address)
+        const promises = await Promise.all([await queryAllBalances(pool.reserve_account_address), await querySupplyOf(pool.pool_coin_denom)])
+
+        let response = promises[0]
+        response.pooltoken_amount = promises[1].amount
+
         return response
     }
 }
