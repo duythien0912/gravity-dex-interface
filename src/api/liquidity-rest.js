@@ -15,15 +15,44 @@ export const queryParams = async () => {
 export const queryLiquidityPools = async () => {
     try {
         const response = await liquidityRestApi.queryLiquidityPools({ "pagination.limit": '100' })
-        console.log('response', response.data)
-        const addressBalance = await queryAllBalances('cosmos10d2sku6rjarnhn2va9pf2uv8p6mrwth3g8z7mr')
-        const test = await queryLiquidityPool('1')
-        console.log('test', test)
-        console.log('addressBalance', addressBalance)
+        const promises = response.data.pools.map(queryPoolReserveTokens);
+        const poolsData = await Promise.all(promises);
+        let modifiedPoolsData = {}
+        let poolTokenIndexer = {}
+
+        response.data.pools.forEach((pool, index) => {
+            modifiedPoolsData[`${pool.reserve_coin_denoms[0]}-${pool.reserve_coin_denoms[1]}`] = {
+                id: pool.id,
+                pool_coin_denom: pool.pool_coin_denom,
+                reserve_coin_balances: {
+                    [poolsData[index].balances[0].denom]: poolsData[index].balances[0].amount,
+                    [poolsData[index].balances[1].denom]: poolsData[index].balances[1].amount
+                }
+            }
+            poolTokenIndexer[pool.pool_coin_denom] = `${pool.reserve_coin_denoms[0]}-${pool.reserve_coin_denoms[1]}`
+        })
+
+        console.log(modifiedPoolsData)
+        console.log(poolTokenIndexer)
+
+        poolsData.forEach((pool) => {
+            // console.log(pool)
+            pool.balances.forEach((coin) => {
+                // console.log(coin.denom, coin.amount)
+            })
+
+        })
+
         return response.data
     } catch (e) {
         console.log(e)
         return null
+    }
+
+    //helper
+    async function queryPoolReserveTokens(pool) {
+        const response = await queryAllBalances(pool.reserve_account_address)
+        return response
     }
 }
 
