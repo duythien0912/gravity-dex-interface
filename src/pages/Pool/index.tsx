@@ -284,35 +284,28 @@ const PoolWrapper = styled.div`
 `
 
 function Pool() {
-    // const poolData = useSelector((state) => state.store.poolsData)
-    // console.log(poolData)
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const { userBalances } = useSelector(cosmosSelector.all);
     const history = useHistory();
     const [searchKeyword, setSearchKeyword] = React.useState('')
 
-
     const poolsData = poolsInfo?.poolsData
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
-    let PoolTokenCheckedPoolsData = {}
+    let poolTokenCheckedPoolsData = {}
 
-    console.log(poolTokenIndexer)
-    console.log(userBalances)
-
-    if (poolsData) {
-
+    if (poolsData && poolTokenIndexer && userBalances) {
         for (let pool in poolsData) {
-            console.log(poolsData[pool])
-            PoolTokenCheckedPoolsData[pool] = { ...poolsData[pool], userPoolData: { poolTokenAmount: userBalances[poolsData[pool].pool_coin_denom] ? userBalances[poolsData[pool].pool_coin_denom] : 0 } }
+            poolTokenCheckedPoolsData[pool] = { ...poolsData[pool], userPoolData: { poolTokenAmount: userBalances[poolsData[pool].pool_coin_denom] ? userBalances[poolsData[pool].pool_coin_denom] : 0 } }
         }
     }
-    console.log('test', PoolTokenCheckedPoolsData)
-    console.log(poolsData)
+
+    console.log('poolTokenCheckedPoolsData', poolTokenCheckedPoolsData)
 
     function poolGenerator(data, isUser, keyword = '') {
         let result = []
+        const isPools = Object.keys(data).length > 0 ? true : false
 
-        if (data) {
+        if (isPools) {
             for (let pool in data) {
                 const pairPoolData = data[pool]
                 const coinX = pool.split('/')[0]
@@ -464,7 +457,7 @@ function Pool() {
                     </div>
                 </div>
 
-                {poolGenerator(PoolTokenCheckedPoolsData, true)}
+                {poolGenerator(poolTokenCheckedPoolsData, true)}
 
                 <div className="header">
                     <div className="title">
@@ -476,7 +469,7 @@ function Pool() {
                     </div>
                 </div>
 
-                {poolGenerator(PoolTokenCheckedPoolsData, false, searchKeyword)}
+                {poolGenerator(poolTokenCheckedPoolsData, false, searchKeyword)}
 
             </PoolWrapper>
         </>
