@@ -26,9 +26,6 @@ function* handleQueryLiquidityPools() {
     const { queryLiquidityPoolsSuccess, queryLiquidityPoolsFail } = liquidityAction;
     try {
         const pools = yield call(queryLiquidityPools)
-        console.log('pools', pools)
-        // const pool = yield call(queryLiquidityPool('1'))
-        // console.log('pool', pool)
         yield put(queryLiquidityPoolsSuccess(pools));
     } catch (err) {
         yield put(queryLiquidityPoolsFail(err));

@@ -3,7 +3,7 @@ const name = 'liquidity';
 
 const initialState = {
     params: null,
-    pools: null,
+    poolsInfo: null,
     isParams: false,
     isPools: false,
     isLoading: false,
@@ -26,8 +26,7 @@ const reducers = {
     requestQueryLiquidityPools: (state) => {
     },
     queryLiquidityPoolsSuccess: (state, { payload: response }) => {
-        console.log('final', response)
-        state.pools = response
+        state.poolsInfo = response
     },
     queryLiquidityPoolsFail: (state) => {
         console.log('LiquidityPools FAIL')
@@ -40,9 +39,9 @@ const slice = createSlice({
 
 const selectAllState = createSelector(
     state => state.params,
-    state => state.pools,
-    (params, pools) => {
-        return { params, pools };
+    state => state.poolsInfo,
+    (params, poolsInfo) => {
+        return { params, poolsInfo };
     }
 );
 

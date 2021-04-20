@@ -21,8 +21,8 @@ export const queryLiquidityPools = async () => {
         let poolTokenIndexer = {}
 
         response.data.pools.forEach((pool, index) => {
-
-            modifiedPoolsData[`${pool.reserve_coin_denoms[0]}-${pool.reserve_coin_denoms[1]}`] = {
+            const poolName = `${pool.reserve_coin_denoms[0].substr(1)}/${pool.reserve_coin_denoms[1].substr(1)}`
+            modifiedPoolsData[poolName] = {
                 id: pool.id,
                 pool_coin_denom: pool.pool_coin_denom,
                 pool_coin_amount: poolsData[index].pooltoken_amount.amount,
@@ -31,21 +31,10 @@ export const queryLiquidityPools = async () => {
                     [poolsData[index].balances[1].denom]: poolsData[index].balances[1].amount
                 }
             }
-            poolTokenIndexer[pool.pool_coin_denom] = `${pool.reserve_coin_denoms[0]}-${pool.reserve_coin_denoms[1]}`
+            poolTokenIndexer[pool.pool_coin_denom] = poolName
         })
 
-        console.log(modifiedPoolsData)
-        console.log(poolTokenIndexer)
-
-        poolsData.forEach((pool) => {
-            // console.log(pool)
-            pool.balances.forEach((coin) => {
-                // console.log(coin.denom, coin.amount)
-            })
-
-        })
-
-        return response.data
+        return { poolsData: modifiedPoolsData, poolTokenIndexer: poolTokenIndexer }
     } catch (e) {
         console.log(e)
         return null
