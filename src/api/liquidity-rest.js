@@ -1,5 +1,5 @@
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
-import { queryAllBalances } from './bank-rest'
+import { queryAllBalances, querySupplyOf } from './bank-rest'
 const BASE_URL = "https://api.gravity.bharvest.io"
 const liquidityRestApi = new Api({ baseUrl: BASE_URL })
 
@@ -14,8 +14,8 @@ export const queryParams = async () => {
 
 export const queryLiquidityPools = async () => {
     try {
-        const response = await liquidityRestApi.queryLiquidityPools()
-        console.log('response', response)
+        const response = await liquidityRestApi.queryLiquidityPools({ "pagination.limit": '100' })
+        console.log('response', response.data)
         const addressBalance = await queryAllBalances('cosmos10d2sku6rjarnhn2va9pf2uv8p6mrwth3g8z7mr')
         const test = await queryLiquidityPool('1')
         console.log('test', test)

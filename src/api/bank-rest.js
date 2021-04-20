@@ -12,3 +12,14 @@ export const queryAllBalances = async (address) => {
         return e
     }
 }
+
+export const querySupplyOf = async (denom) => {
+    try {
+        const response = await bankRestApi.querySupplyOf(denom)
+        return response.data
+    } catch (e) {
+        console.log(e)
+        return e
+    }
+}
+
