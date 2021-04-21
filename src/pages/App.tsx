@@ -72,6 +72,9 @@ function App() {
       history.push('/swap')
     }
     dispatch(requestQueryParams())
+    setInterval(() => {
+      dispatch(requestQueryLiquidityPools())
+    }, 7000)
     dispatch(requestQueryLiquidityPools())
     console.log('render')
 

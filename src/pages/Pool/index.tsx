@@ -290,7 +290,7 @@ function Pool() {
     const { isWallet } = useSelector(storeSelector.all)
     const history = useHistory();
     const [searchKeyword, setSearchKeyword] = React.useState('')
-    console.log(userBalances)
+
     const poolsData = poolsInfo?.poolsData
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     let poolTokenCheckedPoolsData = {}
