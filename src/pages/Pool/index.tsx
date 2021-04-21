@@ -288,30 +288,32 @@ function Pool() {
     const { userBalances } = useSelector(cosmosSelector.all);
     const history = useHistory();
     const [searchKeyword, setSearchKeyword] = React.useState('')
-
+    console.log(userBalances)
     const poolsData = poolsInfo?.poolsData
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     let poolTokenCheckedPoolsData = {}
 
-    if (poolsData && poolTokenIndexer && userBalances) {
+    if (poolsData && poolTokenIndexer) {
         for (let pool in poolsData) {
             poolTokenCheckedPoolsData[pool] = { ...poolsData[pool], userPoolData: { poolTokenAmount: userBalances[poolsData[pool].pool_coin_denom] ? userBalances[poolsData[pool].pool_coin_denom] : 0 } }
         }
     }
 
-    console.log('poolTokenCheckedPoolsData', poolTokenCheckedPoolsData)
+    // console.log('poolTokenCheckedPoolsData', poolTokenCheckedPoolsData)
 
     function poolGenerator(data, isUser, keyword = '') {
         let result = []
         const isPools = Object.keys(data).length > 0 ? true : false
-
+        const isUserBalances = Object.keys(userBalances).length > 0 ? true : false
         if (isPools) {
+            if (isUser && !isUserBalances) {
+                return <div className="no-pool">No liquidity found</div>
+            }
             for (let pool in data) {
                 const pairPoolData = data[pool]
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
-                console.log(pairPoolData)
                 const myShare = parseFloat(cutNumber((pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount), 4))
 
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
@@ -405,6 +407,8 @@ function Pool() {
                             </div>
                         </div>
                     )
+                } else {
+                    <div>test</div>
                 }
             }
         } else {
