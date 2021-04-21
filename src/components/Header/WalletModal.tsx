@@ -2,6 +2,9 @@ import * as React from 'react';
 import styled from "styled-components";
 
 import { useSelector } from "react-redux"
+import { liquiditySelector } from "../../modules/liquidityRest/slice"
+
+
 // useDispatch,
 const Wrapper = styled.div`
 
@@ -86,7 +89,9 @@ border-top-left-radius: 12px;
 
 function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { close: any, priceData: {}, userBalances: {}, totalValue: any }) {
     const myBalance = userBalances
-    console.log(myBalance)
+
+    const { poolsInfo } = useSelector(liquiditySelector.all)
+    const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     // const dispatch = useDispatch()
     React.useEffect(() => {
 
@@ -96,7 +101,11 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
         let result = []
 
         for (let pair in balance) {
-            const coinName = pair.substr(1)
+            let coinName = pair.substr(1)
+            if (pair.startsWith('pool')) {
+                coinName = "pool"
+            }
+
             const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             const pairBalance = (Math.floor(balance[pair] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             result.push(
@@ -105,7 +114,7 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
 
                     }} key={pair}>
                     <div className="coin-info">
-                        <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />{coinName.toUpperCase()}
+                        <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
                     </div>
                     <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                 </div>
