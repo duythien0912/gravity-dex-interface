@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
 import { getSelectedPairsPoolData, getPoolPrice, cutNumber } from "../../utils/global-functions"
+import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -146,9 +147,7 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 
 function CreateCard() {
 
-
-    const myBalance = useSelector((state) => state.store.userData.balance)
-    // const slippage = useSelector((state) => state.store.userData.slippage)
+    const { userBalances } = useSelector(cosmosSelector.all);
     const poolData = useSelector((state) => state.store.poolsData.pools)
 
     const history = useHistory();
@@ -164,12 +163,12 @@ function CreateCard() {
     //reducer for useReducer
     function reducer(state, action) {
         const { targetPair, counterTargetPair } = getPairs(action)
+
         const selectedPairAmount = action.payload?.amount || ''
-        //state[`${targetPair}Amount`]
         const counterPairAmount = state[`${counterTargetPair}Amount`]
-        const selectedPairMyBalance = myBalance[state[`${targetPair}Coin`]]
-        const counterPairMyBalance = myBalance[state[`${counterTargetPair}Coin`]]
-        // const price = targetPair === 'X' ? state.price : 1 / state.price
+
+        const selectedPairUserBalances = userBalances['u' + state[`${targetPair}Coin`]] / 1000000
+        const counterPairUserBalances = userBalances['u' + state[`${counterTargetPair}Coin`]] / 1000000
 
         let isOver = false
         let isEmpty = false
@@ -178,18 +177,32 @@ function CreateCard() {
         switch (action.type) {
 
             case TYPES.AMOUNT_CHANGE:
-
-                setAmountCheckVariables()
-                if (selectedPairAmount > selectedPairMyBalance) {
+                if (selectedPairAmount > selectedPairUserBalances || counterPairAmount > counterPairUserBalances || isNaN(counterPairUserBalances) || isNaN(selectedPairUserBalances)) {
                     isOver = true
                 } else {
                     isOver = false
                 }
 
+                if (counterPairAmount && selectedPairAmount) {
+                    isEmpty = false
+                } else {
+                    isEmpty = true
+                }
+
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
-                setAmountCheckVariables()
+                if (selectedPairAmount > selectedPairUserBalances || counterPairAmount > counterPairUserBalances || isNaN(counterPairUserBalances)) {
+                    isOver = true
+                } else {
+                    isOver = false
+                }
+
+                if (counterPairAmount && selectedPairAmount) {
+                    isEmpty = false
+                } else {
+                    isEmpty = true
+                }
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
@@ -198,23 +211,26 @@ function CreateCard() {
                 const isBothCoin = coinA !== '' && coinB !== ''
 
                 if (!isBothCoin) {
-                    return { ...state, [`${targetPair}Coin`]: action.payload.coin }
+                    return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
                 } else {
-                    const selectedPooldata = getSelectedPairsPoolData(state, action, counterTargetPair, poolData)
-                    state.status = "normal"
-                    setAmountCheckVariables()
-
-                    if (!selectedPooldata) {
-                        return { ...state, status: "create", [`${targetPair}Coin`]: action.payload.coin, price: '-' }
+                    if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
+                        isEmpty = true
                     } else {
-                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), status: getStatus(state) }
+                        isOver = true
                     }
+
+                    return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '', status: getStatus(state) }
                 }
 
             case TYPES.SET_FROM_QUERY:
-                // toCoin 수량 계산 및 액션버튼 검증로직
 
-                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
+                if (userBalances['u' + action.payload.from] && userBalances['u' + action.payload.to]) {
+                    isEmpty = true
+                } else {
+                    isOver = true
+                }
+
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, status: getStatus(state) }
             default:
                 console.log("DEFAULT: SWAP REDUCER")
                 return state;
@@ -232,22 +248,6 @@ function CreateCard() {
                 counterTargetPair = 'to'
             }
             return { targetPair, counterTargetPair }
-        }
-
-        function setAmountCheckVariables() {
-            if (selectedPairAmount > selectedPairMyBalance || counterPairAmount > counterPairMyBalance) {
-                isOver = true
-            } else {
-                isOver = false
-            }
-            if (selectedPairAmount === 0) {
-                isEmpty = true
-            } else {
-                isEmpty = false
-            }
-            // if (counterPairAmount === '' || counterPairAmount == 0) {
-            //     isCounterPairEmpty = true
-            // }
         }
 
         function getStatus(state) {
@@ -319,11 +319,11 @@ function CreateCard() {
                         <div className="title">Initial prices and pool share</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.toAmount / state.fromAmount, 2))}</div>
+                                <div className="number">{state.fromAmount === '' || isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.toAmount / state.fromAmount, 4))}</div>
                                 <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.fromAmount / state.toAmount, 2))}</div>
+                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.fromAmount / state.toAmount, 4))}</div>
                                 <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
