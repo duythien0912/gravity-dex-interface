@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, getPoolPrice } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber } from "../../utils/global-functions"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -144,7 +144,7 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 }
 
 
-function SwapCard() {
+function CreateCard() {
 
 
     const myBalance = useSelector((state) => state.store.userData.balance)
@@ -256,7 +256,7 @@ function SwapCard() {
     }
 
     const [state, dispatch] = React.useReducer(reducer, {
-        fromCoin: 'atom',
+        fromCoin: '',
         toCoin: '',
         fromAmount: '',
         toAmount: '',
@@ -319,12 +319,12 @@ function SwapCard() {
                         <div className="title">Initial prices and pool share</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">100</div>
-                                <div className="text">A per B</div>
+                                <div className="number">{isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.toAmount / state.fromAmount, 2))}</div>
+                                <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">0.01</div>
-                                <div className="text">B per A</div>
+                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.fromAmount / state.toAmount, 2))}</div>
+                                <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="number">100%</div>
@@ -343,4 +343,4 @@ function SwapCard() {
     )
 }
 
-export default SwapCard
+export default CreateCard
