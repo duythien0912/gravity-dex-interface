@@ -311,8 +311,8 @@ function Pool() {
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
-
-                const myShare = (pairPoolData.userPoolData.poolTokenAmount / pairPoolData.totalPoolToken)
+                console.log(pairPoolData)
+                const myShare = parseFloat(cutNumber((pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount), 4))
 
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
@@ -334,19 +334,19 @@ function Pool() {
                             <div className="pool-details">
                                 <div className="detail">
                                     <div>Your total pool tokens:</div>
-                                    <div>{parseFloat(cutNumber(pairPoolData.userPoolData.poolTokenAmount, 4))}</div>
+                                    <div>{parseFloat(cutNumber(pairPoolData.userPoolData.poolTokenAmount / 1000000, 4))} PoolToken</div>
                                 </div>
                                 <div className="detail">
                                     <div>Pooled {uppercasePoolNames.split('/')[0]}:</div>
-                                    <div className="detail-amount">{parseFloat(cutNumber(myShare * pairPoolData[coinX], 8))} <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
+                                    <div className="detail-amount">{parseFloat(cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinX] / 1000000, 8))} {coinX.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
                                 </div>
                                 <div className="detail">
                                     <div>Pooled {uppercasePoolNames.split('/')[1]}:</div>
-                                    <div className="detail-amount">{parseFloat(cutNumber(myShare * pairPoolData[coinY], 8))} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
+                                    <div className="detail-amount">{parseFloat(cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinY] / 1000000, 8))} {coinY.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
                                 </div>
                                 <div className="detail">
                                     <div>Your pool share:</div>
-                                    <div>{parseFloat(cutNumber(myShare, 8))}%</div>
+                                    <div>{parseFloat(cutNumber(myShare * 100, 8))}%</div>
                                 </div>
 
                                 <div className="pool-action">
@@ -380,20 +380,20 @@ function Pool() {
                             <div className="pool-details">
                                 <div className="detail">
                                     <div>Total Pooled {uppercasePoolNames.split('/')[0]}:</div>
-                                    <div className="detail-amount">{parseFloat(cutNumber(pairPoolData[coinX], 4))}   <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
+                                    <div className="detail-amount">{parseFloat(cutNumber(pairPoolData.reserve_coin_balances['u' + coinX] / 1000000, 4))} {coinX.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
                                 </div>
                                 <div className="detail">
                                     <div>Total Pooled {uppercasePoolNames.split('/')[1]}:</div>
-                                    <div className="detail-amount">{parseFloat(cutNumber(pairPoolData[coinY], 4))}  <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
+                                    <div className="detail-amount">{parseFloat(cutNumber(pairPoolData.reserve_coin_balances['u' + coinY] / 1000000, 4))} {coinY.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
                                 </div>
-                                <div className="detail">
+                                {/* <div className="detail">
                                     <div>External {uppercasePoolNames.split('/')[0]} Price:</div>
                                     <div className="detail-amount">$20.12</div>
                                 </div>
                                 <div className="detail">
                                     <div>External {uppercasePoolNames.split('/')[1]} Price:</div>
                                     <div className="detail-amount">$0.412</div>
-                                </div>
+                                </div> */}
                                 <div className="detail">
                                     <div>APY:</div>
                                     <div className="apy">4%</div>
