@@ -307,11 +307,25 @@ function Pool() {
         let result = []
         const isPools = Object.keys(data).length > 0 ? true : false
 
+        let hasPoolToken = false
+        for (let coin in userBalances) {
+            if (coin.startsWith('pool')) {
+                hasPoolToken = true
+            }
+        }
+
         if (isPools) {
 
-            if (isUser && !isWallet) {
-                return <div className="no-pool">Please connect a wallet</div>
+            if (isUser) {
+                if (!isWallet) {
+                    return <div className="no-pool">Please connect a wallet</div>
+                }
+                if (!hasPoolToken) {
+                    return <div className="no-pool">No liquidity found</div>
+                }
             }
+
+
 
             for (let pool in data) {
                 const pairPoolData = data[pool]
