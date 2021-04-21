@@ -2,8 +2,10 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+
+import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
@@ -147,7 +149,7 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 
 function CreateCard() {
 
-    const { userBalances } = useSelector(cosmosSelector.all);
+    const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const poolData = useSelector((state) => state.store.poolsData.pools)
 
     const history = useHistory();
@@ -263,8 +265,19 @@ function CreateCard() {
         status: 'empty' // connectWallet, notSelected, empty, over, normal
     })
 
-    function swap() {
-        alert('swap')
+    async function create() {
+        // const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        BroadcastLiquidityTx({
+            type: 'msgCreatePool',
+            data: {
+                poolCreatorAddress: userAddress,
+                poolTypeId: 1,
+                depositCoins: [
+                    { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
+                    { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
+                ]
+            }
+        })
     }
 
     return (
@@ -334,7 +347,7 @@ function CreateCard() {
                     </div>
 
                     {/* Swap Button */}
-                    <ActionButton onClick={swap} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
+                    <ActionButton onClick={create} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
                     </ActionButton>
                 </SwapWrapper>
