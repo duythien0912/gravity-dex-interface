@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
 import { getSelectedPairsPoolData, cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { liquiditySelector } from "../../modules/liquidityRest/slice"
 
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 
@@ -32,7 +33,7 @@ margin-bottom: 50px;
 `
 
 
-const SwapWrapper = styled.div`
+const CardWrapper = styled.div`
     .header {
         display: flex;
         align-items: center;
@@ -129,6 +130,8 @@ const TYPES = {
 function getButtonNameByStatus(status, fromCoin, toCoin) {
     if (fromCoin === '' || toCoin === '') {
         return 'Select a coin'
+    } else if (status === 'existed') {
+        return 'Pool already exists'
     } else if (status === 'over') {
         return 'Insufficient balance'
     } else if (status === 'empty') {
@@ -150,7 +153,8 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 function CreateCard() {
 
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
-    const poolData = useSelector((state) => state.store.poolsData.pools)
+    const { poolsInfo } = useSelector(liquiditySelector.all)
+    const poolsData = poolsInfo?.poolsData
 
     const history = useHistory();
     React.useEffect(() => {
@@ -215,6 +219,13 @@ function CreateCard() {
                 if (!isBothCoin) {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
                 } else {
+
+                    const coinA = state[`${counterTargetPair}Coin`]
+                    const coinB = action.payload.coin
+                    const sortedCoins = [coinA, coinB].sort()
+
+                    console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
+
                     if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
                         isEmpty = true
                     } else {
@@ -283,7 +294,7 @@ function CreateCard() {
     return (
         <Wrapper>
             <BaseCard>
-                <SwapWrapper>
+                <CardWrapper>
                     {/* Header */}
                     <div className="header">
                         <div className="back" onClick={() => { history.push('/pool') }}>←</div>
@@ -350,7 +361,7 @@ function CreateCard() {
                     <ActionButton onClick={create} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
                     </ActionButton>
-                </SwapWrapper>
+                </CardWrapper>
             </BaseCard>
         </Wrapper>
     )
