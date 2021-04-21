@@ -370,7 +370,7 @@ function Pool() {
                                 </div>
 
                                 <div className="pool-action">
-                                    <button>Add Liquidity</button><button>Redeem</button>
+                                    <button onClick={() => { goUrlWithQuery(coinX, coinY) }}>Add Liquidity</button><button>Redeem</button>
                                 </div>
                             </div>
 
@@ -420,7 +420,7 @@ function Pool() {
                                 </div>
 
                                 <div className="pool-action">
-                                    <button>Add Liquidity</button>
+                                    <button onClick={() => { goUrlWithQuery(coinX, coinY) }}>Add Liquidity</button>
                                 </div>
                             </div>
                         </div>
@@ -449,11 +449,13 @@ function Pool() {
             return str.slice(0, str.indexOf('.') + digitsAfterDot + 1);
         }
 
+        function goUrlWithQuery(a, b) {
+            history.push(`/add?from=${a}&to=${b}`)
+        }
+
     }
 
-    // function goUrlWithPairs(a, b) {
-    //     history.push('/swap')
-    // }
+
 
     return (
         <>
