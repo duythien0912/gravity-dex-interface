@@ -242,7 +242,6 @@ function AddLiquidityCard() {
                 } else {
                     isOver = true
                 }
-
                 return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, status: getStatus(state) }
             default:
                 console.log("DEFAULT: SWAP REDUCER")
@@ -275,7 +274,15 @@ function AddLiquidityCard() {
         toAmount: '',
         status: 'empty' // connectWallet, notSelected, empty, over, normal
     })
-
+    let coinXAmount = null
+    let coinYAmount = null
+    let poolPrice = coinXAmount / coinYAmount
+    if (poolsData && poolsData[`${state.fromCoin}/${state.toCoin}`]) {
+        const reserveCoins = poolsData[`${state.fromCoin}/${state.toCoin}`].reserve_coin_balances
+        coinXAmount = reserveCoins[`u${state.fromCoin}`]
+        coinYAmount = reserveCoins[`u${state.toCoin}`]
+    }
+    console.log(coinXAmount / coinYAmount)
     async function create() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
         BroadcastLiquidityTx({
@@ -341,11 +348,11 @@ function AddLiquidityCard() {
                         <div className="title">Initial prices and pool share</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{state.fromAmount === '' || isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.toAmount / state.fromAmount, 4))}</div>
+                                <div className="number">{(coinYAmount / coinXAmount) ? parseFloat(cutNumber((coinYAmount / coinXAmount), 4)) : ''}</div>
                                 <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.fromAmount / state.toAmount, 4))}</div>
+                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber((coinXAmount / coinYAmount), 4)) : ''}</div>
                                 <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
