@@ -31,7 +31,8 @@ const initialState = {
             "atom/luna": { atom: 423333, luna: 12234.23124, totalPoolToken: 1, userPoolData: {} },
             "kava/luna": { kava: 13333.1231215, luna: 12234.23124, totalPoolToken: 1, userPoolData: {} },
         }
-    }
+    },
+    isWallet: false
 }
 
 const reducers = {
@@ -39,8 +40,13 @@ const reducers = {
         let currentStatus = state.userData.walletStatus
         state.userData.walletStatus = currentStatus === 'pending' ? 'normal' : 'pending'
     },
-    setSlippage: (state, action) => {
-        state.userData.slippage = action.payload
+    togglePendingStatus: (state, action) => {
+        let currentStatus = state.userData.walletStatus
+        state.userData.walletStatus = currentStatus === 'pending' ? 'normal' : 'pending'
+    },
+    setIsWallet: (state, action) => {
+        state.isWallet = action.payload
+        console.log(state.isWallet)
     }
 }
 
@@ -52,8 +58,9 @@ const selectAllState = createSelector(
     state => state.userData,
     state => state.priceData,
     state => state.poolsData,
-    (userData, priceData, poolsData) => {
-        return { userData, priceData, poolsData };
+    state => state.isWallet,
+    (userData, priceData, poolsData, isWallet) => {
+        return { userData, priceData, poolsData, isWallet };
     }
 );
 

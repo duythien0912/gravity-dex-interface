@@ -251,6 +251,7 @@ function AppHeader() {
 
     if (walletAddress) {
       setWalletAddress(walletAddress)
+      dispatch({ type: 'store/setIsWallet', payload: true })
       if (isToggle) {
         connectWalletModalToggle()
       }

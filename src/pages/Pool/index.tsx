@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { storeSelector } from "../../modules/store/slice"
 
 const mobileWidth = 500
 const PoolWrapper = styled.div`
@@ -285,7 +286,8 @@ const PoolWrapper = styled.div`
 
 function Pool() {
     const { poolsInfo } = useSelector(liquiditySelector.all)
-    const { userBalances } = useSelector(cosmosSelector.all);
+    const { userBalances } = useSelector(cosmosSelector.all)
+    const { isWallet } = useSelector(storeSelector.all)
     const history = useHistory();
     const [searchKeyword, setSearchKeyword] = React.useState('')
     console.log(userBalances)
@@ -304,11 +306,13 @@ function Pool() {
     function poolGenerator(data, isUser, keyword = '') {
         let result = []
         const isPools = Object.keys(data).length > 0 ? true : false
-        const isUserBalances = Object.keys(userBalances).length > 0 ? true : false
+
         if (isPools) {
-            if (isUser && !isUserBalances) {
-                return <div className="no-pool">No liquidity found</div>
+
+            if (isUser && !isWallet) {
+                return <div className="no-pool">Please connect a wallet</div>
             }
+
             for (let pool in data) {
                 const pairPoolData = data[pool]
                 const coinX = pool.split('/')[0]
