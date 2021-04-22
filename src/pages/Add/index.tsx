@@ -211,8 +211,6 @@ function AddLiquidityCard() {
         let isEmpty = false
         let isCounterPairEmpty = false
 
-
-
         switch (action.type) {
 
             case TYPES.AMOUNT_CHANGE:
@@ -257,8 +255,6 @@ function AddLiquidityCard() {
                     const coinB = action.payload.coin
                     const sortedCoins = [coinA, coinB].sort()
 
-                    console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
-
                     if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
                         isEmpty = true
                     } else {
@@ -302,15 +298,20 @@ function AddLiquidityCard() {
     }
 
     async function add() {
-        // const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        let isReverse = false
+        if(state.fromCoin !== sortedCoins[0]) {
+            isReverse = true
+        }
+        console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
         BroadcastLiquidityTx({
-            type: 'msgCreatePool',
+            type: 'msgDeposit',
             data: {
-                poolCreatorAddress: userAddress,
-                poolTypeId: 1,
+                depositorAddress: userAddress,
+                poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                 depositCoins: [
-                    { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
-                    { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
+                    { denom: 'u' + (isReverse ? state.toCoin: state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                    { denom: 'u' + (isReverse ? state.fromCoin: state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
                 ]
             }
         })

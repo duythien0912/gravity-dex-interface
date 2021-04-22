@@ -10,7 +10,14 @@ export async function BroadcastLiquidityTx(txInfo) {
         } catch (e) {
             console.log(e)
         }
+    } else if(txInfo.type === 'msgDeposit') {
+        try {
+            msg = txGenerator.msgDepositWithinBatch(txInfo.data)
+        } catch (e) {
+            console.log(e)
+        }
     }
+
     console.log(msg)
     try {
         const txBroadcastResponse = await txGenerator.signAndBroadcast([msg])
