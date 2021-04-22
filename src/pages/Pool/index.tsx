@@ -294,7 +294,7 @@ function Pool() {
     const poolsData = poolsInfo?.poolsData
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     let poolTokenCheckedPoolsData = {}
-   
+
     if (poolsData && poolTokenIndexer) {
         for (let pool in poolsData) {
             poolTokenCheckedPoolsData[pool] = { ...poolsData[pool], userPoolData: { poolTokenAmount: userBalances[poolsData[pool].pool_coin_denom] ? userBalances[poolsData[pool].pool_coin_denom] : 0 } }
@@ -332,9 +332,9 @@ function Pool() {
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
-                const myShare = Math.round(pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount * 100)/100
-                console.log( pairPoolData.userPoolData.poolTokenAmount , pairPoolData.pool_coin_amount)
-                
+                const myShare = Math.round(pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount * 100) / 100
+                console.log(pairPoolData.userPoolData.poolTokenAmount, pairPoolData.pool_coin_amount)
+
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
                         (<div className="pool" key={pool + '*'}>
@@ -379,7 +379,6 @@ function Pool() {
                         </div>)
                     )
                 } else if (!isUser) {
-                    // console.log(pairPoolData)
 
                     result.push(
                         <div className="pool all-pool" key={pool}>
@@ -407,18 +406,7 @@ function Pool() {
                                     <div>Total Pooled {uppercasePoolNames.split('/')[1]}:</div>
                                     <div className="detail-amount">{parseFloat(cutNumber(pairPoolData.reserve_coin_balances['u' + coinY] / 1000000, 4))} {coinY.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
                                 </div>
-                                {/* <div className="detail">
-                                    <div>External {uppercasePoolNames.split('/')[0]} Price:</div>
-                                    <div className="detail-amount">$20.12</div>
-                                </div>
-                                <div className="detail">
-                                    <div>External {uppercasePoolNames.split('/')[1]} Price:</div>
-                                    <div className="detail-amount">$0.412</div>
-                                </div> */}
-                                <div className="detail">
-                                    <div>APY:</div>
-                                    <div className="apy">4%</div>
-                                </div>
+
 
                                 <div className="pool-action">
                                     <button onClick={() => { goUrlWithQuery(coinX, coinY) }}>Add Liquidity</button>
@@ -426,8 +414,6 @@ function Pool() {
                             </div>
                         </div>
                     )
-                } else {
-                    <div>test</div>
                 }
             }
         } else {

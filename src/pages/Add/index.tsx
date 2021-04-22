@@ -120,10 +120,10 @@ function getButtonNameByStatus(status, fromCoin, toCoin) {
         return 'Select a coin'
     } else if (status === 'existed') {
         return 'Pool already exists'
-    } else if (status === 'over') {
-        return 'Insufficient balance'
     } else if (status === 'empty') {
         return 'Enter an amount'
+    } else if (status === 'over') {
+        return 'Insufficient balance'
     } else {
         return 'ADD'
     }
@@ -147,13 +147,13 @@ function AddLiquidityCard() {
         fromCoin: '',
         toCoin: '',
         fromAmount: '',
-        fromReserveAmount:'',
+        fromReserveAmount: '',
         toAmount: '',
-        toReserveAmount:'',
+        toReserveAmount: '',
         status: 'empty' // connectWallet, notSelected, empty, over, normal
     })
 
-    
+
     let coinXAmount = null
     let coinYAmount = null
     let poolPrice = null
@@ -165,7 +165,7 @@ function AddLiquidityCard() {
         coinYAmount = reserveCoins[`u${state.toCoin}`]
         poolPrice = coinXAmount / coinYAmount
     }
-    
+
     const history = useHistory();
     React.useEffect(() => {
         const searchParams = new URLSearchParams(history.location.search);
@@ -196,15 +196,15 @@ function AddLiquidityCard() {
             coinXAmount = reserveCoins[`u${state.fromCoin}`]
             coinYAmount = reserveCoins[`u${state.toCoin}`]
             poolPrice = coinXAmount / coinYAmount
-            state = {...state, fromReserveAmount: reserveCoins[`u${state.fromCoin}`], toReserveAmount: reserveCoins[`u${state.toCoin}`]}
-           
-                if(poolPrice) {
-                    if(targetPair === 'from') {
-                        price = 1/poolPrice
-                    } else {
-                        price = poolPrice
-                    }
+            state = { ...state, fromReserveAmount: reserveCoins[`u${state.fromCoin}`], toReserveAmount: reserveCoins[`u${state.toCoin}`] }
+
+            if (poolPrice) {
+                if (targetPair === 'from') {
+                    price = 1 / poolPrice
+                } else {
+                    price = poolPrice
                 }
+            }
         }
 
         let isOver = false
@@ -214,18 +214,18 @@ function AddLiquidityCard() {
         switch (action.type) {
 
             case TYPES.AMOUNT_CHANGE:
-                if (selectedPairAmount > selectedPairUserBalances || counterPairAmount > counterPairUserBalances || isNaN(counterPairUserBalances) || isNaN(selectedPairUserBalances)) {
+                if (selectedPairAmount > selectedPairUserBalances || selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances) || isNaN(selectedPairUserBalances)) {
                     isOver = true
                 } else {
                     isOver = false
                 }
 
-                if (selectedPairAmount) {
+                if (selectedPairAmount && selectedPairAmount !== '0' && selectedPairAmount !== '') {
                     isEmpty = false
                 } else {
                     isEmpty = true
                 }
-                
+
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
@@ -235,7 +235,7 @@ function AddLiquidityCard() {
                     isOver = false
                 }
 
-                
+
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
@@ -289,14 +289,14 @@ function AddLiquidityCard() {
         }
 
         function getStatus(state) {
-            return state.status === 'create' ? 'create' : (isOver ? 'over' : (isEmpty || isCounterPairEmpty) ? 'empty' : 'normal')
+            return state.status === 'create' ? 'create' : ((isEmpty || isCounterPairEmpty) ? 'empty' : isOver ? 'over' : 'normal')
         }
     }
 
     async function add() {
         const sortedCoins = [state.fromCoin, state.toCoin].sort()
         let isReverse = false
-        if(state.fromCoin !== sortedCoins[0]) {
+        if (state.fromCoin !== sortedCoins[0]) {
             isReverse = true
         }
         console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
@@ -306,8 +306,8 @@ function AddLiquidityCard() {
                 depositorAddress: userAddress,
                 poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                 depositCoins: [
-                    { denom: 'u' + (isReverse ? state.toCoin: state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                    { denom: 'u' + (isReverse ? state.fromCoin: state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
+                    { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                    { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
                 ]
             }
         })
