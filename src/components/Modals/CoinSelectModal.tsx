@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 // useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
+import { chainInfo, currencies } from "../../cosmos-amm/config"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 const SelectCoinWrapper = styled.div`
@@ -98,9 +99,7 @@ const SelectCoinWrapper = styled.div`
 `
 
 function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, toggle: any, selectCoin: any }) {
-    const PoolsData = useSelector((state) => state.store.poolsData)
     const [searchKeyword, setSearchKeyword] = React.useState('')
-
     const { userBalances } = useSelector(cosmosSelector.all);
 
     React.useEffect(() => {
@@ -108,7 +107,10 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
     }, [isOpen])
 
     function generateCoinList(pairs, keyword, counterPair) {
-        let listPairs = pairs
+        let listPairs = []
+        pairs.forEach((item) => {
+            listPairs.push(item.coinDenom.toLowerCase())
+        })
 
         if (keyword !== '') {
             listPairs = listPairs.filter((s => s.includes(keyword)))
@@ -119,7 +121,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
             if (counterPair === pair) {
                 return null
             }
-            const pairBalance = Math.floor(userBalances['u' + pair] / 10000) / 100
+            const pairBalance = pair === 'xrun' ? Math.floor(userBalances[pair] / 10000) / 100 : Math.floor(userBalances['u' + pair] / 10000) / 100
             return (
                 <div className="row"
                     onClick={() => {
@@ -146,7 +148,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
 
                 <input className="search" value={searchKeyword} onChange={(e) => { setSearchKeyword(e.target.value) }} type="text" placeholder="Search Coin" />
                 <div className="coin-list-wrapper">
-                    {generateCoinList(PoolsData.pairs, searchKeyword, selectCoin.counterPair)}
+                    {generateCoinList(currencies, searchKeyword, selectCoin.counterPair)}
                 </div>
 
             </SelectCoinWrapper>

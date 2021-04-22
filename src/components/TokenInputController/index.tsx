@@ -121,7 +121,9 @@ const Wrapper = styled.div`
                 .coin-image {
                     width: 24px;
                     height: 24px;
-
+                    
+                    border-radius: 50%;
+                    border: 1px solid rgb(197,197,197);
                     margin-right: 8px;
                 }
 
