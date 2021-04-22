@@ -1,7 +1,8 @@
 import { Api } from '@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module/rest.js'
 import { queryAllBalances, querySupplyOf } from './bank-rest'
-const BASE_URL = "https://api.gravity.bharvest.io"
-const liquidityRestApi = new Api({ baseUrl: BASE_URL })
+import { chainInfo } from "../cosmos-amm/config"
+
+const liquidityRestApi = new Api({ baseUrl: chainInfo.rest })
 
 export const queryParams = async () => {
     try {

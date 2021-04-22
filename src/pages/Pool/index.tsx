@@ -333,7 +333,7 @@ function Pool() {
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
                 const myShare = parseFloat(cutNumber((pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount), 4))
-
+                console.log(uppercasePoolNames,pairPoolData)
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
                         (<div className="pool" key={pool + '*'}>

@@ -1,7 +1,7 @@
 import { Api } from '@starport/tendermint-liquidity-js/cosmos/cosmos-sdk/cosmos.bank.v1beta1/module/rest.js'
+import { chainInfo } from "../cosmos-amm/config"
 
-const BASE_URL = "https://api.gravity.bharvest.io"
-const bankRestApi = new Api({ baseUrl: BASE_URL })
+const bankRestApi = new Api({ baseUrl: chainInfo.rest })
 
 export const queryAllBalances = async (address) => {
     try {

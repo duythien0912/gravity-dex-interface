@@ -229,18 +229,14 @@ function AddLiquidityCard() {
                 return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
-                if (selectedPairAmount > selectedPairUserBalances || counterPairAmount > counterPairUserBalances || isNaN(counterPairUserBalances)) {
+                if (selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances)) {
                     isOver = true
                 } else {
                     isOver = false
                 }
 
-                if (counterPairAmount && selectedPairAmount) {
-                    isEmpty = false
-                } else {
-                    isEmpty = true
-                }
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
+                
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]

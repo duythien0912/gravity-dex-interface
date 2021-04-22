@@ -2,7 +2,7 @@ import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity
 import { chainInfo } from "./config"
 export async function BroadcastLiquidityTx(txInfo) {
     const signer = window.getOfflineSigner(chainInfo.chainId);
-    const txGenerator = await txClient(signer, { addr: "https://rpc.gravity.bharvest.io" })
+    const txGenerator = await txClient(signer, { addr: chainInfo.rpc })
     let msg = null
     if (txInfo.type === 'msgCreatePool') {
         try {

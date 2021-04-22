@@ -2,8 +2,13 @@ import { defaultBech32Config } from "@chainapsis/cosmosjs/core/bech32Config";
 
 export const currencies = [
   {
-    coinDenom: "SCRT",
-    coinMinimalDenom: "uscrt",
+    coinDenom: "STAKE",
+    coinMinimalDenom: "ustake",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "AKT",
+    coinMinimalDenom: "uakt",
     coinDecimals: 6
   },
   {
@@ -12,18 +17,23 @@ export const currencies = [
     coinDecimals: 6
   },
   {
+    coinDenom: "BTSG",
+    coinMinimalDenom: "ubtsg",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "DVPN",
+    coinMinimalDenom: "udvpn",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "GCYB",
+    coinMinimalDenom: "ugcyb",
+    coinDecimals: 6
+  },
+  {
     coinDenom: "IRIS",
     coinMinimalDenom: "uiris",
-    coinDecimals: 6
-  },
-  {
-    coinDenom: "BAND",
-    coinMinimalDenom: "uband",
-    coinDecimals: 6
-  },
-  {
-    coinDenom: "KAVA",
-    coinMinimalDenom: "ukava",
     coinDecimals: 6
   },
   {
@@ -32,11 +42,31 @@ export const currencies = [
     coinDecimals: 6
   },
   {
-    coinDenom: "USDT",
-    coinMinimalDenom: "uusdt",
+    coinDenom: "NGM",
+    coinMinimalDenom: "ungm",
     coinDecimals: 6
   },
-];
+  {
+    coinDenom: "XPRT",
+    coinMinimalDenom: "uxprt",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "XRN",
+    coinMinimalDenom: "uxrn",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "XRUN",
+    coinMinimalDenom: "xrun",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "BLD",
+    coinMinimalDenom: "ubld",
+    coinDecimals: 6
+  }
+]
 
 export const stakingCurrency = {
   coinDenom: "ATOM",
@@ -45,10 +75,10 @@ export const stakingCurrency = {
 };
 
 export const chainInfo = {
-  rpc: "https://rpc.gravity.bharvest.io",
-  rest: "https://api.gravity.bharvest.io",
-  chainId: "swap-testnet-2003",
-  chainName: "Swap Testnet",
+  rpc: "https://competition.bharvest.io",
+  rest: "https://competition.bharvest.io:1317",
+  chainId: "swap-testnet-2004",
+  chainName: "Competition",
   stakeCurrency: stakingCurrency,
   bip44: {
     coinType: 118
