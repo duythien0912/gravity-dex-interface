@@ -224,8 +224,6 @@ function CreateCard() {
                     const coinB = action.payload.coin
                     const sortedCoins = [coinA, coinB].sort()
 
-                    console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
-
                     if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
                         isEmpty = true
                     } else {

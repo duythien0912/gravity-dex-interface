@@ -294,7 +294,7 @@ function Pool() {
     const poolsData = poolsInfo?.poolsData
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     let poolTokenCheckedPoolsData = {}
-
+   
     if (poolsData && poolTokenIndexer) {
         for (let pool in poolsData) {
             poolTokenCheckedPoolsData[pool] = { ...poolsData[pool], userPoolData: { poolTokenAmount: userBalances[poolsData[pool].pool_coin_denom] ? userBalances[poolsData[pool].pool_coin_denom] : 0 } }
@@ -332,8 +332,9 @@ function Pool() {
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
-                const myShare = parseFloat(cutNumber((pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount), 4))
-                console.log(uppercasePoolNames,pairPoolData)
+                const myShare = Math.round(pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount * 100)/100
+                console.log( pairPoolData.userPoolData.poolTokenAmount , pairPoolData.pool_coin_amount)
+                
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
                         (<div className="pool" key={pool + '*'}>
