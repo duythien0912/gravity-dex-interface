@@ -14,24 +14,14 @@ import ActionButton from "../../components/Buttons/ActionButton"
 
 //Styled-components
 const Wrapper = styled.div`
-    /* position: absolute;
-    top:0;
-    left: 0;
-
-    width: 100%;
-    height: 100%; */
-   
 margin-top: -50px;
 margin-bottom: 50px;
   width: 100%;
 
   @media(max-width: 500px) {
     margin-top: -10px;
-   
     }
-   
 `
-
 
 const CardWrapper = styled.div`
     .header {
@@ -125,8 +115,6 @@ const TYPES = {
 }
 
 //helpers
-
-
 function getButtonNameByStatus(status, fromCoin, toCoin) {
     if (fromCoin === '' || toCoin === '') {
         return 'Select a coin'
@@ -137,7 +125,7 @@ function getButtonNameByStatus(status, fromCoin, toCoin) {
     } else if (status === 'empty') {
         return 'Enter an amount'
     } else {
-        return 'CREATE'
+        return 'ADD'
     }
 }
 
@@ -151,19 +139,39 @@ function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
 
 
 function AddLiquidityCard() {
-
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolsData = poolsInfo?.poolsData
 
+    const [state, dispatch] = React.useReducer(reducer, {
+        fromCoin: '',
+        toCoin: '',
+        fromAmount: '',
+        fromReserveAmount:'',
+        toAmount: '',
+        toReserveAmount:'',
+        status: 'empty' // connectWallet, notSelected, empty, over, normal
+    })
+
+    
+    let coinXAmount = null
+    let coinYAmount = null
+    let poolPrice = null
+
+    const sortedCoins = [state.fromCoin, state.toCoin].sort()
+    if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
+        const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
+        coinXAmount = reserveCoins[`u${state.fromCoin}`]
+        coinYAmount = reserveCoins[`u${state.toCoin}`]
+        poolPrice = coinXAmount / coinYAmount
+    }
+    
     const history = useHistory();
     React.useEffect(() => {
         const searchParams = new URLSearchParams(history.location.search);
-
         if (searchParams.has('from')) {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
-
     }, [history.location.search])
 
     //reducer for useReducer
@@ -176,9 +184,34 @@ function AddLiquidityCard() {
         const selectedPairUserBalances = userBalances['u' + state[`${targetPair}Coin`]] / 1000000
         const counterPairUserBalances = userBalances['u' + state[`${counterTargetPair}Coin`]] / 1000000
 
+        const poolsData = poolsInfo?.poolsData
+        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        let coinXAmount = null
+        let coinYAmount = null
+        let poolPrice = null
+        let price = null;
+
+        if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
+            const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
+            coinXAmount = reserveCoins[`u${state.fromCoin}`]
+            coinYAmount = reserveCoins[`u${state.toCoin}`]
+            poolPrice = coinXAmount / coinYAmount
+            state = {...state, fromReserveAmount: reserveCoins[`u${state.fromCoin}`], toReserveAmount: reserveCoins[`u${state.toCoin}`]}
+           
+                if(poolPrice) {
+                    if(targetPair === 'from') {
+                        price = 1/poolPrice
+                    } else {
+                        price = poolPrice
+                    }
+                }
+        }
+
         let isOver = false
         let isEmpty = false
         let isCounterPairEmpty = false
+
+
 
         switch (action.type) {
 
@@ -189,13 +222,13 @@ function AddLiquidityCard() {
                     isOver = false
                 }
 
-                if (counterPairAmount && selectedPairAmount) {
+                if (selectedPairAmount) {
                     isEmpty = false
                 } else {
                     isEmpty = true
                 }
-
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, status: getStatus(state) }
+                
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
                 if (selectedPairAmount > selectedPairUserBalances || counterPairAmount > counterPairUserBalances || isNaN(counterPairUserBalances)) {
@@ -236,17 +269,18 @@ function AddLiquidityCard() {
                 }
 
             case TYPES.SET_FROM_QUERY:
-
                 if (userBalances['u' + action.payload.from] && userBalances['u' + action.payload.to]) {
                     isEmpty = true
                 } else {
                     isOver = true
                 }
                 return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, status: getStatus(state) }
+
             default:
-                console.log("DEFAULT: SWAP REDUCER")
+                console.log("DEFAULT: REDUCER")
                 return state;
         }
+
         //helpers
         function getPairs(action) {
             let targetPair = null
@@ -267,23 +301,7 @@ function AddLiquidityCard() {
         }
     }
 
-    const [state, dispatch] = React.useReducer(reducer, {
-        fromCoin: '',
-        toCoin: '',
-        fromAmount: '',
-        toAmount: '',
-        status: 'empty' // connectWallet, notSelected, empty, over, normal
-    })
-    let coinXAmount = null
-    let coinYAmount = null
-    let poolPrice = coinXAmount / coinYAmount
-    if (poolsData && poolsData[`${state.fromCoin}/${state.toCoin}`]) {
-        const reserveCoins = poolsData[`${state.fromCoin}/${state.toCoin}`].reserve_coin_balances
-        coinXAmount = reserveCoins[`u${state.fromCoin}`]
-        coinYAmount = reserveCoins[`u${state.toCoin}`]
-    }
-    console.log(coinXAmount / coinYAmount)
-    async function create() {
+    async function add() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
         BroadcastLiquidityTx({
             type: 'msgCreatePool',
@@ -345,25 +363,25 @@ function AddLiquidityCard() {
 
                     {/* Swap detail */}
                     <div className="pool-creation-detail">
-                        <div className="title">Initial prices and pool share</div>
+                        <div className="title">Pool information</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{(coinYAmount / coinXAmount) ? parseFloat(cutNumber((coinYAmount / coinXAmount), 4)) : ''}</div>
+                                <div className="number">{(coinYAmount / coinXAmount) ? parseFloat(cutNumber((coinYAmount / coinXAmount), 4)) : '-'}</div>
                                 <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber((coinXAmount / coinYAmount), 4)) : ''}</div>
+                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber((coinXAmount / coinYAmount), 4)) : '-'}</div>
                                 <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">100%</div>
+                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber(((state.toAmount * 1000000) / coinYAmount) * 100, 4)) : '-'}%</div>
                                 <div className="text">Share of Pool</div>
                             </div>
                         </div>
                     </div>
 
                     {/* Swap Button */}
-                    <ActionButton onClick={create} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
+                    <ActionButton onClick={add} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
                     </ActionButton>
                 </CardWrapper>
