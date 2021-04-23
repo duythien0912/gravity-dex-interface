@@ -137,22 +137,18 @@ const TYPES = {
 }
 
 //helpers
-function getButtonNameByStatus(status, fromCoin, toCoin) {
-    if (fromCoin === '' || toCoin === '') {
-        return 'Select a coin'
-    } else if (status === 'existed') {
-        return 'Pool already exists'
-    } else if (status === 'empty') {
+function getButtonNameByStatus(amount, share) {
+    if (!share) {
+        return 'No pool token'
+    } else if (!amount[0]) {
         return 'Enter an amount'
-    } else if (status === 'over') {
-        return 'Insufficient balance'
     } else {
         return 'Redeem'
     }
 }
 
-function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
-    if (fromCoin === '' || toCoin === '' || status === 'over' || status === 'empty') {
+function getButtonCssClassNameByStatus(amount, userShare) {
+    if (amount[0] === 0 || !userShare) {
         return 'disabled'
     } else {
         return 'normal'
@@ -195,9 +191,6 @@ function RedeemCard() {
         poolCoinDenom = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_denom
         userPoolCoinAmount = userBalances[poolCoinDenom]
         userShare = userPoolCoinAmount / totalPoolCoinAmount
-        console.log('totalPoolCoinAmount', totalPoolCoinAmount)
-        console.log('userPoolCoinAmount', userPoolCoinAmount)
-        console.log('myShare', userPoolCoinAmount / totalPoolCoinAmount)
     }
 
 
@@ -212,28 +205,20 @@ function RedeemCard() {
     //reducer for useReducer
     function reducer(state, action) {
         switch (action.type) {
-
             case TYPES.AMOUNT_CHANGE:
-
                 return { ...state, amount: action.payload.amount }
-
             case TYPES.SET_FROM_QUERY:
-
                 return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
-
             default:
                 console.log("DEFAULT: REDUCER")
                 return state;
         }
-
-        //helpers
-
     }
     function setAmount(value) {
         dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { amount: value } })
     }
 
-    async function add() {
+    async function redeem() {
         const sortedCoins = [state.fromCoin, state.toCoin].sort()
         let isReverse = false
         if (state.fromCoin !== sortedCoins[0]) {
@@ -357,7 +342,7 @@ function RedeemCard() {
                         <div className="details">
                             <div className="detail">
                                 <div className="return">
-                                    {userShare * coinXAmount * state.amount / 100000000}
+                                    {userShare ? userShare * coinXAmount * state.amount / 100000000 : '-'}
                                 </div>
                                 <div className="pair">
                                     <div className="coin-info">
@@ -366,7 +351,7 @@ function RedeemCard() {
                                 </div>
                             </div>
                             <div className="detail">
-                                <div className="return">{userShare * coinYAmount * state.amount / 100000000}</div>
+                                <div className="return">{userShare ? userShare * coinYAmount * state.amount / 100000000 : '-'}</div>
                                 <div className="pair">
                                     <div className="coin-info">
                                         <img className="coin-img" src={`/assets/coins/${state.toCoin}.png`} alt="coin pair" />{state.toCoin.toUpperCase()}
@@ -377,8 +362,8 @@ function RedeemCard() {
                     </div>
 
                     {/* Swap Button */}
-                    <ActionButton onClick={add} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
-                        {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
+                    <ActionButton onClick={redeem} status={getButtonCssClassNameByStatus(state.amount, userShare)} css={{ marginTop: "16px" }}>
+                        {getButtonNameByStatus(state.amount, userShare)}
                     </ActionButton>
                 </CardWrapper>
             </BaseCard>
