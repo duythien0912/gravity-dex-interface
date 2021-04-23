@@ -100,6 +100,7 @@ const CardWrapper = styled.div`
             border: none;
             cursor:pointer; 
             font-size: 16px;
+            outline: none;
 
             width: 60px;
             padding: 10px 0;
@@ -169,7 +170,7 @@ function RedeemCard() {
         toAmount: '',
         toReserveAmount: '',
         status: 'empty', // connectWallet, notSelected, empty, over, normal
-        amount: [0],
+        percent: [0],
     })
 
 
@@ -206,7 +207,7 @@ function RedeemCard() {
     function reducer(state, action) {
         switch (action.type) {
             case TYPES.AMOUNT_CHANGE:
-                return { ...state, amount: action.payload.amount }
+                return { ...state, percent: action.payload.percent }
             case TYPES.SET_FROM_QUERY:
                 return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
             default:
@@ -215,25 +216,17 @@ function RedeemCard() {
         }
     }
     function setAmount(value) {
-        dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { amount: value } })
+        dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { percent: value } })
     }
 
     async function redeem() {
         const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        let isReverse = false
-        if (state.fromCoin !== sortedCoins[0]) {
-            isReverse = true
-        }
-        console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
         BroadcastLiquidityTx({
-            type: 'msgDeposit',
+            type: 'msgWithdraw',
             data: {
-                depositorAddress: userAddress,
+                withdrawerAddress: userAddress,
                 poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
-                depositCoins: [
-                    { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                    { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
-                ]
+                poolCoin: { denom: poolCoinDenom, amount: String(userPoolCoinAmount * state.percent[0] / 100) },
             }
         })
     }
@@ -268,10 +261,10 @@ function RedeemCard() {
                         }}
                     >
                         <output style={{ margin: "30px", textAlign: "center", fontSize: "60px", fontWeight: 500 }} id="output">
-                            <div style={{ paddingLeft: "30px" }} >{state.amount}%</div>
+                            <div style={{ paddingLeft: "30px" }} >{state.percent}%</div>
                         </output>
                         <Range
-                            values={state.amount}
+                            values={state.percent}
                             step={STEP}
                             min={MIN}
                             max={MAX}
@@ -294,7 +287,7 @@ function RedeemCard() {
                                             width: "100%",
                                             borderRadius: "4px",
                                             background: getTrackBackground({
-                                                values: [state.amount],
+                                                values: [state.percent],
                                                 colors: ["#F6743C", "#ccc"],
                                                 min: MIN,
                                                 max: MAX
@@ -342,7 +335,7 @@ function RedeemCard() {
                         <div className="details">
                             <div className="detail">
                                 <div className="return">
-                                    {userShare ? userShare * coinXAmount * state.amount / 100000000 : '-'}
+                                    {userShare ? userShare * coinXAmount * state.percent / 100000000 : '-'}
                                 </div>
                                 <div className="pair">
                                     <div className="coin-info">
@@ -351,7 +344,7 @@ function RedeemCard() {
                                 </div>
                             </div>
                             <div className="detail">
-                                <div className="return">{userShare ? userShare * coinYAmount * state.amount / 100000000 : '-'}</div>
+                                <div className="return">{userShare ? userShare * coinYAmount * state.percent / 100000000 : '-'}</div>
                                 <div className="pair">
                                     <div className="coin-info">
                                         <img className="coin-img" src={`/assets/coins/${state.toCoin}.png`} alt="coin pair" />{state.toCoin.toUpperCase()}
@@ -362,8 +355,8 @@ function RedeemCard() {
                     </div>
 
                     {/* Swap Button */}
-                    <ActionButton onClick={redeem} status={getButtonCssClassNameByStatus(state.amount, userShare)} css={{ marginTop: "16px" }}>
-                        {getButtonNameByStatus(state.amount, userShare)}
+                    <ActionButton onClick={redeem} status={getButtonCssClassNameByStatus(state.percent, userShare)} css={{ marginTop: "16px" }}>
+                        {getButtonNameByStatus(state.percent, userShare)}
                     </ActionButton>
                 </CardWrapper>
             </BaseCard>

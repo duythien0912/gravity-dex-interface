@@ -10,9 +10,15 @@ export async function BroadcastLiquidityTx(txInfo) {
         } catch (e) {
             console.log(e)
         }
-    } else if(txInfo.type === 'msgDeposit') {
+    } else if (txInfo.type === 'msgDeposit') {
         try {
             msg = txGenerator.msgDepositWithinBatch(txInfo.data)
+        } catch (e) {
+            console.log(e)
+        }
+    } else if (txInfo.type === 'msgWithdraw') {
+        try {
+            msg = txGenerator.msgWithdrawWithinBatch(txInfo.data)
         } catch (e) {
             console.log(e)
         }
