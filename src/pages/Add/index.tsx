@@ -69,7 +69,7 @@ const CardWrapper = styled.div`
         }
    }
 
-   .pool-creation-detail {
+   .add-detail {
         border-radius: 20px;
         border: 1px solid rgb(247, 248, 250);
 
@@ -359,7 +359,7 @@ function AddLiquidityCard() {
                     />
 
                     {/* Swap detail */}
-                    <div className="pool-creation-detail">
+                    <div className="add-detail">
                         <div className="title">Pool information</div>
                         <div className="details">
                             <div className="detail">
