@@ -11,7 +11,8 @@ import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
-
+import { Range, getTrackBackground } from "react-range";
+import { NonExistenceProof } from '@cosmjs/stargate/build/codec/confio/proofs';
 //Styled-components
 const Wrapper = styled.div`
 margin-top: -50px;
@@ -109,7 +110,6 @@ const CardWrapper = styled.div`
 //reducer action types
 const TYPES = {
     AMOUNT_CHANGE: 'AMOUNT_CHANGE',
-    SELECT_COIN: 'SELECT_COIN',
     SET_MAX_AMOUNT: 'SET_MAX_AMOUNT',
     SET_FROM_QUERY: 'SET_FROM_QUERY'
 }
@@ -150,7 +150,8 @@ function RedeemCard() {
         fromReserveAmount: '',
         toAmount: '',
         toReserveAmount: '',
-        status: 'empty' // connectWallet, notSelected, empty, over, normal
+        status: 'empty', // connectWallet, notSelected, empty, over, normal
+        amount: [0],
     })
 
 
@@ -176,97 +177,15 @@ function RedeemCard() {
 
     //reducer for useReducer
     function reducer(state, action) {
-        const { targetPair, counterTargetPair } = getPairs(action)
-
-        const selectedPairAmount = action.payload?.amount || ''
-        const counterPairAmount = state[`${counterTargetPair}Amount`]
-
-        const selectedPairUserBalances = userBalances['u' + state[`${targetPair}Coin`]] / 1000000
-        const counterPairUserBalances = userBalances['u' + state[`${counterTargetPair}Coin`]] / 1000000
-
-        const poolsData = poolsInfo?.poolsData
-        const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        let coinXAmount = null
-        let coinYAmount = null
-        let poolPrice = null
-        let price = null;
-
-        if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
-            const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
-            coinXAmount = reserveCoins[`u${state.fromCoin}`]
-            coinYAmount = reserveCoins[`u${state.toCoin}`]
-            poolPrice = coinXAmount / coinYAmount
-            state = { ...state, fromReserveAmount: reserveCoins[`u${state.fromCoin}`], toReserveAmount: reserveCoins[`u${state.toCoin}`] }
-
-            if (poolPrice) {
-                if (targetPair === 'from') {
-                    price = 1 / poolPrice
-                } else {
-                    price = poolPrice
-                }
-            }
-        }
-
-        let isOver = false
-        let isEmpty = false
-        let isCounterPairEmpty = false
-
         switch (action.type) {
 
             case TYPES.AMOUNT_CHANGE:
-                if (selectedPairAmount > selectedPairUserBalances || selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances) || isNaN(selectedPairUserBalances)) {
-                    isOver = true
-                } else {
-                    isOver = false
-                }
 
-                if (selectedPairAmount && selectedPairAmount !== '0' && selectedPairAmount !== '') {
-                    isEmpty = false
-                } else {
-                    isEmpty = true
-                }
-
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
-
-            case TYPES.SET_MAX_AMOUNT:
-                if (selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances)) {
-                    isOver = true
-                } else {
-                    isOver = false
-                }
-
-
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
-
-            case TYPES.SELECT_COIN:
-                const coinA = state[`${counterTargetPair}Coin`]
-                const coinB = action.payload.coin
-                const isBothCoin = coinA !== '' && coinB !== ''
-
-                if (!isBothCoin) {
-                    return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
-                } else {
-
-                    const coinA = state[`${counterTargetPair}Coin`]
-                    const coinB = action.payload.coin
-                    const sortedCoins = [coinA, coinB].sort()
-
-                    if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
-                        isEmpty = true
-                    } else {
-                        isOver = true
-                    }
-
-                    return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '', status: getStatus(state) }
-                }
+                return { ...state, amount: action.payload.amount }
 
             case TYPES.SET_FROM_QUERY:
-                if (userBalances['u' + action.payload.from] && userBalances['u' + action.payload.to]) {
-                    isEmpty = true
-                } else {
-                    isOver = true
-                }
-                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, status: getStatus(state) }
+
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
 
             default:
                 console.log("DEFAULT: REDUCER")
@@ -274,23 +193,7 @@ function RedeemCard() {
         }
 
         //helpers
-        function getPairs(action) {
-            let targetPair = null
-            let counterTargetPair = null
 
-            if (action.payload?.target) {
-                targetPair = action.payload.target === "X" ? "from" : "to"
-                counterTargetPair = targetPair === 'from' ? 'to' : 'from'
-            } else {
-                targetPair = 'from'
-                counterTargetPair = 'to'
-            }
-            return { targetPair, counterTargetPair }
-        }
-
-        function getStatus(state) {
-            return state.status === 'create' ? 'create' : ((isEmpty || isCounterPairEmpty) ? 'empty' : isOver ? 'over' : 'normal')
-        }
     }
 
     async function add() {
@@ -312,7 +215,9 @@ function RedeemCard() {
             }
         })
     }
-
+    const STEP = 1;
+    const MIN = 0;
+    const MAX = 100;
     return (
         <Wrapper>
             <BaseCard>
@@ -327,36 +232,77 @@ function RedeemCard() {
                     {/* Info */}
                     {/* Info */}
                     <div className="info-box">
-                        <span style={{ fontWeight: "bold" }}>Tip:</span> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.
+                        <span style={{ fontWeight: "bold" }}>Tip:</span> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                     </div>
 
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            flexWrap: "wrap",
+                            margin: "2em"
+                        }}
+                    >
+                        <Range
+                            values={state.amount}
+                            step={STEP}
+                            min={MIN}
+                            max={MAX}
+                            onChange={(values) => dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { amount: values } })}
+                            renderTrack={({ props, children }) => (
+                                <div
+                                    onMouseDown={props.onMouseDown}
+                                    onTouchStart={props.onTouchStart}
+                                    style={{
+                                        ...props.style,
+                                        height: "36px",
+                                        display: "flex",
+                                        width: "100%"
+                                    }}
+                                >
+                                    <div
+                                        ref={props.ref}
+                                        style={{
+                                            height: "5px",
+                                            width: "100%",
+                                            borderRadius: "4px",
+                                            background: getTrackBackground({
+                                                values: [state.amount],
+                                                colors: ["#F6743C", "#ccc"],
+                                                min: MIN,
+                                                max: MAX
+                                            }),
+                                            alignSelf: "center"
+                                        }}
+                                    >
+                                        {children}
+                                    </div>
+                                </div>
+                            )}
+                            renderThumb={({ props, isDragged }) => (
+                                <div
+                                    {...props}
+                                    style={{
+                                        ...props.style,
+                                        height: "42px",
+                                        width: "42px",
+                                        outline: "none",
+                                        borderRadius: "50%",
+                                        backgroundColor: "rgb(243 164 96)",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        boxShadow: "0px 2px 6px #AAA"
+                                    }}
+                                >
 
-                    {/* From */}
-                    <TokenInputController
-                        header={{ title: 'X' }}
-                        coin={state.fromCoin}
-                        amount={state.fromAmount}
-                        counterPair={state.toCoin}
-                        dispatch={dispatch}
-                        dispatchTypes={{ amount: TYPES.AMOUNT_CHANGE, coin: TYPES.SELECT_COIN, max: TYPES.SET_MAX_AMOUNT }}
-                    />
-
-                    {/* plus icon */}
-                    <div className="divider">
-                        <div className="plus">
-                            +
-                        </div>
+                                </div>
+                            )}
+                        />
+                        <output style={{ marginTop: "30px" }} id="output">
+                            {state.amount}
+                        </output>
                     </div>
-
-                    {/* To */}
-                    <TokenInputController
-                        header={{ title: 'Y' }}
-                        coin={state.toCoin}
-                        amount={state.toAmount}
-                        counterPair={state.fromCoin}
-                        dispatch={dispatch}
-                        dispatchTypes={{ amount: TYPES.AMOUNT_CHANGE, coin: TYPES.SELECT_COIN, max: TYPES.SET_MAX_AMOUNT }}
-                    />
 
                     {/* Swap detail */}
                     <div className="pool-creation-detail">
