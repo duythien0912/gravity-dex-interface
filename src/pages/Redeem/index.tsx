@@ -57,19 +57,6 @@ const CardWrapper = styled.div`
         width: fit-content;
     }
 
-   .divider {
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding: 16px 0;
-        transition: opacity 0.2s;
-
-        .plus {
-            font-size: 24px;
-            font-weight: 300;
-        }
-   }
-
    .pool-creation-detail {
         border-radius: 20px;
         border: 1px solid rgb(247, 248, 250);
@@ -105,6 +92,31 @@ const CardWrapper = styled.div`
             }
         }
    }
+   .easy-amount-set-buttons {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            width: 100%;
+            padding: 0 20px;
+
+            .button {
+                background-color: #f77e4a33;
+                color:#ff4d00;
+                border: none;
+                cursor:pointer; 
+                font-size: 16px;
+
+                width: 60px;
+                padding: 10px 0;
+
+                border-radius: 8px;
+                border: 1px solid transparent;
+
+                &:hover {
+                    border: 1px solid #ff4d00;
+                }
+            }
+        }
 `
 
 //reducer action types
@@ -195,6 +207,9 @@ function RedeemCard() {
         //helpers
 
     }
+    function setAmount(value) {
+        dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { amount: value } })
+    }
 
     async function add() {
         const sortedCoins = [state.fromCoin, state.toCoin].sort()
@@ -235,20 +250,25 @@ function RedeemCard() {
                         <span style={{ fontWeight: "bold" }}>Tip:</span> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                     </div>
 
+
+
                     <div
                         style={{
                             display: "flex",
                             justifyContent: "center",
                             flexWrap: "wrap",
-                            margin: "2em"
+                            margin: "0 32px 32px"
                         }}
                     >
+                        <output style={{ margin: "30px", textAlign: "center", fontSize: "60px", fontWeight: 500 }} id="output">
+                            <div style={{ paddingLeft: "30px" }} >{state.amount}%</div>
+                        </output>
                         <Range
                             values={state.amount}
                             step={STEP}
                             min={MIN}
                             max={MAX}
-                            onChange={(values) => dispatch({ type: TYPES.AMOUNT_CHANGE, payload: { amount: values } })}
+                            onChange={(value) => setAmount(value)}
                             renderTrack={({ props, children }) => (
                                 <div
                                     onMouseDown={props.onMouseDown}
@@ -299,9 +319,14 @@ function RedeemCard() {
                                 </div>
                             )}
                         />
-                        <output style={{ marginTop: "30px" }} id="output">
-                            {state.amount}
-                        </output>
+                    </div>
+
+                    {/* Easy amount set buttons */}
+                    <div className="easy-amount-set-buttons">
+                        <button onClick={() => { setAmount([25]) }} className="button">25%</button>
+                        <button onClick={() => { setAmount([50]) }} className="button">50%</button>
+                        <button onClick={() => { setAmount([75]) }} className="button">75%</button>
+                        <button onClick={() => { setAmount([100]) }} className="button">Max</button>
                     </div>
 
                     {/* Swap detail */}
