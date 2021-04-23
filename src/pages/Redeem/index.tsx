@@ -57,7 +57,7 @@ const CardWrapper = styled.div`
         width: fit-content;
     }
 
-   .pool-creation-detail {
+   .returns-detail {
         border-radius: 20px;
         border: 1px solid rgb(247, 248, 250);
 
@@ -70,51 +70,61 @@ const CardWrapper = styled.div`
         }
 
         .details {
-            display: flex;
+           
             justify-content: space-between;
-            padding: 16px;
+            padding: 0 16px;
             border: 1px solid rgb(247, 248, 250);
             border-radius: 20px;
+            width: 100%;
 
             .detail {
-                text-align:center;
-                flex: 1;
-                .number {
-                    font-weight: 500;
-                }
-
-                .text {
-                    font-weight: 500;
-                    font-size: 14px;
-                    color: rgb(86, 90, 105);
-                    padding-top: 4px;
-                }
+                padding: 4px 0;
+                justify-content: space-between;
+                align-items: center;
+                display: flex;
+                width: 100%;
+                
             }
         }
    }
    .easy-amount-set-buttons {
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            width: 100%;
-            padding: 0 20px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        width: 100%;
+        padding: 0 20px;
 
-            .button {
-                background-color: #f77e4a33;
-                color:#ff4d00;
-                border: none;
-                cursor:pointer; 
-                font-size: 16px;
+        .button {
+            background-color: #f77e4a33;
+            color:#ff4d00;
+            border: none;
+            cursor:pointer; 
+            font-size: 16px;
 
-                width: 60px;
-                padding: 10px 0;
+            width: 60px;
+            padding: 10px 0;
 
-                border-radius: 8px;
-                border: 1px solid transparent;
+            border-radius: 8px;
+            border: 1px solid transparent;
 
-                &:hover {
-                    border: 1px solid #ff4d00;
-                }
+            &:hover {
+                border: 1px solid #ff4d00;
+            }
+        }
+    }
+
+    .coin-info {
+            display: flex;
+            align-items: center;
+
+            font-weight: 500;
+
+            .coin-img {
+                width: 28px;
+                height: 28px;
+                margin-right: 12px;
+                border: 1px solid rgb(197, 197, 197);
+                border-radius: 50%;
             }
         }
 `
@@ -169,7 +179,11 @@ function RedeemCard() {
 
     let coinXAmount = null
     let coinYAmount = null
+    let totalPoolCoinAmount = null
+    let poolCoinDenom = null
     let poolPrice = null
+    let userPoolCoinAmount = null
+    let userShare = null
 
     const sortedCoins = [state.fromCoin, state.toCoin].sort()
     if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
@@ -177,7 +191,15 @@ function RedeemCard() {
         coinXAmount = reserveCoins[`u${state.fromCoin}`]
         coinYAmount = reserveCoins[`u${state.toCoin}`]
         poolPrice = coinXAmount / coinYAmount
+        totalPoolCoinAmount = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_amount
+        poolCoinDenom = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_denom
+        userPoolCoinAmount = userBalances[poolCoinDenom]
+        userShare = userPoolCoinAmount / totalPoolCoinAmount
+        console.log('totalPoolCoinAmount', totalPoolCoinAmount)
+        console.log('userPoolCoinAmount', userPoolCoinAmount)
+        console.log('myShare', userPoolCoinAmount / totalPoolCoinAmount)
     }
+
 
     const history = useHistory();
     React.useEffect(() => {
@@ -329,21 +351,27 @@ function RedeemCard() {
                         <button onClick={() => { setAmount([100]) }} className="button">Max</button>
                     </div>
 
-                    {/* Swap detail */}
-                    <div className="pool-creation-detail">
-                        <div className="title">Pool information</div>
+                    {/* redeem detail */}
+                    <div className="returns-detail">
+                        <div className="title">Estimated Returns</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{(coinYAmount / coinXAmount) ? parseFloat(cutNumber((coinYAmount / coinXAmount), 4)) : '-'}</div>
-                                <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
+                                <div className="return">
+                                    {userShare * coinXAmount * state.amount / 100000000}
+                                </div>
+                                <div className="pair">
+                                    <div className="coin-info">
+                                        <img className="coin-img" src={`/assets/coins/${state.fromCoin}.png`} alt="coin pair" />{state.fromCoin.toUpperCase()}
+                                    </div>
+                                </div>
                             </div>
                             <div className="detail">
-                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber((coinXAmount / coinYAmount), 4)) : '-'}</div>
-                                <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
-                            </div>
-                            <div className="detail">
-                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber(((state.toAmount * 1000000) / coinYAmount) * 100, 4)) : '-'}%</div>
-                                <div className="text">Share of Pool</div>
+                                <div className="return">{userShare * coinYAmount * state.amount / 100000000}</div>
+                                <div className="pair">
+                                    <div className="coin-info">
+                                        <img className="coin-img" src={`/assets/coins/${state.toCoin}.png`} alt="coin pair" />{state.toCoin.toUpperCase()}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
