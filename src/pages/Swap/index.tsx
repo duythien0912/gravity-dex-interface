@@ -32,7 +32,7 @@ const SwapWrapper = styled.div`
         align-items:center;
         justify-content:center;
         padding: 16px 0;
-        transition: transform 0.4s;
+        transition: transform 0.2s;
 
         .arrow {
             cursor: pointer;
@@ -64,22 +64,33 @@ const SwapWrapper = styled.div`
    }
 
    .result-detail-board {
-       position: absolute;
-       width: 100%;
-       max-width: 380px;
-       height: 200px;
-       padding-bottom: 20px;
-      
-       
-       z-index: -1;
+        position: absolute;
+        width: 100%;
+        max-width: 380px;
+        height: 130px;
+        padding-bottom: 20px;
+        
+        
+        z-index: -1;
 
-       transition:transform 0.4s linear;
-       transform: translateY(-200px);
+        transition:transform 0.4s ease-out;
+        transform: translateY(-130px);
         background-color: transparent;
+       
        .content {
-        background-color:#151019bd;
-        height: 160px;
-        border-radius: 12px;
+            padding: 30px 20px 20px;
+            background-color:#151019bd;
+            height: 110px;
+            border-radius: 12px;
+
+            color: #fff;
+            font-weight: 500;
+
+        .detail {
+            display: flex;
+            justify-content: space-between;
+            line-height: 2;
+        }
        }
    }
 `
@@ -337,7 +348,20 @@ function SwapCard() {
                     </ActionButton>
 
                     <div style={{ transform: `translateY(${isBoard ? '0' : '-200'}px)` }} className="result-detail-board">
-                        <div className="content">test</div>
+                        <div className="content">
+                            <div className="detail">
+                                <div className="title">Estimated Return</div>
+                                <div className="data">20 {state.toCoin.toUpperCase()}</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Price Impact</div>
+                                <div className="data">20%</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title"></div>
+                                <div className="data"></div>
+                            </div>
+                        </div>
                     </div>
                 </SwapWrapper>
             </BaseCard>
