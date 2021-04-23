@@ -13,6 +13,8 @@ import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 //Styled-components
 const SwapWrapper = styled.div`
+    position: relative;
+
     .header {
         display: flex;
         align-items: center;
@@ -30,7 +32,7 @@ const SwapWrapper = styled.div`
         align-items:center;
         justify-content:center;
         padding: 16px 0;
-        transition: transform 0.2s;
+        transition: transform 0.4s;
 
         .arrow {
             cursor: pointer;
@@ -59,6 +61,26 @@ const SwapWrapper = styled.div`
         .right {
 
         }
+   }
+
+   .result-detail-board {
+       position: absolute;
+       width: 100%;
+       max-width: 380px;
+       height: 200px;
+       padding-bottom: 20px;
+      
+       
+       z-index: -1;
+
+       transition:transform 0.4s linear;
+       transform: translateY(-200px);
+        background-color: transparent;
+       .content {
+        background-color:#151019bd;
+        height: 160px;
+        border-radius: 12px;
+       }
    }
 `
 
@@ -234,7 +256,8 @@ function SwapCard() {
         fromAmount: '',
         toAmount: '',
         status: 'empty', // connectWallet, notSelected, empty, over, normal
-        price: '-'
+        price: '-',
+        isBoard: false,
     })
 
     function swap() {
@@ -248,7 +271,7 @@ function SwapCard() {
     function create(from, to) {
         history.push(`/create?from=${from}&to=${to}`)
     }
-
+    const isBoard = state.fromCoin && state.toCoin && state.status !== "create"
     return (
         <>
             <BaseCard>
@@ -312,9 +335,12 @@ function SwapCard() {
                     }} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
                     </ActionButton>
+
+                    <div style={{ transform: `translateY(${isBoard ? '0' : '-200'}px)` }} className="result-detail-board">
+                        <div className="content">test</div>
+                    </div>
                 </SwapWrapper>
             </BaseCard>
-
         </>
     )
 }
