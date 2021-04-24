@@ -211,8 +211,6 @@ function SwapCard() {
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
 
-                console.log('targetPair', targetPair)
-                console.log('selectedPairAmount', selectedPairAmount)
                 if (targetPair === 'from') {
                     if (selectedPairAmount > userFromCoinBalance) {
                         isOver = true
@@ -220,13 +218,24 @@ function SwapCard() {
                         isOver = false
                     }
                 } else {
-                    if ((selectedPairAmount * price) > userFromCoinBalance) {
+                    if (selectedPairAmount > userToCoinBalance) {
                         isOver = true
                     } else {
                         isOver = false
                     }
                 }
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
+
+                if (selectedPairAmount === '' || selectedPairAmount === '0') {
+                    isEmpty = true
+                } else {
+                    isEmpty = false
+                }
+                console.log(price)
+                if (price !== '-' && !isNaN(price)) {
+                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
+                } else {
+                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: '', status: getStatus(state) }
+                }
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
@@ -238,16 +247,16 @@ function SwapCard() {
                 const isBothCoin = coinA !== '' && coinB !== ''
 
                 if (!isBothCoin) {
-                    return { ...state, [`${targetPair}Coin`]: action.payload.coin }
+                    return { ...state, [`${targetPair}Coin`]: action.payload.coin, fromAmount: '', toAmount: '' }
                 } else {
                     const selectedPooldata = getSelectedPairsPoolData(state, action, counterTargetPair, poolData)
                     state.status = "normal"
                     setAmountCheckVariables()
 
                     if (!selectedPooldata) {
-                        return { ...state, status: "create", [`${targetPair}Coin`]: action.payload.coin, price: '-' }
+                        return { ...state, status: "create", [`${targetPair}Coin`]: action.payload.coin, fromAmount: '', toAmount: '', price: '-' }
                     } else {
-                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), status: getStatus(state) }
+                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), fromAmount: '', toAmount: '', status: getStatus(state) }
                     }
                 }
 
