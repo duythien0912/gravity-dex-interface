@@ -135,43 +135,79 @@ const TYPES = {
     AMOUNT_CHANGE: 'AMOUNT_CHANGE',
     SELECT_COIN: 'SELECT_COIN',
     SET_MAX_AMOUNT: 'SET_MAX_AMOUNT',
-    CHANGE_FROM_TO_COIN: 'CHANGE_FROM_TO_COIN'
+    CHANGE_FROM_TO_COIN: 'CHANGE_FROM_TO_COIN',
+    UPDATE_PRICE: 'UPDATE_PRICE'
 }
 
 // component function
 function SwapCard() {
-
-    React.useEffect(() => {
-        //미로그인시 connectWallet 스테이터스 아니면 empty로
-
-    }, [])
-
     const { slippage } = useSelector((state) => state.store.userData)
     const storeDispatch = useDispatch()
     const history = useHistory();
     const { userBalances } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolData = poolsInfo?.poolsData
+    const [state, dispatch] = React.useReducer(reducer, {
+        fromCoin: 'atom',
+        toCoin: '',
+        fromAmount: '',
+        toAmount: '',
+        status: 'empty', // connectWallet, notSelected, empty, over, normal
+        price: '-',
+        isBoard: false,
+    })
 
+    React.useEffect(() => {
+        //미로그인시 connectWallet 스테이터스 아니면 empty로
+        console.log('poolsInfo', poolsInfo)
+        console.log('state', state)
+        if (state.fromCoin !== '' && state.toCoin) {
+            const sortedCoins = [state.fromCoin, state.toCoin].sort()
+
+            let isReverse = false
+            if (sortedCoins[0] === state.fromCoin) {
+                isReverse = true
+            }
+
+            const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
+            if (selectedPairsPoolData !== undefined) {
+                const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
+                console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
+                console.log('price', price)
+                dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: parseFloat(cutNumber(price, 6)) } })
+            } else {
+                console.log('no Pool')
+            }
+
+        } else {
+            console.log('need both coins')
+        }
+
+    }, [poolsInfo, state.fromCoin, state.toCoin])
 
     //reducer for useReducer
     function reducer(state, action) {
         const { targetPair, counterTargetPair } = getPairs(action)
+
         const selectedPairAmount = action.payload?.amount || ''
-        //state[`${targetPair}Amount`]
         const counterPairAmount = state[`${counterTargetPair}Amount`]
+
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
         const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
-        const price = targetPair === 'from' ? state.price : 1 / state.price
 
         const userFromCoinBalance = userBalances['u' + state.fromCoin] / 1000000
         const userToCoinBalance = userBalances['u' + state.toCoin] / 1000000
+
+        const price = targetPair === 'from' ? state.price : 1 / state.price
 
         let isOver = false
         let isEmpty = false
         let isCounterPairEmpty = false
 
         switch (action.type) {
+            case TYPES.UPDATE_PRICE:
+                console.log('here', action.payload)
+                return { ...state, price: action.payload.price }
 
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
@@ -275,15 +311,7 @@ function SwapCard() {
         }
     }
 
-    const [state, dispatch] = React.useReducer(reducer, {
-        fromCoin: 'atom',
-        toCoin: '',
-        fromAmount: '',
-        toAmount: '',
-        status: 'empty', // connectWallet, notSelected, empty, over, normal
-        price: '-',
-        isBoard: false,
-    })
+
 
     function swap() {
         alert('swap')

@@ -46,7 +46,6 @@ const reducers = {
     },
     setIsWallet: (state, action) => {
         state.isWallet = action.payload
-        console.log(state.isWallet)
     }
 }
 
