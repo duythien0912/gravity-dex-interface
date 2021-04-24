@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 
 import ChangeArrow from "../../assets/svgs/ChangeArrow"
@@ -11,7 +11,7 @@ import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
-
+import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 //Styled-components
 const SwapWrapper = styled.div`
     position: relative;
@@ -144,9 +144,11 @@ function SwapCard() {
     const { slippage } = useSelector((state) => state.store.userData)
     const storeDispatch = useDispatch()
     const history = useHistory();
-    const { userBalances } = useSelector(cosmosSelector.all);
+    const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolData = poolsInfo?.poolsData
+    const [slipage, setSlippage] = React.useState(0)
+    const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
         toCoin: '',
@@ -174,6 +176,8 @@ function SwapCard() {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
                 console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
                 console.log('price', price)
+                setSelectedPoolData(selectedPairsPoolData)
+                setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: parseFloat(cutNumber(price, 6)) } })
             } else {
                 console.log('no Pool')
@@ -183,7 +187,7 @@ function SwapCard() {
             console.log('need both coins')
         }
 
-    }, [poolsInfo, state.fromCoin, state.toCoin])
+    }, [poolsInfo, state.fromCoin, state.toCoin, state.toAmount])
 
     //reducer for useReducer
     function reducer(state, action) {
@@ -230,7 +234,7 @@ function SwapCard() {
                 } else {
                     isEmpty = false
                 }
-                console.log(price)
+
                 if (price !== '-' && !isNaN(price)) {
                     return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
                 } else {
@@ -319,7 +323,35 @@ function SwapCard() {
 
 
     function swap() {
-        alert('swap')
+        //         swapRequesterAddress: string;
+        //   /** id of the target pool */
+        //   poolId: number;
+        //   /** id of swap type. Must match the value in the pool. */
+        //   swapTypeId: number;
+        //   /** offer sdk.coin for the swap request, must match the denom in the pool. */
+        //   offerCoin: Coin | undefined;
+        //   /** denom of demand coin to be exchanged on the swap request, must match the denom in the pool. */
+        //   demandCoinDenom: string;
+        //   /** half of offer coin amount * params.swap_fee_rate for reservation to pay fees */
+        //   offerCoinFee: Coin | undefined;
+        //   /**
+        //    * limit order price for the order, the price is the exchange ratio of X/Y where X is the amount of the first coin and
+        //    * Y is the amount of the second coin when their denoms are sorted alphabetically
+        //    */
+        //   orderPrice: string;
+        console.log(selectedPoolData)
+        BroadcastLiquidityTx({
+            type: 'msgSwap',
+            data: {
+                swapRequesterAddress: userAddress,
+                poolId: Number(selectedPoolData.id),
+                swapTypeId: 1,
+                offerCoin: { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
+                demandCoinDenom: 'u' + state.toCoin,
+                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000 * 0.0015) },
+                orderPrice: String(1)
+            }
+        })
         storeDispatch({ type: 'rootStore/togglePendingStatus' })
         setTimeout(() => {
             storeDispatch({ type: 'rootStore/togglePendingStatus' })
@@ -402,7 +434,7 @@ function SwapCard() {
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
-                                <div className="data">20%</div>
+                                <div className="data">{slipage}%</div>
                             </div>
                             <div className="detail">
                                 <div className="title"></div>

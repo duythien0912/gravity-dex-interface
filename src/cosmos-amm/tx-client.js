@@ -22,6 +22,12 @@ export async function BroadcastLiquidityTx(txInfo) {
         } catch (e) {
             console.log(e)
         }
+    } else if (txInfo.type === 'msgSwap') {
+        try {
+            msg = txGenerator.msgSwapWithinBatch(txInfo.data)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     console.log(msg)
