@@ -10,6 +10,7 @@ import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { liquiditySelector } from "../../modules/liquidityRest/slice"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -79,7 +80,7 @@ const SwapWrapper = styled.div`
        
        .content {
             padding: 30px 20px 20px;
-            background-color:#151019bd;
+            background-color:#1b142161;
             height: 110px;
             border-radius: 12px;
 
@@ -90,6 +91,17 @@ const SwapWrapper = styled.div`
             display: flex;
             justify-content: space-between;
             line-height: 2;
+
+            .data {
+                /* font-weight: bold;
+                font-size: 18px; */
+            }
+
+            &:first-child {
+                .data {
+                    font-weight: bold;
+                }
+            }
         }
        }
    }
@@ -135,10 +147,12 @@ function SwapCard() {
     }, [])
 
     const { slippage } = useSelector((state) => state.store.userData)
-    const poolData = useSelector((state) => state.store.poolsData.pools)
     const storeDispatch = useDispatch()
     const history = useHistory();
     const { userBalances } = useSelector(cosmosSelector.all);
+    const { poolsInfo } = useSelector(liquiditySelector.all)
+    const poolData = poolsInfo?.poolsData
+
 
     //reducer for useReducer
     function reducer(state, action) {
