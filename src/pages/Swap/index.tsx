@@ -202,7 +202,6 @@ function SwapCard() {
 
         let isOver = false
         let isEmpty = false
-        let isCounterPairEmpty = false
 
         switch (action.type) {
             case TYPES.UPDATE_PRICE:
@@ -301,13 +300,10 @@ function SwapCard() {
             } else {
                 isEmpty = false
             }
-            // if (counterPairAmount === '' || counterPairAmount == 0) {
-            //     isCounterPairEmpty = true
-            // }
         }
 
         function getStatus(state) {
-            return state.status === 'create' ? 'create' : (isOver ? 'over' : (isEmpty || isCounterPairEmpty) ? 'empty' : 'normal')
+            return state.status === 'create' ? 'create' : (isOver ? 'over' : isEmpty ? 'empty' : 'normal')
         }
     }
 
@@ -393,7 +389,7 @@ function SwapCard() {
                         <div className="content">
                             <div className="detail">
                                 <div className="title">Estimated Return</div>
-                                <div className="data">20 {state.toCoin.toUpperCase()}</div>
+                                <div className="data">{state.toAmount ? state.toAmount : '?'} {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
