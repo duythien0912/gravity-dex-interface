@@ -115,7 +115,8 @@ function ConnectWalletModal({ close }: { close: any }) {
         } else {
             setSlippageStatus('normal')
         }
-        dispatch({ type: 'rootStore/setSlippage', payload: Number(value) })
+        console.log(value)
+        dispatch({ type: 'store/setSlippage', payload: { slippage: value ? Number(value) : '' } })
     }
 
     function setSlippageStatusWarning(status) {
@@ -134,7 +135,12 @@ function ConnectWalletModal({ close }: { close: any }) {
         < SettingWrapper >
             <div className="title">
                 Transaction Settings
-                    <div onClick={() => { close() }}>X</div>
+                    <div onClick={() => {
+                    if (slippage === 0 || slippage === '') {
+                        dispatch({ type: 'store/setSlippage', payload: { slippage: 3 } })
+                    }
+                    close()
+                }}>X</div>
             </div>
             <div className="settings">
                 <div className="setting">

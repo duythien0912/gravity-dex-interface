@@ -344,9 +344,9 @@ function SwapCard() {
             console.log('swap error', e)
         })
 
-        storeDispatch({ type: 'rootStore/togglePendingStatus' })
+        storeDispatch({ type: 'store/togglePendingStatus' })
         setTimeout(() => {
-            storeDispatch({ type: 'rootStore/togglePendingStatus' })
+            storeDispatch({ type: 'store/togglePendingStatus' })
         }, 3000)
     }
 

@@ -11,7 +11,7 @@ const initialState = {
             luna: 400,
             band: 500,
         },
-        slippage: 1,
+        slippage: 3,
         walletStatus: 'normal' // normal, pending, error
     },
     priceData: {
@@ -46,6 +46,9 @@ const reducers = {
     },
     setIsWallet: (state, action) => {
         state.isWallet = action.payload
+    },
+    setSlippage: (state, action) => {
+        state.userData.slippage = action.payload.slippage
     }
 }
 
