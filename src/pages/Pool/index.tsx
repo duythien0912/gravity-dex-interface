@@ -378,7 +378,7 @@ function Pool() {
 
                         </div>)
                     )
-                } else if (!isUser) {
+                } else if (!isUser && pairPoolData.reserve_coin_balances['u' + coinX] !== '0') {
 
                     result.push(
                         <div className="pool all-pool" key={pool}>

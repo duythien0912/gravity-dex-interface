@@ -115,10 +115,8 @@ function getButtonNameByStatus(status, fromCoin, toCoin) {
         return 'Insufficient balance'
     } else if (status === 'empty') {
         return 'Enter an amount'
-    } else if (status === 'create') {
+    } else if (status === 'create' || status === 'noPoolToken') {
         return 'Create a new pool'
-    } else if (status === 'noPoolToken') {
-        return 'Add Liquidity'
     } else {
         return 'SWAP'
     }
@@ -322,7 +320,7 @@ function SwapCard() {
         }
 
         function getStatus(state) {
-            return state.status === 'create' ? 'create' : (isOver ? 'over' : isEmpty ? 'empty' : 'normal')
+            return state.status === 'create' || state.status === 'noPoolToken' ? 'create' : (isOver ? 'over' : isEmpty ? 'empty' : 'normal')
         }
     }
 
@@ -403,7 +401,7 @@ function SwapCard() {
                     {/* Swap detail */}
                     <div className="swap-detail">
                         <div className="left">Price</div>
-                        <div className="right">{state.price !== '-' ? `${cutNumber(state.price, 6)} ${state.fromCoin.toUpperCase()} per ${state.toCoin.toUpperCase()}` : '-'}</div>
+                        <div className="right">{(state.price !== '-' && !isNaN(state.price)) ? `${cutNumber(state.price, 6)} ${state.fromCoin.toUpperCase()} per ${state.toCoin.toUpperCase()}` : '-'}</div>
                     </div>
 
                     <div className="swap-detail">
@@ -425,7 +423,7 @@ function SwapCard() {
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
                     </ActionButton>
 
-                    <div style={{ transform: `translateY(${isBoard ? '0' : '-200'}px)` }} className="result-detail-board">
+                    <div style={{ transform: `translateY(${isBoard && state.status !== "noPoolToken" ? '0' : '-200'}px)` }} className="result-detail-board">
                         <div className="content">
                             <div className="detail">
                                 <div className="title">Estimated Receives</div>
