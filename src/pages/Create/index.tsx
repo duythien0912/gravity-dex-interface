@@ -155,15 +155,15 @@ function CreateCard() {
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolsData = poolsInfo?.poolsData
-
     const history = useHistory();
+    const searchParams = new URLSearchParams(history.location.search);
+
     React.useEffect(() => {
-        const searchParams = new URLSearchParams(history.location.search);
+
 
         if (searchParams.has('from')) {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
-
     }, [history.location.search])
 
     //reducer for useReducer
@@ -276,17 +276,37 @@ function CreateCard() {
 
     async function create() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        BroadcastLiquidityTx({
-            type: 'msgCreatePool',
-            data: {
-                poolCreatorAddress: userAddress,
-                poolTypeId: 1,
-                depositCoins: [
-                    { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
-                    { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
-                ]
+
+        if (searchParams.has('emptyPool')) {
+            const sortedCoins = [state.fromCoin, state.toCoin].sort()
+            let isReverse = false
+            if (state.fromCoin !== sortedCoins[0]) {
+                isReverse = true
             }
-        })
+            BroadcastLiquidityTx({
+                type: 'msgDeposit',
+                data: {
+                    depositorAddress: userAddress,
+                    poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
+                    depositCoins: [
+                        { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
+                    ]
+                }
+            })
+        } else {
+            BroadcastLiquidityTx({
+                type: 'msgCreatePool',
+                data: {
+                    poolCreatorAddress: userAddress,
+                    poolTypeId: 1,
+                    depositCoins: [
+                        { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
+                        { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
+                    ]
+                }
+            })
+        }
     }
 
     return (

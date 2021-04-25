@@ -117,6 +117,8 @@ function getButtonNameByStatus(status, fromCoin, toCoin) {
         return 'Enter an amount'
     } else if (status === 'create') {
         return 'Create a new pool'
+    } else if (status === 'noPoolToken') {
+        return 'Add Liquidity'
     } else {
         return 'SWAP'
     }
@@ -162,8 +164,8 @@ function SwapCard() {
 
     React.useEffect(() => {
         //미로그인시 connectWallet 스테이터스 아니면 empty로
-        console.log('poolsInfo', poolsInfo)
-        console.log('state', state)
+        // console.log('poolsInfo', poolsInfo)
+        // console.log('state', state)
         if (state.fromCoin !== '' && state.toCoin) {
             const sortedCoins = [state.fromCoin, state.toCoin].sort()
 
@@ -177,7 +179,7 @@ function SwapCard() {
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
                 console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
-                console.log('price', price)
+                // console.log('price', price)
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
@@ -186,7 +188,7 @@ function SwapCard() {
             }
 
         } else {
-            console.log('need both coins')
+            // console.log('need both coins')
         }
 
     }, [poolsInfo, state.fromCoin, state.toCoin, state.toAmount])
@@ -255,13 +257,16 @@ function SwapCard() {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, fromAmount: '', toAmount: '' }
                 } else {
                     const selectedPooldata = getSelectedPairsPoolData(state, action, counterTargetPair, poolData)
+                    console.log('sp', selectedPooldata.pool_coin_amount === '0')
                     state.status = "normal"
                     setAmountCheckVariables()
 
                     if (!selectedPooldata) {
                         return { ...state, status: "create", [`${targetPair}Coin`]: action.payload.coin, fromAmount: '', toAmount: '', price: '-' }
+                    } else if (selectedPooldata.pool_coin_amount === '0') {
+                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), fromAmount: '', toAmount: '', status: 'noPoolToken' }
                     } else {
-                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), fromAmount: '', toAmount: '', status: getStatus(state) }
+                        return { ...state, [`${targetPair}Coin`]: action.payload.coin, price: getPoolPrice(state, action, counterTargetPair, poolData), fromAmount: '', toAmount: '', status: 'empty' }
                     }
                 }
 
@@ -409,10 +414,12 @@ function SwapCard() {
 
                     {/* Swap Button */}
                     <ActionButton onClick={() => {
-                        if (state.status !== 'create') {
-                            swap()
-                        } else {
+                        if (state.status === 'create') {
                             create(state.fromCoin, state.toCoin)
+                        } else if (state.status === 'noPoolToken') {
+                            history.push(`/Create?from=${state.fromCoin}&to=${state.toCoin}&emptyPool=true`)
+                        } else {
+                            swap()
                         }
                     }} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
                         {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
@@ -426,7 +433,7 @@ function SwapCard() {
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
-                                <div className="data">{cutNumber(slipage, 4)}%</div>
+                                <div className="data">{slipage ? cutNumber(slipage, 4) : '?'}%</div>
                             </div>
                             <div className="detail">
                                 <div className="title"></div>
