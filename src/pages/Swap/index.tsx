@@ -157,6 +157,7 @@ function SwapCard() {
         status: 'empty', // connectWallet, notSelected, empty, over, normal
         price: '-',
         isBoard: false,
+        isReverse: false,
     })
 
     React.useEffect(() => {
@@ -166,9 +167,10 @@ function SwapCard() {
         if (state.fromCoin !== '' && state.toCoin) {
             const sortedCoins = [state.fromCoin, state.toCoin].sort()
 
-            let isReverse = false
+            let isReverse = true
+            console.log(sortedCoins[0], state.fromCoin)
             if (sortedCoins[0] === state.fromCoin) {
-                isReverse = true
+                isReverse = false
             }
 
             const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
@@ -178,7 +180,7 @@ function SwapCard() {
                 console.log('price', price)
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
-                dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: parseFloat(cutNumber(price, 6)) } })
+                dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: parseFloat(cutNumber(price, 6)), isReverse: isReverse } })
             } else {
                 console.log('no Pool')
             }
@@ -209,8 +211,7 @@ function SwapCard() {
 
         switch (action.type) {
             case TYPES.UPDATE_PRICE:
-                console.log('here', action.payload)
-                return { ...state, price: action.payload.price }
+                return { ...state, price: action.payload.price, isReverse: action.payload.isReverse }
 
             case TYPES.AMOUNT_CHANGE:
                 setAmountCheckVariables()
@@ -323,35 +324,26 @@ function SwapCard() {
 
 
     function swap() {
-        //         swapRequesterAddress: string;
-        //   /** id of the target pool */
-        //   poolId: number;
-        //   /** id of swap type. Must match the value in the pool. */
-        //   swapTypeId: number;
-        //   /** offer sdk.coin for the swap request, must match the denom in the pool. */
-        //   offerCoin: Coin | undefined;
-        //   /** denom of demand coin to be exchanged on the swap request, must match the denom in the pool. */
-        //   demandCoinDenom: string;
-        //   /** half of offer coin amount * params.swap_fee_rate for reservation to pay fees */
-        //   offerCoinFee: Coin | undefined;
-        //   /**
-        //    * limit order price for the order, the price is the exchange ratio of X/Y where X is the amount of the first coin and
-        //    * Y is the amount of the second coin when their denoms are sorted alphabetically
-        //    */
-        //   orderPrice: string;
-        console.log(selectedPoolData)
+        console.log(state.isReverse)
+        console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
         BroadcastLiquidityTx({
             type: 'msgSwap',
             data: {
                 swapRequesterAddress: userAddress,
                 poolId: Number(selectedPoolData.id),
                 swapTypeId: 1,
-                offerCoin: { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
+                offerCoin: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000)) },
                 demandCoinDenom: 'u' + state.toCoin,
-                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000 * 0.0015) },
-                orderPrice: String(1)
+                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.ceil(state.fromAmount * 1000000 * 0.001500000000000000)) },
+                orderPrice: String(Number((Number(state.isReverse ? 1 / state.price * 1 / 1.1 : state.price * 1.1)).toFixed(18).replace('.', '')))
             }
+
+        }).then((res) => {
+            console.log('swap res', res)
+        }).catch((e) => {
+            console.log('swap error', e)
         })
+
         storeDispatch({ type: 'rootStore/togglePendingStatus' })
         setTimeout(() => {
             storeDispatch({ type: 'rootStore/togglePendingStatus' })
