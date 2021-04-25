@@ -328,6 +328,8 @@ function SwapCard() {
 
     function swap() {
         console.log(state.isReverse)
+        const slippageRange = 1 + slippage / 100
+        console.log(slippageRange)
         console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
         BroadcastLiquidityTx({
             type: 'msgSwap',
@@ -338,7 +340,7 @@ function SwapCard() {
                 offerCoin: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000)) },
                 demandCoinDenom: 'u' + state.toCoin,
                 offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.ceil(state.fromAmount * 1000000 * 0.001500000000000000)) },
-                orderPrice: String(Number((Number(state.isReverse ? 1 / state.price * 1 / 1.1 : state.price * 1.1)).toFixed(18).replace('.', '')))
+                orderPrice: String(Number((Number(state.isReverse ? 1 / (state.price * (1 / slippageRange)) : state.price * slippageRange)).toFixed(18).replace('.', '')))
             }
 
         }).then((res) => {

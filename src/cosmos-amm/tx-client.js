@@ -37,10 +37,10 @@ export async function BroadcastLiquidityTx(txInfo) {
         if (txBroadcastResponse.code !== undefined) {
             console.log("error")
             console.log(txBroadcastResponse.rawLog)
-            alert(txBroadcastResponse.rawLog)
+            // alert(txBroadcastResponse.rawLog)
         } else {
             console.log("success")
-            alert("success")
+            // alert("success")
             console.log(txBroadcastResponse)
         }
 
