@@ -1,6 +1,8 @@
 import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module"
+import axios from "axios";
 import { chainInfo } from "./config"
 export async function BroadcastLiquidityTx(txInfo) {
+
     const signer = window.getOfflineSigner(chainInfo.chainId);
     const txGenerator = await txClient(signer, { addr: chainInfo.rpc })
     let msg = null
@@ -42,10 +44,34 @@ export async function BroadcastLiquidityTx(txInfo) {
             console.log("success")
             // alert("success")
             console.log(txBroadcastResponse)
+            getTxResult(txBroadcastResponse.height)
         }
 
     } catch (e) {
         console.log("error", e)
         console.log(e.rawLog?.split(':')[2].trim())
+    }
+
+
+    async function getTxResult(height) {
+        const response = await axios.get(`${chainInfo.rpc}/block_results?height=${height}`)
+        console.log(response.data.result.end_block_events)
+
+        response.data.result.end_block_events.forEach((item) => {
+            if (item.type === "swap_transacted") {
+                item.attributes.forEach((result) => {
+                    console.log(atob(result.key), atob(result.value))
+                })
+            }
+        })
+
+        response.data.result.txs_results[0].events.forEach((item) => {
+            if (item.type === "swap_within_batch") {
+                item.attributes.forEach((result) => {
+                    console.log(atob(result.key), atob(result.value))
+                })
+            }
+        })
+        // atob()
     }
 }

@@ -168,7 +168,7 @@ function SwapCard() {
             const sortedCoins = [state.fromCoin, state.toCoin].sort()
 
             let isReverse = true
-            console.log(sortedCoins[0], state.fromCoin)
+            // console.log(sortedCoins[0], state.fromCoin)
             if (sortedCoins[0] === state.fromCoin) {
                 isReverse = false
             }
@@ -176,7 +176,7 @@ function SwapCard() {
             const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
-                console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
+                // console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
                 // console.log('price', price)
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
@@ -327,10 +327,10 @@ function SwapCard() {
 
 
     function swap() {
-        console.log(state.isReverse)
+        // console.log(state.isReverse)
         const slippageRange = 1 + slippage / 100
-        console.log(slippageRange)
-        console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
+        // console.log(slippageRange)
+        // console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
         BroadcastLiquidityTx({
             type: 'msgSwap',
             data: {
