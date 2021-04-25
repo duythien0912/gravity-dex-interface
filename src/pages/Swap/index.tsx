@@ -180,7 +180,7 @@ function SwapCard() {
                 console.log('price', price)
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
-                dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: parseFloat(cutNumber(price, 6)), isReverse: isReverse } })
+                dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
                 console.log('no Pool')
             }
@@ -398,7 +398,7 @@ function SwapCard() {
                     {/* Swap detail */}
                     <div className="swap-detail">
                         <div className="left">Price</div>
-                        <div className="right">{state.price !== '-' ? (`${parseFloat(cutNumber(state.price, 6))} ${state.fromCoin.toUpperCase()} per ${state.toCoin.toUpperCase()}`) : '-'}</div>
+                        <div className="right">{state.price !== '-' ? `${cutNumber(state.price, 6)} ${state.fromCoin.toUpperCase()} per ${state.toCoin.toUpperCase()}` : '-'}</div>
                     </div>
 
                     <div className="swap-detail">
@@ -421,12 +421,12 @@ function SwapCard() {
                     <div style={{ transform: `translateY(${isBoard ? '0' : '-200'}px)` }} className="result-detail-board">
                         <div className="content">
                             <div className="detail">
-                                <div className="title">Estimated Return</div>
-                                <div className="data">{state.toAmount ? state.toAmount : '?'} {state.toCoin.toUpperCase()}</div>
+                                <div className="title">Estimated Receives</div>
+                                <div className="data">{state.toAmount ? cutNumber(state.toAmount, 4) : '?'} {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
-                                <div className="data">{slipage}%</div>
+                                <div className="data">{cutNumber(slipage, 4)}%</div>
                             </div>
                             <div className="detail">
                                 <div className="title"></div>

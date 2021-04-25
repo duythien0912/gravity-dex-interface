@@ -226,7 +226,7 @@ function AddLiquidityCard() {
                     isEmpty = true
                 }
 
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? cutNumber(selectedPairAmount * price, 6) : '', status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
                 if (selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances)) {
@@ -236,7 +236,7 @@ function AddLiquidityCard() {
                 }
 
 
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? parseFloat(cutNumber(selectedPairAmount * price, 6)) : '', status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? cutNumber(selectedPairAmount * price, 6) : '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
@@ -363,15 +363,15 @@ function AddLiquidityCard() {
                         <div className="title">Pool information</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{(coinYAmount / coinXAmount) ? parseFloat(cutNumber((coinYAmount / coinXAmount), 4)) : '-'}</div>
+                                <div className="number">{(coinYAmount / coinXAmount) ? cutNumber((coinYAmount / coinXAmount), 4) : '-'}</div>
                                 <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber((coinXAmount / coinYAmount), 4)) : '-'}</div>
+                                <div className="number">{(coinXAmount / coinYAmount) ? cutNumber((coinXAmount / coinYAmount), 4) : '-'}</div>
                                 <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{(coinXAmount / coinYAmount) ? parseFloat(cutNumber(((state.toAmount * 1000000) / coinYAmount) * 100, 4)) : '-'}%</div>
+                                <div className="number">{(coinXAmount / coinYAmount) ? cutNumber(((state.toAmount * 1000000) / coinYAmount) * 100, 4) : '-'}%</div>
                                 <div className="text">Share of Pool</div>
                             </div>
                         </div>

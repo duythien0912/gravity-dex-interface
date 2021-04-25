@@ -331,7 +331,7 @@ function RedeemCard() {
 
                     {/* redeem detail */}
                     <div className="returns-detail">
-                        <div className="title">Estimated Returns</div>
+                        <div className="title">Estimated Receives</div>
                         <div className="details">
                             <div className="detail">
                                 <div className="return">

@@ -341,11 +341,11 @@ function CreateCard() {
                         <div className="title">Initial prices and pool share</div>
                         <div className="details">
                             <div className="detail">
-                                <div className="number">{state.fromAmount === '' || isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.toAmount / state.fromAmount, 4))}</div>
+                                <div className="number">{state.fromAmount === '' || isNaN(state.toAmount / state.fromAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : cutNumber(state.toAmount / state.fromAmount, 4)}</div>
                                 <div className="text">{state.toCoin.toUpperCase()} per {state.fromCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
-                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : parseFloat(cutNumber(state.fromAmount / state.toAmount, 4))}</div>
+                                <div className="number">{isNaN(state.fromAmount / state.toAmount) || (state.fromAmount / state.toAmount) === Infinity ? '-' : cutNumber(state.fromAmount / state.toAmount, 4)}</div>
                                 <div className="text">{state.fromCoin.toUpperCase()} per {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
