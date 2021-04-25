@@ -335,7 +335,7 @@ function RedeemCard() {
                         <div className="details">
                             <div className="detail">
                                 <div className="return">
-                                    {userShare ? userShare * coinXAmount * state.percent / 100000000 : '-'}
+                                    {userShare ? cutNumber(userShare * coinXAmount * state.percent / 100000000, 4) : '-'}
                                 </div>
                                 <div className="pair">
                                     <div className="coin-info">
@@ -344,7 +344,7 @@ function RedeemCard() {
                                 </div>
                             </div>
                             <div className="detail">
-                                <div className="return">{userShare ? userShare * coinYAmount * state.percent / 100000000 : '-'}</div>
+                                <div className="return">{userShare ? cutNumber(userShare * coinYAmount * state.percent / 100000000, 4) : '-'}</div>
                                 <div className="pair">
                                     <div className="coin-info">
                                         <img className="coin-img" src={`/assets/coins/${state.toCoin}.png`} alt="coin pair" />{state.toCoin.toUpperCase()}

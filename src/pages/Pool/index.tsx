@@ -359,15 +359,15 @@ function Pool() {
                                 </div>
                                 <div className="detail">
                                     <div>Pooled {uppercasePoolNames.split('/')[0]}:</div>
-                                    <div className="detail-amount">{cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinX] / 1000000, 8)} {coinX.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
+                                    <div className="detail-amount">{cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinX] / 1000000, 4)} {coinX.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinX}.png`} alt="pairX" /></div>
                                 </div>
                                 <div className="detail">
                                     <div>Pooled {uppercasePoolNames.split('/')[1]}:</div>
-                                    <div className="detail-amount">{cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinY] / 1000000, 8)} {coinY.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
+                                    <div className="detail-amount">{cutNumber(myShare * pairPoolData.reserve_coin_balances['u' + coinY] / 1000000, 4)} {coinY.toUpperCase()} <img className="coin-img" src={`/assets/coins/${coinY}.png`} alt="pairY" /></div>
                                 </div>
                                 <div className="detail">
                                     <div>Your pool share:</div>
-                                    <div>{cutNumber(myShare * 100, 8)}%</div>
+                                    <div>{cutNumber(myShare * 100, 4)}%</div>
                                 </div>
 
                                 <div className="pool-action">
@@ -464,7 +464,7 @@ function Pool() {
 
                     <div className="buttons">
                         <button className="button" onClick={() => { history.push('/create') }}>Create a pool</button>
-                        <button className="button" onClick={() => { history.push('/add') }}>Add Liquidity</button>
+                        {/* <button className="button" onClick={() => { history.push('/add') }}>Add Liquidity</button> */}
                     </div>
                 </div>
 
