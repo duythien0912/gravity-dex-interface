@@ -237,14 +237,14 @@ function SwapCard() {
                 }
 
                 if (price !== '-' && !isNaN(price)) {
-                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
+                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (cutNumber(selectedPairAmount * price, 6)), status: getStatus(state) }
                 } else {
                     return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: '', status: getStatus(state) }
                 }
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (selectedPairAmount * price), status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (cutNumber(selectedPairAmount * price, 6)), status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
