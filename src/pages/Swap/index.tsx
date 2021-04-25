@@ -148,6 +148,7 @@ function SwapCard() {
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolData = poolsInfo?.poolsData
     const [slipage, setSlippage] = React.useState(0)
+    const [fixedPrice, setFixedPrice] = React.useState(0)
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
@@ -176,10 +177,14 @@ function SwapCard() {
             const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
-                // console.log('selectedPairsPoolData', selectedPairsPoolData === undefined ? false : selectedPairsPoolData)
-                // console.log('price', price)
+
+
+                setFixedPrice(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
+
+                console.log(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
+
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
                 console.log('no Pool')
@@ -255,7 +260,7 @@ function SwapCard() {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, fromAmount: '', toAmount: '' }
                 } else {
                     const selectedPooldata = getSelectedPairsPoolData(state, action, counterTargetPair, poolData)
-                    console.log('sp', selectedPooldata.pool_coin_amount === '0')
+
                     state.status = "normal"
                     setAmountCheckVariables()
 
@@ -327,8 +332,11 @@ function SwapCard() {
 
 
     function swap() {
-        // console.log(state.isReverse)
+        // console.log(state.isReverse ? (1 / state.price).toFixed(6) : state.price)
+        // return
+        console.log(state.isReverse)
         const slippageRange = 1 + slippage / 100
+        console.log('price', state.price)
         // console.log(slippageRange)
         // console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
         BroadcastLiquidityTx({
@@ -340,7 +348,9 @@ function SwapCard() {
                 offerCoin: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000)) },
                 demandCoinDenom: 'u' + state.toCoin,
                 offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.ceil(state.fromAmount * 1000000 * 0.001500000000000000)) },
-                orderPrice: String(Number((Number(state.isReverse ? 1 / (state.price * (1 / slippageRange)) : state.price * slippageRange)).toFixed(18).replace('.', '')))
+                orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
+                // orderPrice: String((state.isReverse ? 1 / fixedPrice * (1 - (slippage / 100)) : fixedPrice * slippageRange).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
+                // orderPrice: String(Number((Number(state.isReverse ? (1 / (state.price * (1 / slippageRange))).toFixed(6) : state.price * slippageRange)).toFixed(18).replace('.', '')))
             }
 
         }).then((res) => {
