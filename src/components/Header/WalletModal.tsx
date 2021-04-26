@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { useSelector } from "react-redux"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
+import { checkImageExsistence } from "../../utils/global-functions"
 
 
 // useDispatch,
@@ -89,7 +90,7 @@ border-top-left-radius: 12px;
 
 function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { close: any, priceData: {}, userBalances: {}, totalValue: any }) {
     const myBalance = userBalances
-
+    console.log(myBalance)
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     // const dispatch = useDispatch()
@@ -101,7 +102,7 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
         let result = []
 
         for (let pair in balance) {
-            let coinName = pair.substr(1)
+            let coinName = pair !== 'xrun' ? pair.substr(1) : pair
             if (pair.startsWith('pool')) {
                 coinName = "pool"
             }
@@ -123,13 +124,7 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
         }
 
         //helpers 
-        function checkImageExsistence(coinName) {
-            if (coinName === 'xrn' || coinName === 'run' || coinName === 'gcyb') {
-                return false
-            } else {
-                return true
-            }
-        }
+
         return result
     }
 

@@ -5,6 +5,7 @@ import BasicModal from "./BasicModal"
 import styled from "styled-components"
 import { currencies } from "../../cosmos-amm/config"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { checkImageExsistence } from "../../utils/global-functions"
 
 const SelectCoinWrapper = styled.div`
 @media(max-width: 500px) {
@@ -129,7 +130,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
                         toggle()
                     }} key={index}>
                     <div className="coin-info">
-                        <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" />{pair.toUpperCase()}
+                        {checkImageExsistence(pair) ? <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" /> : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>{pair.charAt(0).toUpperCase()}</div>} {pair.toUpperCase()}
                     </div>
                     <div className="coin-balance">{pairBalance || 0}</div>
                 </div>

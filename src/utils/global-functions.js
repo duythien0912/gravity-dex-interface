@@ -46,6 +46,14 @@ export function sortCoins(x, y) {
     return [x, y].sort()
 }
 
+export function checkImageExsistence(coinName) {
+    if (coinName === 'xrn' || coinName === 'xrun' || coinName === 'gcyb') {
+        return false
+    } else {
+        return true
+    }
+}
+
 export function getSelectedPairsPoolData(state, action, counterTarget, poolData) {
     let coinA = state[`${counterTarget}Coin`]
     let coinB = action.payload.coin
