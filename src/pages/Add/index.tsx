@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, cutNumber } from "../../utils/global-functions"
+import { cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 
@@ -156,14 +156,12 @@ function AddLiquidityCard() {
 
     let coinXAmount = null
     let coinYAmount = null
-    let poolPrice = null
 
     const sortedCoins = [state.fromCoin, state.toCoin].sort()
     if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
         const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
         coinXAmount = reserveCoins[`u${state.fromCoin}`]
         coinYAmount = reserveCoins[`u${state.toCoin}`]
-        poolPrice = coinXAmount / coinYAmount
     }
 
     const history = useHistory();
@@ -179,7 +177,6 @@ function AddLiquidityCard() {
         const { targetPair, counterTargetPair } = getPairs(action)
 
         const selectedPairAmount = action.payload?.amount || ''
-        const counterPairAmount = state[`${counterTargetPair}Amount`]
 
         const selectedPairUserBalances = userBalances['u' + state[`${targetPair}Coin`]] / 1000000
         const counterPairUserBalances = userBalances['u' + state[`${counterTargetPair}Coin`]] / 1000000
@@ -246,10 +243,6 @@ function AddLiquidityCard() {
                 if (!isBothCoin) {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
                 } else {
-
-                    const coinA = state[`${counterTargetPair}Coin`]
-                    const coinB = action.payload.coin
-                    const sortedCoins = [coinA, coinB].sort()
 
                     if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
                         isEmpty = true

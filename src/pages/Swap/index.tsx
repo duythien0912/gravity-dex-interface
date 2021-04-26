@@ -148,7 +148,6 @@ function SwapCard() {
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolData = poolsInfo?.poolsData
     const [slipage, setSlippage] = React.useState(0)
-    const [fixedPrice, setFixedPrice] = React.useState(0)
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
@@ -178,8 +177,6 @@ function SwapCard() {
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
 
-
-                setFixedPrice(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
 
@@ -194,7 +191,7 @@ function SwapCard() {
             // console.log('need both coins')
         }
 
-    }, [poolsInfo, state.fromCoin, state.toCoin, state.toAmount])
+    }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
 
     //reducer for useReducer
     function reducer(state, action) {

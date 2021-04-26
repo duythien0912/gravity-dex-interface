@@ -28,9 +28,6 @@ import { useToggle } from "ahooks";
 import { useDispatch, useSelector } from "react-redux";
 import { toastGenerator, mobileCheck } from "../../utils/global-functions"
 
-//TEST-CODE
-import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-
 const { requestQueryAllBalances } = cosmosAction;
 // styled-components
 const HeaderFrame = styled.div`

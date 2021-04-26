@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import CoinSelectorArrow from "../../assets/svgs/CoinSelectorArrow"
 import CoinSelectModal from "../Modals/CoinSelectModal"
 
-import { cosmosSelector, cosmosAction } from "../../modules/cosmosRest/slice"
+import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 const Wrapper = styled.div`
     border-radius: 20px;

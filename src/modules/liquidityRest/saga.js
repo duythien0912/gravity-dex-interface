@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { queryParams, queryLiquidityPools, queryLiquidityPool } from '../../api/liquidity-rest';
+import { queryParams, queryLiquidityPools } from '../../api/liquidity-rest';
 import { liquidityAction } from './slice';
 
 

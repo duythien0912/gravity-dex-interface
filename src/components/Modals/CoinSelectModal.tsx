@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 // useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
-import { chainInfo, currencies } from "../../cosmos-amm/config"
+import { currencies } from "../../cosmos-amm/config"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
 const SelectCoinWrapper = styled.div`

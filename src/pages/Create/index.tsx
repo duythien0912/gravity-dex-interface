@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, cutNumber } from "../../utils/global-functions"
+import { cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 
@@ -156,7 +156,7 @@ function CreateCard() {
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolsData = poolsInfo?.poolsData
     const history = useHistory();
-    const searchParams = new URLSearchParams(history.location.search);
+    const searchParams = React.useMemo(() => { return new URLSearchParams(history.location.search) }, [history.location.search]);
 
     React.useEffect(() => {
 
@@ -164,7 +164,7 @@ function CreateCard() {
         if (searchParams.has('from')) {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
-    }, [history.location.search])
+    }, [history.location.search, searchParams])
 
     //reducer for useReducer
     function reducer(state, action) {
@@ -219,10 +219,6 @@ function CreateCard() {
                 if (!isBothCoin) {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
                 } else {
-
-                    const coinA = state[`${counterTargetPair}Coin`]
-                    const coinB = action.payload.coin
-                    const sortedCoins = [coinA, coinB].sort()
 
                     if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
                         isEmpty = true

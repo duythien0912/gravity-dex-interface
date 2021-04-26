@@ -2,17 +2,14 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { getSelectedPairsPoolData, cutNumber } from "../../utils/global-functions"
+import { cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
-
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-
 import BaseCard from "../../components/Cards/BaseCard"
-import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
 import { Range, getTrackBackground } from "react-range";
-import { NonExistenceProof } from '@cosmjs/stargate/build/codec/confio/proofs';
+
 //Styled-components
 const Wrapper = styled.div`
 margin-top: -50px;
@@ -178,7 +175,7 @@ function RedeemCard() {
     let coinYAmount = null
     let totalPoolCoinAmount = null
     let poolCoinDenom = null
-    let poolPrice = null
+
     let userPoolCoinAmount = null
     let userShare = null
 
@@ -187,7 +184,7 @@ function RedeemCard() {
         const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
         coinXAmount = reserveCoins[`u${state.fromCoin}`]
         coinYAmount = reserveCoins[`u${state.toCoin}`]
-        poolPrice = coinXAmount / coinYAmount
+
         totalPoolCoinAmount = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_amount
         poolCoinDenom = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_denom
         userPoolCoinAmount = userBalances[poolCoinDenom]

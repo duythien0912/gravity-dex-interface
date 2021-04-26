@@ -40,10 +40,6 @@ const reducers = {
         let currentStatus = state.userData.walletStatus
         state.userData.walletStatus = currentStatus === 'pending' ? 'normal' : 'pending'
     },
-    togglePendingStatus: (state, action) => {
-        let currentStatus = state.userData.walletStatus
-        state.userData.walletStatus = currentStatus === 'pending' ? 'normal' : 'pending'
-    },
     setIsWallet: (state, action) => {
         state.isWallet = action.payload
     },
