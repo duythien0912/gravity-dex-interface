@@ -19,7 +19,7 @@ const initialState = {
     isWallet: false,
 
     isTxModal: false,
-    TxModalData: {},
+    txModalData: { test: 'te' },
 }
 
 const reducers = {
@@ -28,7 +28,7 @@ const reducers = {
         state.userData.walletStatus = currentStatus === 'pending' ? 'normal' : 'pending'
     },
     setTxModalStatus: (state, action) => {
-        state.TXmodalData = action.payload
+        state.txModalData = action.payload
         console.log(action.payload)
         state.isTxModal = !state.isTxModal
     },
@@ -50,8 +50,9 @@ const selectAllState = createSelector(
     state => state.poolsData,
     state => state.isWallet,
     state => state.isTxModal,
-    (userData, priceData, poolsData, isWallet, isTxModal) => {
-        return { userData, priceData, poolsData, isWallet, isTxModal };
+    state => state.txModalData,
+    (userData, priceData, poolsData, isWallet, isTxModal, txModalData) => {
+        return { userData, priceData, poolsData, isWallet, isTxModal, txModalData };
     }
 );
 

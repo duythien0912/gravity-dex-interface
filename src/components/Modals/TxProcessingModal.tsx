@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { storeSelector } from "../../modules/store/slice"
 import { checkImageExsistence } from "../../utils/global-functions"
 
 const SelectCoinWrapper = styled.div`
@@ -56,18 +57,18 @@ const SelectCoinWrapper = styled.div`
 }
 
 .wrapper {
-    height: 150px;
+    height: 100px;
 
-    padding: 0 20px;
+    padding: 0 20px 0 0;
     display: flex;
 
-    border: 1px solid #812056;
+   background-color: #f77e4a33;
     border-radius: 8px;
     margin: 0 20px;
     
     .step-orders {
         width: 60px;
-        height: 148px;
+        height: 100px;
 
         .order {
             /* border: 1px solid black; */
@@ -77,15 +78,15 @@ const SelectCoinWrapper = styled.div`
             /* height: 24px; */
             text-align: center;
             margin: 0 auto;
-            
+           
             &:first-child {
-                margin-top: 28px;
+                margin-top: 15px;
             }
         }
 
         .divider {
             width: 1px;
-            height: 53px;
+            height: 31px;
             background-color: black;
             margin: 0 auto;
         }
@@ -95,11 +96,17 @@ const SelectCoinWrapper = styled.div`
       
         height: 148px;
         flex: 1;
-        padding-left: 20px;
+     
         .detail {
+            font-weight: 300;
             display:flex;
             align-items: center;
-            height: 74px;
+            height: 50px;
+
+            .status {
+                font-weight: 600;
+                padding-left: 4px;
+            }
         }
     }
 }
@@ -108,20 +115,42 @@ const SelectCoinWrapper = styled.div`
     .result {
         padding: 20px;
         font-size: 20px;
+
         .title {
             text-align: center;
             margin-bottom: 20px;
         }
+
+        .detail {
+            text-align: center;
+        }
     }
 `
+//helpers
+function getSuccessMessage(type) {
+    switch (type) {
+        case 'Redeem':
+            return "Redeem Success! 🎉"
+        case 'Create':
+            return "Pool Created! 🎉"
+        case 'Create':
+            return "  Add Liquidity Success! 🎉"
+        case 'Swap':
+            return "Swap Success! 🎉"
+    }
+}
+
 
 function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }) {
-    const [searchKeyword, setSearchKeyword] = React.useState('')
-    const { userBalances } = useSelector(cosmosSelector.all);
+
+    const { txModalData } = useSelector(storeSelector.all)
+    const [broadcastStatus, setBroadcastStatus] = React.useState('pending')
+    const [transactionResultStatus, setTransactionResultStatus] = React.useState('waiting')
 
     React.useEffect(() => {
-        setSearchKeyword('')
-    }, [isOpen])
+        setBroadcastStatus(txModalData.broadcastStatus ? txModalData.broadcastStatus : 'pending')
+        setTransactionResultStatus(txModalData.transactionResultStatus ? txModalData.transactionResultStatus : 'waiting')
+    }, [txModalData])
 
 
 
@@ -130,7 +159,7 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
         <BasicModal elementId="modal" isOpen={isOpen} toggle={toggle}>
             <SelectCoinWrapper>
                 <div className="header">
-                    <div className="title">Transaction Steps</div>
+                    <div className="title">{txModalData.type} Steps</div>
                     <div className="close" onClick={() => { toggle() }}>X</div>
                 </div>
 
@@ -141,17 +170,18 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                         <div className="order" style={{ color: "darkgray" }}>②</div>
                     </div>
                     <div className="step-details">
-                        <div className="detail">Swap Broadcast : PENDING</div>
-                        <div className="detail" style={{ color: "darkgray" }}>Transaction Result : WAITING</div>
+                        <div className="detail">Transaction Broadcast - <span className="status">{broadcastStatus.toUpperCase()}</span></div>
+                        <div className="detail" style={{ color: "darkgray" }}>Transaction Result - <span className="status">{transactionResultStatus.toUpperCase()}</span></div>
                     </div>
                 </div>
 
                 <div className="result">
                     <div className="title">Result</div>
-                    <div>Pool Created!</div>
-                    <div>Redeem Success!</div>
-                    <div>Add Liquidity Success!</div>
-                    <div>Swap Success</div>
+                    <div className="detail">
+
+                        {getSuccessMessage(txModalData.type)}
+                    </div>
+
                 </div>
 
 
