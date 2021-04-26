@@ -218,18 +218,18 @@ function RedeemCard() {
     }
 
     async function redeem() {
-        // const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        // BroadcastLiquidityTx({
-        //     type: 'msgWithdraw',
-        //     data: {
-        //         withdrawerAddress: userAddress,
-        //         poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
-        //         poolCoin: { denom: poolCoinDenom, amount: String(userPoolCoinAmount * state.percent[0] / 100) },
-        //     }
-        // })
+        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        BroadcastLiquidityTx({
+            type: 'msgWithdraw',
+            data: {
+                withdrawerAddress: userAddress,
+                poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
+                poolCoin: { denom: poolCoinDenom, amount: String(Math.floor(userPoolCoinAmount * state.percent[0] / 100)) },
+            }
+        }, storeDispatch, { type: 'Redeem' })
 
         //최초
-        storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'pending' } })
+        // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'pending' } })
         //브로드캐스트 성공 => 대기중
         // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'success', transactionResultStatus: 'pending' } })
         // //브로드캐스트 실패 
@@ -237,7 +237,7 @@ function RedeemCard() {
         // //브로드캐스트 성공 => tx 성공
         // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'success', transactionResultStatus: 'success', resultData: "success" } })
         // //브로드캐스트 성공 => tx 실패
-        // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'success', transactionResultStatus: 'success', resultData: "success" } })
+        // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: "success" } })
     }
     const STEP = 1;
     const MIN = 0;

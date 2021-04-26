@@ -2,7 +2,8 @@ import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity
 import axios from "axios";
 import { chainInfo } from "./config"
 
-export async function BroadcastLiquidityTx(txInfo) {
+export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
+    dispatch(getTxProcessingStatus('init', data))
 
     const signer = window.getOfflineSigner(chainInfo.chainId);
     const txGenerator = await txClient(signer, { addr: chainInfo.rpc })
@@ -38,11 +39,15 @@ export async function BroadcastLiquidityTx(txInfo) {
         const txBroadcastResponse = await txGenerator.signAndBroadcast([msg])
         console.log(txBroadcastResponse)
         if (txBroadcastResponse.code !== undefined) {
+            const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
             console.log("error")
+            dispatch(getTxProcessingStatus('broadcastFail', failMsg))
             console.log(txBroadcastResponse.rawLog)
             // alert(txBroadcastResponse.rawLog)
         } else {
             console.log("success")
+
+            dispatch(getTxProcessingStatus('broadcastSuccess', data))
             // alert("success")
             console.log(txBroadcastResponse)
             getTxResult(txBroadcastResponse.height)
@@ -75,5 +80,26 @@ export async function BroadcastLiquidityTx(txInfo) {
             }
         })
         // atob()
+    }
+
+    function getTxProcessingStatus(status, data) {
+        if (status === 'init') {
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'pending' } }
+        }
+
+        if (status === 'broadcastSuccess') {
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'pending' } }
+        }
+
+        if (status === 'broadcastFail') {
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'fail', resultData: data.resultData } }
+        }
+
+        if (status === 'txSuccess') {
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'success', resultData: "success" } }
+        }
+        if (status === 'txFail') {
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: "success" } }
+        }
     }
 }

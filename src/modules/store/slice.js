@@ -30,7 +30,7 @@ const reducers = {
     setTxModalStatus: (state, action) => {
         state.txModalData = action.payload
         console.log(action.payload)
-        state.isTxModal = !state.isTxModal
+        state.isTxModal = action.payload.isTxModal !== undefined ? action.payload.isTxModal : true
     },
     setIsWallet: (state, action) => {
         state.isWallet = action.payload

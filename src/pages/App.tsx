@@ -109,7 +109,7 @@ function App() {
         rtl={false} pauseOnFocusLoss
         draggable pauseOnHover />
 
-      <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({})) }} />
+      <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({ isTxModal: false })) }} />
 
     </AppWrapper>
   );

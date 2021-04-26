@@ -112,19 +112,32 @@ const SelectCoinWrapper = styled.div`
 }
 
 
-    .result {
-        padding: 20px;
-        font-size: 20px;
+.result {
+    padding: 20px;
+    font-size: 20px;
 
-        .title {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .detail {
-            text-align: center;
-        }
+    .title {
+        text-align: center;
+        margin-bottom: 20px;
     }
+
+    .detail {
+        text-align: center;
+    }
+}
+
+.pending {
+    color: #f39c1a!important;
+}
+
+
+.success {
+    color: green !important;
+}
+
+.fail {
+    color: red !important;
+}
 `
 //helpers
 function getSuccessMessage(type) {
@@ -139,7 +152,6 @@ function getSuccessMessage(type) {
             return "Swap Success! 🎉"
     }
 }
-
 
 function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }) {
 
@@ -165,13 +177,13 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
 
                 <div className="wrapper">
                     <div className="step-orders">
-                        <div className="order" style={{ color: "#F6743C" }}>①</div>
-                        <div className="divider" style={{ backgroundColor: "darkgray" }}></div>
-                        <div className="order" style={{ color: "darkgray" }}>②</div>
+                        <div className={`order ${broadcastStatus}`} style={{ color: "#F6743C" }}>①</div>
+                        <div className="divider" style={{ backgroundColor: broadcastStatus === "success" ? "green" : "darkgray" }}></div>
+                        <div className={`order ${transactionResultStatus}`} style={{ color: "darkgray" }}>②</div>
                     </div>
                     <div className="step-details">
-                        <div className="detail">Transaction Broadcast - <span className="status">{broadcastStatus.toUpperCase()}</span></div>
-                        <div className="detail" style={{ color: "darkgray" }}>Transaction Result - <span className="status">{transactionResultStatus.toUpperCase()}</span></div>
+                        <div className="detail">Transaction Broadcast - <span className={`status ${broadcastStatus}`}>{broadcastStatus.toUpperCase()}</span></div>
+                        <div className={`detail`} style={{ color: transactionResultStatus === "waiting" ? "darkgray" : "black" }}>Transaction Result - <span className={`status ${transactionResultStatus}`}>{transactionResultStatus.toUpperCase()}</span></div>
                     </div>
                 </div>
 
@@ -179,7 +191,8 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                     <div className="title">Result</div>
                     <div className="detail">
 
-                        {getSuccessMessage(txModalData.type)}
+                        {/* {getSuccessMessage(txModalData.type)} */}
+                        {txModalData.resultData}
                     </div>
 
                 </div>
