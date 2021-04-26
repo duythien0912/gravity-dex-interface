@@ -140,7 +140,12 @@ const SelectCoinWrapper = styled.div`
 }
 `
 //helpers
-function getSuccessMessage(type) {
+function getSuccessMessage(type, isSuccess) {
+
+    if (!isSuccess) {
+        return
+    }
+
     switch (type) {
         case 'Redeem':
             return "Redeem Success! 🎉"
@@ -191,8 +196,7 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                     <div className="title">Result</div>
                     <div className="detail">
 
-                        {/* {getSuccessMessage(txModalData.type)} */}
-                        {txModalData.resultData}
+                        {getSuccessMessage(txModalData.type, txModalData.resultData)}
                     </div>
 
                 </div>

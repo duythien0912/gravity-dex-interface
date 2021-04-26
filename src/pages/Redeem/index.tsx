@@ -226,7 +226,7 @@ function RedeemCard() {
                 poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                 poolCoin: { denom: poolCoinDenom, amount: String(Math.floor(userPoolCoinAmount * state.percent[0] / 100)) },
             }
-        }, storeDispatch, { type: 'Redeem' })
+        }, storeDispatch, { type: 'Redeem', userAddress: userAddress })
 
         //최초
         // storeDispatch({ type: 'store/setTxModalStatus', payload: { type: "Redeem", broadcastStatus: 'pending' } })

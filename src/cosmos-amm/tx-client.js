@@ -40,18 +40,20 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         console.log(txBroadcastResponse)
         if (txBroadcastResponse.code !== undefined) {
             const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
-            console.log("error")
             dispatch(getTxProcessingStatus('broadcastFail', failMsg))
+
+            console.log("error")
             console.log(txBroadcastResponse.rawLog)
-            // alert(txBroadcastResponse.rawLog)
         } else {
             console.log("success")
+            console.log(txBroadcastResponse)
 
             dispatch(getTxProcessingStatus('broadcastSuccess', data))
-            // alert("success")
-            console.log(txBroadcastResponse)
-            getTxResult(txBroadcastResponse.height)
 
+
+            const isSuccess = await getTxResult(txBroadcastResponse.height, data)
+            const successMsg = { type: data.type, resultData: isSuccess }
+            dispatch(getTxProcessingStatus('txSuccess', successMsg))
         }
 
     } catch (e) {
@@ -60,26 +62,35 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
     }
 
 
-    async function getTxResult(height) {
+    async function getTxResult(height, data) {
         const response = await axios.get(`${chainInfo.rpc}/block_results?height=${height}`)
+        const checks = getEndBlockChecks(data)
+        let isSuccess = false
         console.log(response.data.result.end_block_events)
 
         response.data.result.end_block_events.forEach((item) => {
-            if (item.type === "swap_transacted") {
+            if (item.type === checks.type) {
                 item.attributes.forEach((result) => {
+
+                    if (atob(result.key) === checks.txAddress) {
+                        console.log('isUserExecuted', checks.userAddress === atob(result.value))
+                        isSuccess = true
+                    }
+
                     console.log(atob(result.key), atob(result.value))
                 })
             }
         })
 
-        response.data.result.txs_results[0].events.forEach((item) => {
-            if (item.type === "swap_within_batch") {
-                item.attributes.forEach((result) => {
-                    console.log(atob(result.key), atob(result.value))
-                })
-            }
-        })
+        // response.data.result.txs_results[0].events.forEach((item) => {
+        //     if (item.type === "swap_within_batch") {
+        //         item.attributes.forEach((result) => {
+        //             console.log(atob(result.key), atob(result.value))
+        //         })
+        //     }
+        // })
         // atob()
+        return isSuccess
     }
 
     function getTxProcessingStatus(status, data) {
@@ -96,10 +107,20 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         }
 
         if (status === 'txSuccess') {
-            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'success', resultData: "success" } }
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'success', resultData: data.resultData } }
         }
         if (status === 'txFail') {
             return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: "success" } }
+        }
+    }
+
+    function getEndBlockChecks(data) {
+        if (data.type === "Swap") {
+            return { type: "swap_transacted", userAddress: data.userAddress }
+        }
+
+        if (data.type === "Redeem") {
+            return { type: "withdraw_from_pool", txAddress: 'withdrawer', userAddress: data.userAddress }
         }
     }
 }
