@@ -183,7 +183,7 @@ function SwapCard() {
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
 
-                console.log(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
+                // console.log(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
 
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
@@ -333,12 +333,12 @@ function SwapCard() {
 
     function swap() {
         // console.log(state.isReverse ? (1 / state.price).toFixed(6) : state.price)
-        // return
-        console.log(state.isReverse)
-        const slippageRange = 1 + slippage / 100
-        console.log('price', state.price)
         // console.log(slippageRange)
         // console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
+        // console.log(state.isReverse)
+        // console.log('price', state.price)
+        const slippageRange = 1 + slippage / 100
+
         BroadcastLiquidityTx({
             type: 'msgSwap',
             data: {
@@ -347,7 +347,7 @@ function SwapCard() {
                 swapTypeId: 1,
                 offerCoin: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000)) },
                 demandCoinDenom: 'u' + state.toCoin,
-                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.ceil(state.fromAmount * 1000000 * 0.001500000000000000)) },
+                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
                 // orderPrice: String((state.isReverse ? 1 / fixedPrice * (1 - (slippage / 100)) : fixedPrice * slippageRange).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
                 // orderPrice: String(Number((Number(state.isReverse ? (1 / (state.price * (1 / slippageRange))).toFixed(6) : state.price * slippageRange)).toFixed(18).replace('.', '')))
