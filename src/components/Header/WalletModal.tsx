@@ -114,11 +114,21 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
 
                     }} key={pair}>
                     <div className="coin-info">
-                        <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
+                        {checkImageExsistence(coinName) ? <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" /> : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>{coinName.charAt(0).toUpperCase()}</div>}{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
                     </div>
                     <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                 </div>
             )
+
+        }
+
+        //helpers 
+        function checkImageExsistence(coinName) {
+            if (coinName === 'xrn' || coinName === 'run' || coinName === 'gcyb') {
+                return false
+            } else {
+                return true
+            }
         }
         return result
     }
