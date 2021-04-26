@@ -57,7 +57,7 @@ const SelectCoinWrapper = styled.div`
 }
 
 .wrapper {
-    height: 100px;
+    height: 90px;
 
     padding: 0 20px 0 0;
     display: flex;
@@ -68,7 +68,7 @@ const SelectCoinWrapper = styled.div`
     
     .step-orders {
         width: 60px;
-        height: 100px;
+        height: 90px;
 
         .order {
             /* border: 1px solid black; */
@@ -80,13 +80,13 @@ const SelectCoinWrapper = styled.div`
             margin: 0 auto;
            
             &:first-child {
-                margin-top: 15px;
+                margin-top: 14px;
             }
         }
 
         .divider {
             width: 1px;
-            height: 31px;
+            height: 24px;
             background-color: black;
             margin: 0 auto;
         }
@@ -101,7 +101,7 @@ const SelectCoinWrapper = styled.div`
             font-weight: 300;
             display:flex;
             align-items: center;
-            height: 50px;
+            height: 45px;
 
             .status {
                 font-weight: 600;
