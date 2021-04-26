@@ -273,13 +273,13 @@ function CreateCard() {
 
     async function create() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        let isReverse = false
+        if (state.fromCoin !== sortedCoins[0]) {
+            isReverse = true
+        }
 
         if (searchParams.has('emptyPool')) {
-            const sortedCoins = [state.fromCoin, state.toCoin].sort()
-            let isReverse = false
-            if (state.fromCoin !== sortedCoins[0]) {
-                isReverse = true
-            }
             BroadcastLiquidityTx({
                 type: 'msgDeposit',
                 data: {
@@ -287,7 +287,7 @@ function CreateCard() {
                     poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                     depositCoins: [
                         { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
+                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
                     ]
                 }
             })
@@ -298,8 +298,8 @@ function CreateCard() {
                     poolCreatorAddress: userAddress,
                     poolTypeId: 1,
                     depositCoins: [
-                        { denom: 'u' + state.fromCoin, amount: String(state.fromAmount * 1000000) },
-                        { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
+                        { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
                     ]
                 }
             }, storeDispatch, { type: 'Create', userAddress: userAddress })

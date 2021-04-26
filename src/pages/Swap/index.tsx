@@ -171,20 +171,17 @@ function SwapCard() {
             const sortedCoins = [state.fromCoin, state.toCoin].sort()
 
             let isReverse = true
-            // console.log(sortedCoins[0], state.fromCoin)
             if (sortedCoins[0] === state.fromCoin) {
                 isReverse = false
             }
 
             const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
+
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
 
                 setSelectedPoolData(selectedPairsPoolData)
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
-
-                // console.log(selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[0]] / selectedPairsPoolData.reserve_coin_balances['u' + sortedCoins[1]])
-
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
                 console.log('no Pool')

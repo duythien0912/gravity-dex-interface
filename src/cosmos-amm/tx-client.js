@@ -74,19 +74,23 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         const checks = getEndBlockChecks(data)
         let isSuccess = false
         console.log(response.data.result.end_block_events)
-        response.data.result.end_block_events.forEach((item) => {
-            if (item.type === checks.type) {
-                item.attributes.forEach((result) => {
+        if (data.type === "Create") {
+            isSuccess = true
+        } else {
+            response.data.result.end_block_events.forEach((item) => {
+                if (item.type === checks.type) {
+                    item.attributes.forEach((result) => {
 
-                    if (atob(result.key) === checks.txAddress) {
-                        console.log('isUserExecuted', checks.userAddress === atob(result.value))
-                        isSuccess = true
-                    }
+                        if (atob(result.key) === checks.txAddress) {
+                            console.log('isUserExecuted', checks.userAddress === atob(result.value))
+                            isSuccess = true
+                        }
 
-                    console.log(atob(result.key), atob(result.value))
-                })
-            }
-        })
+                        console.log(atob(result.key), atob(result.value))
+                    })
+                }
+            })
+        }
 
         // response.data.result.txs_results[0].events.forEach((item) => {
         //     if (item.type === "swap_within_batch") {
