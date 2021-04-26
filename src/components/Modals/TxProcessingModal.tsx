@@ -150,7 +150,7 @@ function getResultMessage(type, data) {
                     return "Redeem Success! 🎉"
                 case 'Create':
                     return "Pool Created! 🎉"
-                case 'Create':
+                case 'Add Liquidity':
                     return "  Add Liquidity Success! 🎉"
                 case 'Swap':
                     return "Swap Success! 🎉"

@@ -125,5 +125,9 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         if (data.type === "Redeem") {
             return { type: "withdraw_from_pool", txAddress: 'withdrawer', userAddress: data.userAddress }
         }
+
+        if (data.type === "Add Liquidity") {
+            return { type: "deposit_to_pool", txAddress: 'depositor', userAddress: data.userAddress }
+        }
     }
 }
