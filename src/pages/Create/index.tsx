@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from "styled-components"
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom'
 import { cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
@@ -154,6 +154,7 @@ function CreateCard() {
 
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
+    const storeDispatch = useDispatch()
     const poolsData = poolsInfo?.poolsData
     const history = useHistory();
     const searchParams = React.useMemo(() => { return new URLSearchParams(history.location.search) }, [history.location.search]);
@@ -301,7 +302,7 @@ function CreateCard() {
                         { denom: 'u' + state.toCoin, amount: String(state.toAmount * 1000000) }
                     ]
                 }
-            })
+            }, storeDispatch, { type: 'Create', userAddress: userAddress })
         }
     }
 

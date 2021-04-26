@@ -50,7 +50,6 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
             dispatch(getTxProcessingStatus('broadcastSuccess', data))
 
-
             const isSuccess = await getTxResult(txBroadcastResponse.height, data)
             const successMsg = { type: data.type, resultData: isSuccess }
             dispatch(getTxProcessingStatus('txSuccess', successMsg))
@@ -69,7 +68,6 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         const checks = getEndBlockChecks(data)
         let isSuccess = false
         console.log(response.data.result.end_block_events)
-
         response.data.result.end_block_events.forEach((item) => {
             if (item.type === checks.type) {
                 item.attributes.forEach((result) => {
