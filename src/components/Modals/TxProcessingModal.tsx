@@ -139,22 +139,25 @@ const SelectCoinWrapper = styled.div`
     color: red !important;
 }
 `
+
+
 //helpers
-function getSuccessMessage(type, isSuccess) {
-
-    if (!isSuccess) {
-        return
-    }
-
-    switch (type) {
-        case 'Redeem':
-            return "Redeem Success! 🎉"
-        case 'Create':
-            return "Pool Created! 🎉"
-        case 'Create':
-            return "  Add Liquidity Success! 🎉"
-        case 'Swap':
-            return "Swap Success! 🎉"
+function getResultMessage(type, data) {
+    if (data) {
+        if (data.isSuccess) {
+            switch (type) {
+                case 'Redeem':
+                    return "Redeem Success! 🎉"
+                case 'Create':
+                    return "Pool Created! 🎉"
+                case 'Create':
+                    return "  Add Liquidity Success! 🎉"
+                case 'Swap':
+                    return "Swap Success! 🎉"
+            }
+        } else {
+            return data.data
+        }
     }
 }
 
@@ -193,10 +196,10 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                 </div>
 
                 <div className="result">
-                    <div className="title">Result</div>
+                    {/* <div className="title">Result</div> */}
                     <div className="detail">
 
-                        {getSuccessMessage(txModalData.type, txModalData.resultData)}
+                        {getResultMessage(txModalData.type, txModalData.resultData)}
                     </div>
 
                 </div>

@@ -70,7 +70,6 @@ function App() {
   const { isTxModal } = useSelector(storeSelector.all);
 
   // const { params, pools } = useSelector(liquiditySelector.all);
-  console.log('isTxModal', isTxModal)
 
   React.useEffect(() => {
     if (window.location.hash === '#/') {

@@ -349,22 +349,16 @@ function SwapCard() {
                 demandCoinDenom: 'u' + state.toCoin,
                 offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
-                // orderPrice: String((state.isReverse ? 1 / fixedPrice * (1 - (slippage / 100)) : fixedPrice * slippageRange).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
-                // orderPrice: String(Number((Number(state.isReverse ? (1 / (state.price * (1 / slippageRange))).toFixed(6) : state.price * slippageRange)).toFixed(18).replace('.', '')))
             }
+        }, storeDispatch, { type: 'Swap', userAddress: userAddress }
+        )
 
-        }).then((res) => {
-            console.log('swap res', res)
-        }).catch((e) => {
-            console.log('swap error', e)
-        })
+        // storeDispatch({ type: 'store/setTxModalStatus', payload: {} })
 
-        storeDispatch({ type: 'store/setTxModalStatus', payload: {} })
-
-        storeDispatch({ type: 'store/togglePendingStatus' })
-        setTimeout(() => {
-            storeDispatch({ type: 'store/togglePendingStatus' })
-        }, 3000)
+        // storeDispatch({ type: 'store/togglePendingStatus' })
+        // setTimeout(() => {
+        //     storeDispatch({ type: 'store/togglePendingStatus' })
+        // }, 3000)
     }
 
     function create(from, to) {

@@ -58,6 +58,8 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
     } catch (e) {
         console.log("error", e)
+        const failMsg = { type: data.type, resultData: String(e) }
+        dispatch(getTxProcessingStatus('broadcastFail', failMsg))
         console.log(e.rawLog?.split(':')[2].trim())
     }
 
@@ -103,11 +105,14 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         }
 
         if (status === 'broadcastFail') {
-            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'fail', resultData: data.resultData } }
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'fail', resultData: { data: data.resultData, isSuccess: false } } }
         }
 
+
         if (status === 'txSuccess') {
-            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'success', resultData: data.resultData } }
+            return {
+                type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'success', resultData: { data: data.resultData, isSuccess: true } }
+            }
         }
         if (status === 'txFail') {
             return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: "success" } }
@@ -116,7 +121,7 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
     function getEndBlockChecks(data) {
         if (data.type === "Swap") {
-            return { type: "swap_transacted", userAddress: data.userAddress }
+            return { type: "swap_transacted", txAddress: 'swap_requester', userAddress: data.userAddress }
         }
 
         if (data.type === "Redeem") {
