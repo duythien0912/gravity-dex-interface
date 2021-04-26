@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from "styled-components"
 import { Route, Switch, useHistory } from 'react-router-dom'
+import { useToggle } from "ahooks"
 import { ToastContainer, Flip } from "react-toastify";
 
 import AppHeader from "../components/Header"
@@ -10,6 +11,8 @@ import Create from "../pages/Create"
 import Add from "../pages/Add"
 import Redeem from "../pages/Redeem"
 import Rank from "../pages/Rank"
+
+import TxProcessingModal from "../components/Modals/TxProcessingModal"
 
 import Background from "../assets/svgs/Background"
 //test
@@ -64,6 +67,7 @@ const { requestQueryParams, requestQueryLiquidityPools } = liquidityAction;
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [isTxProcessingModalOpen, { toggle: txProcessingModalToggle }] = useToggle(true)
   // const { params, pools } = useSelector(liquiditySelector.all);
 
 
@@ -106,6 +110,8 @@ function App() {
         newestOnTop closeOnClick
         rtl={false} pauseOnFocusLoss
         draggable pauseOnHover />
+
+      <TxProcessingModal isOpen={isTxProcessingModalOpen} toggle={txProcessingModalToggle} />
 
     </AppWrapper>
   );
