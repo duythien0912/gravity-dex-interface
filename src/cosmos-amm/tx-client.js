@@ -50,9 +50,15 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
             dispatch(getTxProcessingStatus('broadcastSuccess', data))
 
-            const isSuccess = await getTxResult(txBroadcastResponse.height, data)
-            const successMsg = { type: data.type, resultData: isSuccess }
-            dispatch(getTxProcessingStatus('txSuccess', successMsg))
+            let isSuccess = false;
+
+            setTimeout(async () => {
+                isSuccess = await getTxResult(txBroadcastResponse.height, data)
+                const successMsg = { type: data.type, resultData: isSuccess }
+                dispatch(getTxProcessingStatus('txSuccess', successMsg))
+            }, 3000)
+
+
         }
 
     } catch (e) {
