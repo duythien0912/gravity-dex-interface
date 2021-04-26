@@ -12,6 +12,7 @@ import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
+
 //Styled-components
 const SwapWrapper = styled.div`
     position: relative;
@@ -141,9 +142,11 @@ const TYPES = {
 
 // component function
 function SwapCard() {
-    const { slippage } = useSelector((state) => state.store.userData)
     const storeDispatch = useDispatch()
     const history = useHistory();
+
+    const { slippage } = useSelector((state) => state.store.userData)
+
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolData = poolsInfo?.poolsData
@@ -356,6 +359,8 @@ function SwapCard() {
             console.log('swap error', e)
         })
 
+        storeDispatch({ type: 'store/setTxModalStatus', payload: {} })
+
         storeDispatch({ type: 'store/togglePendingStatus' })
         setTimeout(() => {
             storeDispatch({ type: 'store/togglePendingStatus' })
@@ -436,7 +441,7 @@ function SwapCard() {
                         <div className="content">
                             <div className="detail">
                                 <div className="title">Estimated Receives</div>
-                                <div className="data">{state.toAmount ? cutNumber(state.toAmount, 4) : '?'} {state.toCoin.toUpperCase()}</div>
+                                <div className="data">{state.toAmount ? cutNumber(cutNumber(state.toAmount, 4) * Number(cutNumber(1 - (slipage / 100), 4)), 4) : '?'} {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>

@@ -24,9 +24,9 @@ import Background from "../assets/svgs/Background"
 // import { cosmosSelector, cosmosAction } from "../modules/cosmosRest/slice"
 
 //starport liquidity js
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { liquidityAction } from "../modules/liquidityRest/slice"
-
+import { storeSelector, storeAction } from "../modules/store/slice"
 
 
 
@@ -63,13 +63,14 @@ height: 100vh;
 `
 
 const { requestQueryParams, requestQueryLiquidityPools } = liquidityAction;
-
+const { setTxModalStatus } = storeAction
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [isTxProcessingModalOpen, { toggle: txProcessingModalToggle }] = useToggle(true)
-  // const { params, pools } = useSelector(liquiditySelector.all);
+  const { isTxModal } = useSelector(storeSelector.all);
 
+  // const { params, pools } = useSelector(liquiditySelector.all);
+  console.log('isTxModal', isTxModal)
 
   React.useEffect(() => {
     if (window.location.hash === '#/') {
@@ -80,9 +81,6 @@ function App() {
       dispatch(requestQueryLiquidityPools())
     }, 7000)
     dispatch(requestQueryLiquidityPools())
-    console.log('render')
-
-
   }, [history, dispatch])
 
   return (
@@ -111,7 +109,7 @@ function App() {
         rtl={false} pauseOnFocusLoss
         draggable pauseOnHover />
 
-      <TxProcessingModal isOpen={isTxProcessingModalOpen} toggle={txProcessingModalToggle} />
+      <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({})) }} />
 
     </AppWrapper>
   );
