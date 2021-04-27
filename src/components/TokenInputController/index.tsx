@@ -7,7 +7,7 @@ import CoinSelectorArrow from "../../assets/svgs/CoinSelectorArrow"
 import CoinSelectModal from "../Modals/CoinSelectModal"
 
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
-import { checkImageExsistence } from "../../utils/global-functions"
+import { checkImageExsistence, getMinimalDenomCoin } from "../../utils/global-functions"
 
 const Wrapper = styled.div`
     border-radius: 20px;
@@ -149,8 +149,8 @@ const Wrapper = styled.div`
     }
 `
 function getUserCoinBalance(coin, userBalances) {
-    if (userBalances['u' + coin] !== undefined) {
-        return Math.floor(userBalances['u' + coin] / 10000) / 100
+    if (userBalances[getMinimalDenomCoin(coin)] !== undefined) {
+        return Math.floor(userBalances[getMinimalDenomCoin(coin)] / 10000) / 100
     } else {
         return '-'
     }
