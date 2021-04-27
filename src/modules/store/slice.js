@@ -4,7 +4,7 @@ const name = "store";
 const initialState = {
     //TEST DATA
     userData: {
-        slippage: 3,
+        userSlippage: 3,
         walletStatus: 'normal' // normal, pending, error
     },
 
@@ -36,7 +36,7 @@ const reducers = {
         state.isWallet = action.payload
     },
     setSlippage: (state, action) => {
-        state.userData.slippage = action.payload.slippage
+        state.userData.userSlippage = action.payload.userSlippage
     },
     setCoinPrices: (state, action) => {
         state.priceData = action.payload.prices

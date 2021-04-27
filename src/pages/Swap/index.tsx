@@ -1,17 +1,19 @@
 import * as React from 'react'
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 
+//UI components
 import ChangeArrow from "../../assets/svgs/ChangeArrow"
-
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
+
+//functions
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage } from "../../utils/global-functions"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -142,16 +144,17 @@ const TYPES = {
 
 // component function
 function SwapCard() {
-    const storeDispatch = useDispatch()
+    const reduxDispatch = useDispatch()
     const history = useHistory();
 
-    const { slippage } = useSelector((state) => state.store.userData)
-
+    const { userSlippage } = useSelector((state) => state.store.userData)
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
     const { poolsInfo } = useSelector(liquiditySelector.all)
-    const poolData = poolsInfo?.poolsData
-    const [slipage, setSlippage] = React.useState(0)
+
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
+    const poolData = poolsInfo?.poolsData
+
+    const [slippage, setSlippage] = React.useState(0)
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
         toCoin: '',
@@ -334,7 +337,7 @@ function SwapCard() {
         // console.log(String(Number((Number(state.isReverse ? 1 / state.price : state.price) * 1.1).toFixed(18).replace('.', ''))))
         // console.log(state.isReverse)
         // console.log('price', state.price)
-        const slippageRange = 1 + slippage / 100
+        const slippageRange = 1 + userSlippage / 100
 
         BroadcastLiquidityTx({
             type: 'msgSwap',
@@ -347,14 +350,14 @@ function SwapCard() {
                 offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
             }
-        }, storeDispatch, { type: 'Swap', userAddress: userAddress }
+        }, reduxDispatch, { type: 'Swap', userAddress: userAddress }
         )
 
-        // storeDispatch({ type: 'store/setTxModalStatus', payload: {} })
+        // reduxDispatch({ type: 'store/setTxModalStatus', payload: {} })
 
-        // storeDispatch({ type: 'store/togglePendingStatus' })
+        // reduxDispatch({ type: 'store/togglePendingStatus' })
         // setTimeout(() => {
-        //     storeDispatch({ type: 'store/togglePendingStatus' })
+        //     reduxDispatch({ type: 'store/togglePendingStatus' })
         // }, 3000)
     }
 
@@ -411,7 +414,7 @@ function SwapCard() {
 
                     <div className="swap-detail">
                         <div className="left">Slippage Tolerance</div>
-                        <div className="right">{slippage}%</div>
+                        <div className="right">{userSlippage}%</div>
                     </div>
 
 
@@ -432,11 +435,11 @@ function SwapCard() {
                         <div className="content">
                             <div className="detail">
                                 <div className="title">Estimated Receives</div>
-                                <div className="data">{state.toAmount ? cutNumber(cutNumber(state.toAmount, 4) * Number(cutNumber(1 - (slipage / 100), 4)), 4) : '?'} {state.toCoin.toUpperCase()}</div>
+                                <div className="data">{state.toAmount ? cutNumber(cutNumber(state.toAmount, 4) * Number(cutNumber(1 - (slippage / 100), 4)), 4) : '?'} {state.toCoin.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
-                                <div className="data">{slipage ? cutNumber(slipage, 4) : '?'}%</div>
+                                <div className="data">{slippage ? cutNumber(slippage, 4) : '?'}%</div>
                             </div>
                             <div className="detail">
                                 <div className="title"></div>

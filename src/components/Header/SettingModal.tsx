@@ -101,7 +101,7 @@ div {
 `
 
 function ConnectWalletModal({ close }: { close: any }) {
-    const slippage = useSelector((state) => state.store.userData.slippage)
+    const slippage = useSelector((state) => state.store.userData.userSlippage)
     const [slippageStatus, setSlippageStatus] = React.useState('normal')
     const dispatch = useDispatch()
 
@@ -116,7 +116,7 @@ function ConnectWalletModal({ close }: { close: any }) {
             setSlippageStatus('normal')
         }
         console.log(value)
-        dispatch({ type: 'store/setSlippage', payload: { slippage: value ? Number(value) : '' } })
+        dispatch({ type: 'store/setSlippage', payload: { userSlippage: value ? Number(value) : '' } })
     }
 
     function setSlippageStatusWarning(status) {
@@ -137,7 +137,7 @@ function ConnectWalletModal({ close }: { close: any }) {
                 Transaction Settings
                     <div onClick={() => {
                     if (slippage === 0 || slippage === '') {
-                        dispatch({ type: 'store/setSlippage', payload: { slippage: 3 } })
+                        dispatch({ type: 'store/setSlippage', payload: { userSlippage: 3 } })
                     }
                     close()
                 }}>X</div>
