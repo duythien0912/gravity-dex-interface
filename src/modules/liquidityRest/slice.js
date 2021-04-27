@@ -17,7 +17,7 @@ const reducers = {
     queryParamsSuccess: (state, { payload: params }) => {
         state.isParams = true;
         state.params = params
-        console.log(state.params)
+        // console.log(state.params)
     },
     queryParamsFail: (state) => {
         state.isParams = false;
