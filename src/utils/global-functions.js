@@ -38,9 +38,13 @@ export function getMyCoinBalance(coin, myBalance) {
     }
 }
 
-// export function sortReserveCoinDenoms(x, y) {
-//     return [x, y].sort()
-// }
+export function getMinimalDenomCoin(x) {
+    if (x === "run" || x === "xrun") {
+        return "xrun"
+    } else {
+        return "u" + x
+    }
+}
 
 export function sortCoins(x, y) {
     const sortedCoins = [x, y].sort()

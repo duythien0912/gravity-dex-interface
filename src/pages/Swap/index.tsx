@@ -13,7 +13,7 @@ import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins, getMinimalDenomCoin } from "../../utils/global-functions"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -178,10 +178,10 @@ function SwapCard() {
 
             //when pool exists
             if (selectedPairsPoolData !== undefined) {
-                const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
+                const price = selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)] / selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.fromCoin)]
 
                 setSelectedPoolData(selectedPairsPoolData)
-                setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
+                setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)]) * 100)
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
                 console.log('no pool/creat a new pool')
@@ -203,8 +203,8 @@ function SwapCard() {
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
         const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
 
-        const userFromCoinBalance = userBalances['u' + state.fromCoin] / 1000000
-        const userToCoinBalance = userBalances['u' + state.toCoin] / 1000000
+        const userFromCoinBalance = userBalances[getMinimalDenomCoin(state.fromCoin)] / 1000000
+        const userToCoinBalance = userBalances[getMinimalDenomCoin(state.toCoin)] / 1000000
 
         const price = targetPair === 'from' ? state.price : 1 / state.price
 
@@ -342,9 +342,9 @@ function SwapCard() {
                 swapRequesterAddress: userAddress,
                 poolId: Number(selectedPoolData.id),
                 swapTypeId: 1,
-                offerCoin: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000)) },
-                demandCoinDenom: 'u' + state.toCoin,
-                offerCoinFee: { denom: 'u' + state.fromCoin, amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
+                offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000)) },
+                demandCoinDenom: getMinimalDenomCoin(state.toCoin),
+                offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
             }
         }, reduxDispatch, { type: 'Swap', userAddress: userAddress }
