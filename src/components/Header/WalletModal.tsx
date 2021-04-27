@@ -90,7 +90,6 @@ border-top-left-radius: 12px;
 
 function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { close: any, priceData: {}, userBalances: {}, totalValue: any }) {
     const myBalance = userBalances
-    console.log(myBalance)
     const { poolsInfo } = useSelector(liquiditySelector.all)
     const poolTokenIndexer = poolsInfo?.poolTokenIndexer
     // const dispatch = useDispatch()
@@ -102,29 +101,37 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
         let result = []
 
         for (let pair in balance) {
-            let coinName = pair !== 'xrun' ? pair.substr(1) : pair
+            let coinName = pair.substr(1)
+
             if (pair.startsWith('pool')) {
                 coinName = "pool"
             }
-            
-            const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+
+            let pairValue = null
+
+            if (pair.startsWith('pool')) {
+                pairValue = (Math.floor(balance[pair] * priceData[pair] * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            } else {
+                pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            }
+
             const pairBalance = (Math.floor(balance[pair] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+
             result.push(
                 <div className="row"
                     onClick={() => {
 
                     }} key={pair}>
                     <div className="coin-info">
-                        {checkImageExsistence(coinName) ? <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" /> : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>{coinName.charAt(0).toUpperCase()}</div>}{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
+                        {checkImageExsistence(coinName) ?
+                            <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />
+                            : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>
+                                {coinName.charAt(0).toUpperCase()}</div>}{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
                     </div>
                     <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                 </div>
             )
-
         }
-
-        //helpers 
-
         return result
     }
 

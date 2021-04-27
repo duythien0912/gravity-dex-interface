@@ -294,8 +294,9 @@ function AppHeader() {
     let totalValue = 0
 
     for (let pair in userBalance) {
-      if (userBalance[pair] !== undefined && priceData[pair.substr(1)] !== undefined)
-        totalValue += Number(userBalance[pair]) * Number(priceData[pair.substr(1)]) / 1000000
+      if (userBalance[pair] !== undefined && priceData[pair] !== undefined) {
+        totalValue += Number(userBalance[pair]) * Number(priceData[pair])
+      }
     }
 
     return (Math.floor(totalValue * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
