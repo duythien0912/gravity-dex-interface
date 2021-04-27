@@ -43,7 +43,13 @@ export function getMyCoinBalance(coin, myBalance) {
 // }
 
 export function sortCoins(x, y) {
-    return [x, y].sort()
+    const sortedCoins = [x, y].sort()
+
+    let isReverse = true
+    if (sortedCoins[0] === x) {
+        isReverse = false
+    }
+    return { coins: sortedCoins, isReverse: isReverse }
 }
 
 export function checkImageExsistence(coinName) {

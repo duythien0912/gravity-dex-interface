@@ -13,7 +13,7 @@ import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins } from "../../utils/global-functions"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -167,19 +167,16 @@ function SwapCard() {
     })
 
     React.useEffect(() => {
-        //미로그인시 connectWallet 스테이터스 아니면 empty로
-        // console.log('poolsInfo', poolsInfo)
-        // console.log('state', state)
         if (state.fromCoin !== '' && state.toCoin) {
-            const sortedCoins = [state.fromCoin, state.toCoin].sort()
+            //get and set pool pair status
+            const sortedCoinsData = sortCoins(state.fromCoin, state.toCoin)
+            const sortedCoins = sortedCoinsData.coins
+            const isReverse = sortedCoinsData.isReverse
 
-            let isReverse = true
-            if (sortedCoins[0] === state.fromCoin) {
-                isReverse = false
-            }
-
+            //get slected pairs pool data
             const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
+            //when pool exists
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin] / selectedPairsPoolData.reserve_coin_balances['u' + state.fromCoin]
 
@@ -187,11 +184,11 @@ function SwapCard() {
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances['u' + state.toCoin]) * 100)
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
-                console.log('no Pool')
+                console.log('no pool/creat a new pool')
             }
 
         } else {
-            // console.log('need both coins')
+            console.log('need both coins')
         }
 
     }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
