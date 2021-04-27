@@ -92,12 +92,12 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
             })
         }
 
+        // const test = await axios.get(`${chainInfo.rest}/tendermint/liquidity/v1beta1/pools/6/batch/swaps`)
+        // console.log('poolId/bathch/swaps', test)
         // response.data.result.txs_results[0].events.forEach((item) => {
-        //     if (item.type === "swap_within_batch") {
         //         item.attributes.forEach((result) => {
         //             console.log(atob(result.key), atob(result.value))
         //         })
-        //     }
         // })
         // atob()
         return isSuccess

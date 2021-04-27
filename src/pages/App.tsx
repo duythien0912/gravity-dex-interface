@@ -11,6 +11,7 @@ import Create from "../pages/Create"
 import Add from "../pages/Add"
 import Redeem from "../pages/Redeem"
 import Rank from "../pages/Rank"
+import Price from "../pages/Price"
 
 import TxProcessingModal from "../components/Modals/TxProcessingModal"
 
@@ -96,6 +97,7 @@ function App() {
         <Route exact strict path="/add" component={Add} />
         <Route exact strict path="/redeem" component={Redeem} />
         <Route exact strict path="/rank" component={Rank} />
+        <Route exact strict path="/price" component={Price} />
       </Switch>
 
       <ToastContainer
