@@ -57,7 +57,7 @@ export function sortCoins(x, y) {
 }
 
 export function checkImageExsistence(coinName) {
-    if (coinName === 'xrun' || coinName === 'run' || coinName === 'gcyb') {
+    if (coinName === 'xrun' || coinName === 'run' || coinName === 'gcyb' || coinName === 'xrn') {
         return false
     } else {
         return true

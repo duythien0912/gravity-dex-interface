@@ -118,10 +118,11 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
         }
 
         return listPairs.map((pair, index) => {
-            console.log(pair)
+
             if (counterPair === pair) {
                 return null
             }
+
             const pairBalance = Math.floor(userBalances[getMinimalDenomCoin(pair)] / 10000) / 100
             return (
                 <div className="row"
@@ -130,7 +131,7 @@ function CoinSelectModal({ isOpen, toggle, selectCoin }: { isOpen: boolean, togg
                         toggle()
                     }} key={index}>
                     <div className="coin-info">
-                        {checkImageExsistence(pair) ? <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" /> : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>{pair.charAt(0).toUpperCase()}</div>}
+                        {checkImageExsistence(pair) ? <img className="coin-img" src={`/assets/coins/${pair}.png`} alt="coin pair" /> : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>?</div>}
                         {pair === "xrun" ? pair.substr(1).toUpperCase() : pair.toUpperCase()}
                     </div>
                     <div className="coin-balance">{pairBalance || 0}</div>
