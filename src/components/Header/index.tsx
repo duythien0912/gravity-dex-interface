@@ -56,7 +56,6 @@ const Logo = styled.div`
     width: 160px;
   }
 }
-
 `
 
 const Navigation = styled.nav`
@@ -174,7 +173,6 @@ display: flex;
 align-items: center;
 `
 
-
 //component
 function AppHeader() {
   const [isConnectWalletModalOpen, { toggle: connectWalletModalToggle }] = useToggle();
@@ -191,12 +189,7 @@ function AppHeader() {
     connectWallet(false)
   }
 
-  React.useEffect(() => {
-
-  }, [])
-
   async function connectWallet(isToggle = true) {
-
     if (!window.getOfflineSigner || !window.keplr) {
       if (mobileCheck()) {
         toastGenerator("info", "🙏  functions are available on the desktop");
@@ -219,45 +212,28 @@ function AppHeader() {
     }
 
     await window.keplr.enable(chainInfo.chainId);
+
     const offlineSigner = window.getOfflineSigner(chainInfo.chainId);
-
-    // TEST-CODE
-    // BroadcastLiquidityTx(offlineSigner, {
-    //   type: 'msgCreatePool',
-    //   data: {
-    //     poolCreatorAddress: 'cosmos1zaylwpa8h2tsjm52xh9ylcxdw7kkaz9rsfr26a',
-    //     poolTypeId: 1,
-    //     depositCoins: [
-    //       { denom: 'uatom', amount: '10000000' },
-    //       { denom: 'uband', amount: '10000000' }
-    //     ]
-    //   }
-    // })
-
-
-    // TEST-CODE
-
     const accounts = await offlineSigner.getAccounts()
-
     const walletAddress = accounts[0].address
 
     if (walletAddress.length === 0) {
       throw new Error("there is no key");
     }
 
-
     if (walletAddress) {
       setWalletAddress(walletAddress)
       dispatch({ type: 'store/setIsWallet', payload: true })
+
       if (isToggle) {
         connectWalletModalToggle()
       }
+
       dispatch(requestQueryAllBalances(walletAddress))
+
       setInterval(() => {
-        //TEST-CODE
         dispatch(requestQueryAllBalances(walletAddress))
       }, 5000)
-
     }
   };
 
@@ -285,7 +261,6 @@ function AppHeader() {
 
   function showStatusDetail() {
     //open modal below is test
-
     // dispatch({ type: 'store/togglePendingStatus' })
   }
 
