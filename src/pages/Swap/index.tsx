@@ -184,11 +184,11 @@ function SwapCard() {
                 setSlippage(calculateSlippage(state.toAmount * 1000000, selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)]) * 100)
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
-                console.log('no pool/creat a new pool')
+                // console.log('no pool/creat a new pool')
             }
 
         } else {
-            console.log('need both coins')
+            // console.log('need both coins')
         }
 
     }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
@@ -213,10 +213,10 @@ function SwapCard() {
 
         switch (action.type) {
             case TYPES.UPDATE_PRICE:
+
                 return { ...state, price: action.payload.price, isReverse: action.payload.isReverse }
 
             case TYPES.AMOUNT_CHANGE:
-                setAmountCheckVariables()
 
                 if (targetPair === 'from') {
                     if (selectedPairAmount > userFromCoinBalance) {
@@ -238,6 +238,8 @@ function SwapCard() {
                     isEmpty = false
                 }
 
+                console.log('slippage', calculateSlippage((selectedPairAmount * 1000000), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])]))
+                console.log(state[`${targetPair}Coin`], state[`${targetPair}Amount`])
                 if (price !== '-' && !isNaN(price)) {
                     return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (cutNumber(selectedPairAmount * price, 6)), status: getStatus(state) }
                 } else {
@@ -418,9 +420,6 @@ function SwapCard() {
                         <div className="left">Slippage Tolerance</div>
                         <div className="right">{userSlippage}%</div>
                     </div>
-
-
-
 
                     {/* Swap Button */}
                     <ActionButton onClick={() => {
