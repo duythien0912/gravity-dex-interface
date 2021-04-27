@@ -149,7 +149,7 @@ function SwapCard() {
 
     const { userSlippage } = useSelector((state) => state.store.userData)
     const { userBalances, userAddress } = useSelector(cosmosSelector.all);
-    const { poolsInfo } = useSelector(liquiditySelector.all)
+    const { poolsInfo, params } = useSelector(liquiditySelector.all)
 
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const poolData = poolsInfo?.poolsData
@@ -410,9 +410,16 @@ function SwapCard() {
                     </div>
 
                     <div className="swap-detail">
+                        <div className="left">Swap Fee</div>
+                        <div className="right">{params ? params?.swap_fee_rate * 100 : ''}%</div>
+                    </div>
+
+                    <div className="swap-detail">
                         <div className="left">Slippage Tolerance</div>
                         <div className="right">{userSlippage}%</div>
                     </div>
+
+
 
 
                     {/* Swap Button */}
