@@ -82,13 +82,15 @@ function App() {
       dispatch(requestQueryLiquidityPools())
       setCoinPrices()
     }, 7000)
+
     dispatch(requestQueryLiquidityPools())
     setCoinPrices()
   }, [history, dispatch])
 
   async function setCoinPrices() {
     const prices = await axios.get("http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/prices")
-    console.log("response prices", prices.data)
+    // console.log("response prices", prices.data)
+    dispatch({type:'store/setCoinPrices', payload: {prices: prices.data.prices }})
   }
 
   return (

@@ -106,7 +106,7 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
             if (pair.startsWith('pool')) {
                 coinName = "pool"
             }
-
+            
             const pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             const pairBalance = (Math.floor(balance[pair] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             result.push(

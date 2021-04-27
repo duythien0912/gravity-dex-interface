@@ -37,6 +37,9 @@ const reducers = {
     },
     setSlippage: (state, action) => {
         state.userData.slippage = action.payload.slippage
+    },
+    setCoinPrices: (state, action) => {
+        state.priceData = action.payload.prices
     }
 }
 

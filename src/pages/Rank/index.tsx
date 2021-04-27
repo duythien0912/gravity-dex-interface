@@ -63,7 +63,7 @@ const Title = styled.div`
 function Table() {
   const [tableData, setTableData] = React.useState([])
   const { userAddress } = useSelector(cosmosSelector.all);
-  console.log(userAddress)
+  // console.log(userAddress)
     // eslint-disable-next-line
     React.useEffect(async () => {
         let rankData = [];
