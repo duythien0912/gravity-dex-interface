@@ -1,214 +1,115 @@
+ // @ts-nocheck
 import * as React from 'react'
 import styled from "styled-components"
 import { useSelector } from "react-redux";
+import {cutNumber} from "../../utils/global-functions"
+import { cosmosSelector } from "../../modules/cosmosRest/slice"
 
-import ChangeArrow from "../../assets/svgs/ChangeArrow"
+import DataTable from 'react-data-table-component';
+import axios from 'axios';
 
-import BaseCard from "../../components/Cards/BaseCard"
-import TokenInputController from "../../components/TokenInputController/index"
-import ActionButton from "../../components/Buttons/ActionButton"
+const columns = [
+  {
+    name: 'Rank',
+    selector: 'rank',
+    sortable: true,
+    center: true,
+    minWidth: "40px",
+    maxWidth: "60px"
+  },
+  {
+    name: 'Account',
+    selector: 'accountAddress',
+    // sortable: true,
+    minWidth: "160px",
+    maxWidth: "200px"
+  },
+  {
+    name: 'Action Score',
+    selector: 'actionScore',
+    sortable: true,
+    minWidth: "160px",
+    maxWidth: "200px"
+  },
+  {
+    name: 'Trading Score',
+    selector: 'tradingScore',
+    sortable: true,
+    minWidth: "160px",
+    maxWidth: "200px"
+  },
+  {
+    name: 'Total Score',
+    selector: 'totalScore',
+    sortable: true,
+    minWidth: "160px",
+    maxWidth: "200px"
+  },
+];
 
 //Styled-components
-const SwapWrapper = styled.div`
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 16px;
-
-        .title {
-            padding-left: 4px;
-            font-weight: 500;
-        }
+const Wrapper = styled.div`
+width: 100%;
+    .table {
+      width: 100%;
     }
-
-   .divider {
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding: 16px 0;
-        transition: opacity 0.2s;
-
-        .arrow {
-            cursor: pointer;
-
-            
-
-            &:hover {
-                opacity: 0.6;
-            }
-        }
-   }
-
-   .swap-detail {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        padding: 6px 12px;
-
-        font-size: 14px;
-        font-weight: 500;
-        color: rgb(86, 90, 105);
-
-        .left {
-            
-        }
-
-        .right {
-
-        }
-   }
 `
 
-//reducer action types
-const TYPES = {
-    AMOUNT_CHANGE: 'AMOUNT_CHANGE',
-    SELECT_COIN: 'SELECT_COIN',
-    SET_MAX_AMOUNT: 'SET_MAX_AMOUNT',
-    CHANGE_FROM_TO_COIN: 'CHANGE_FROM_TO_COIN'
-}
+const Title = styled.div`
+  text-align: center;
+  width: 100%;
+`
 
-//helpers
-
-function getButtonNameByStatus(status, fromCoin, toCoin) {
-    if (fromCoin === '' || toCoin === '') {
-        return 'Select a coin'
-    } else if (status === 'over') {
-        return 'Insufficient balance'
-    } else if (status === 'empty') {
-        return 'Enter an amount'
-    } else {
-        return 'SWAP'
-    }
-}
-
-function getButtonCssClassNameByStatus(status, fromCoin, toCoin) {
-    if (fromCoin === '' || toCoin === '' || status === 'over' || status === 'empty') {
-        return 'disabled'
-    } else {
-        return 'normal'
-    }
-}
-
-
-function SwapCard() {
-    React.useEffect(() => {
-        //미로그인시 connectWallet 스테이터스 아니면 empty로
-    }, [])
-    const myBalance = useSelector((state) => state.store.userData.balance)
-    const slippage = useSelector((state) => state.store.userData.slippage)
-    //reducer for useReducer
-    function reducer(state, action) {
-        let target = null
-        let counterTarget = null
-
-        if (action.payload?.target) {
-            target = action.payload.target === "From" ? "from" : "to"
-            counterTarget = target === 'from' ? 'to' : 'from'
+function Table() {
+  const [tableData, setTableData] = React.useState([])
+  const { userAddress } = useSelector(cosmosSelector.all);
+  console.log(userAddress)
+    // eslint-disable-next-line
+    React.useEffect(async () => {
+        let rankData = [];
+        const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard?address=${userAddress}`)
+        response.data.accounts.forEach((account,index) => {
+          const accountAddress = `${account.address.substr(0, 10)}...${account.address.substr(-5)}`
+          const rank = account.ranking
+          const actionScore = cutNumber(account.actionScore, 2)
+          const tradingScore = cutNumber(account.tradingScore, 2)
+          const totalScore = cutNumber(account.totalScore, 2)
+          rankData.push({
+            accountAddress: accountAddress,
+            rank: rank,
+            actionScore: actionScore,
+            tradingScore: tradingScore,
+            totalScore: totalScore
+          })
+        })
+        if(response.data.me) {
+          rankData.unshift({...response.data.me, 
+            accountAddress: "YOU", 
+            rank:response.data.me.ranking,
+            actionScore: cutNumber(response.data.me.actionScore, 2),
+            tradingScore: cutNumber(response.data.me.tradingScore, 2),
+            totalScore: cutNumber(response.data.me.totalScore, 2 )
+          })
         }
-
-        switch (action.type) {
-            case TYPES.AMOUNT_CHANGE:
-                let isOver = false
-                let isEmpty = false
-
-                if (action.payload.amount > myBalance[state[`${target}Coin`]] || state[`${counterTarget}Amount`] > myBalance[state[`${counterTarget}Coin`]]) {
-                    isOver = true
-                }
-
-                if (action.payload.amount === 0) {
-                    isEmpty = true
-                }
-
-                return { ...state, [`${target}Amount`]: action.payload.amount, status: isOver ? 'over' : isEmpty ? 'empty' : 'normal' }
-            case TYPES.SET_MAX_AMOUNT:
-                return { ...state, [`${target}Amount`]: action.payload.amount, status: 'normal' }
-            case TYPES.SELECT_COIN:
-                return { ...state, [`${target}Coin`]: action.payload.coin }
-            case TYPES.CHANGE_FROM_TO_COIN:
-                // toCoin 수량 계산 및 액션버튼 검증로직
-                return { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
-            default:
-                console.log("DEFAULT: SWAP REDUCER")
-                return state;
-        }
-    }
-
-    const [state, dispatch] = React.useReducer(reducer, {
-        fromCoin: 'atom',
-        toCoin: '',
-        fromAmount: '',
-        toAmount: '',
-        status: 'empty' // connectWallet, notSelected, empty, over, normal
-    })
-
-    function swap() {
-        alert('swap')
-    }
+        
+        setTableData(rankData)
+        
+        console.log(response.data)
+    },[userAddress])
+   
 
     return (
-        <>
-            <BaseCard>
-                <SwapWrapper>
-                    {/* Header */}
-                    <div className="header">
-                        <div className="title">
-                            Swap
-                    </div>
-                        <div />
-                    </div>
-
-                    {/* From */}
-                    <TokenInputController
-                        header={{ title: 'From' }}
-                        coin={state.fromCoin}
-                        amount={state.fromAmount}
-                        counterPair={state.toCoin}
-                        dispatch={dispatch}
-                        dispatchTypes={{ amount: TYPES.AMOUNT_CHANGE, coin: TYPES.SELECT_COIN, max: TYPES.SET_MAX_AMOUNT }}
-                    />
-
-                    {/* From <> To change arrow */}
-                    <div className="divider">
-                        <div className="arrow" onClick={() => {
-                            dispatch({ type: TYPES.CHANGE_FROM_TO_COIN })
-                        }}>
-                            <ChangeArrow />
-                        </div>
-                    </div>
-
-                    {/* To */}
-                    <TokenInputController
-                        header={{ title: 'To (estimated)' }}
-                        coin={state.toCoin}
-                        amount={state.toAmount}
-                        counterPair={state.fromCoin}
-                        dispatch={dispatch}
-                        dispatchTypes={{ amount: TYPES.AMOUNT_CHANGE, coin: TYPES.SELECT_COIN, max: TYPES.SET_MAX_AMOUNT }}
-                    />
-
-                    {/* Swap detail */}
-                    <div className="swap-detail">
-                        <div className="left">Price</div>
-                        <div className="right">1</div>
-                    </div>
-
-                    <div className="swap-detail">
-                        <div className="left">Slippage Tolerance</div>
-                        <div className="right">{slippage}%</div>
-                    </div>
-
-
-                    {/* Swap Button */}
-                    <ActionButton onClick={swap} status={getButtonCssClassNameByStatus(state.status, state.fromCoin, state.toCoin)} css={{ marginTop: "16px" }}>
-                        {getButtonNameByStatus(state.status, state.fromCoin, state.toCoin)}
-                    </ActionButton>
-                </SwapWrapper>
-            </BaseCard>
-
-        </>
+      <Wrapper>
+        {tableData !== null ? <DataTable  
+        title={"Ranking"}
+        columns={columns}
+        data={tableData}
+        fixedHeader={true}
+        subHeaderAlign={"center"}
+        /> : <div>No data</div>}
+        
+      </Wrapper>
     )
 }
 
-export default SwapCard
+export default Table
