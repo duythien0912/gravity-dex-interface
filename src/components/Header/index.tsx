@@ -253,8 +253,8 @@ function AppHeader() {
       <Navigation>
         <StyledNavLink to={"/swap"}>Swap</StyledNavLink>
         <StyledNavLink to={"/pool"}>Pool</StyledNavLink>
-        <StyledNavLink to={"/rank"}>Rank</StyledNavLink>
         <StyledNavLink to={"/price"}>Price</StyledNavLink>
+        <StyledNavLink to={"/rank"}>Rank</StyledNavLink>
       </Navigation>
     )
   }
