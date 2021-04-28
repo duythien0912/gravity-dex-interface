@@ -198,7 +198,7 @@ function SwapCard() {
         const inputAmount = action.payload?.amount || ''
 
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
-        const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
+        // const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
 
         const userFromCoinBalance = userBalances[getMinimalDenomCoin(state.fromCoin)] / 1000000
         const userToCoinBalance = userBalances[getMinimalDenomCoin(state.toCoin)] / 1000000
@@ -226,21 +226,11 @@ function SwapCard() {
                 let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
 
                 if (targetPair === "to") {
-                    swapPrice = (toCoinPoolAmount + 2 * realInputAmount) / fromCoinPoolAmount
-                    counterPairAmount = (inputAmount / swapPrice)
-                    console.log(counterPairAmount)
+                    counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / inputAmount * swapFeeRate) - (2 / toCoinPoolAmount))
+                    console.log('FROM: counterPairAmount', counterPairAmount)
                 }
 
                 let price = 1 / swapPrice
-
-                console.log('swapPrice', swapPrice)
-
-                if (targetPair === "to") {
-                    price = 1 / price
-                    console.log('to price', price)
-                } else {
-                    console.log('price', price)
-                }
 
                 const slippage = calculateSlippage((realInputAmount * 1000000 * 100), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
 
@@ -264,18 +254,6 @@ function SwapCard() {
                     isEmpty = false
                 }
 
-                // console.log('counterPairAmount', counterPairAmount)
-                // console.log('swapamount', swapAmount)
-                // console.log('swapPoolReserveCoin', swapPoolReserveCoin)
-                // console.log('price', price)
-                // console.log('inputAmount', inputAmount, selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
-                // console.log('swapPrice', swapPrice)
-                // console.log('slippage', slippage)
-                // console.log((1 / (1 - slippage) * slippage))
-
-                // console.log(counterPairAmount * (1 / (1 - slippage)))
-                // console.log(counterPairAmount)
-                // let test = targetPair === 'to' ? counterPairAmount * (1 / (1 - slippage)) : counterPairAmount
                 if (!isNaN(price)) {
                     console.log(price)
                     return {
@@ -396,13 +374,6 @@ function SwapCard() {
             }
         }, reduxDispatch, { type: 'Swap', userAddress: userAddress }
         )
-
-        // reduxDispatch({ type: 'store/setTxModalStatus', payload: {} })
-
-        // reduxDispatch({ type: 'store/togglePendingStatus' })
-        // setTimeout(() => {
-        //     reduxDispatch({ type: 'store/togglePendingStatus' })
-        // }, 3000)
     }
 
     function create(from, to) {
