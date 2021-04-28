@@ -225,10 +225,6 @@ function SwapCard() {
                 let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
                 let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
 
-                //to 입력시 from을 알 수 있게
-                // test2가 카운터페어 이미 알고 있는 값(인풋임)
-                let test2 = realInputAmount / ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount) * swapFeeRate
-
                 if (targetPair === "to") {
                     swapPrice = (toCoinPoolAmount + 2 * realInputAmount) / fromCoinPoolAmount
                     counterPairAmount = (inputAmount / swapPrice)
@@ -281,13 +277,14 @@ function SwapCard() {
                 // console.log(counterPairAmount)
                 // let test = targetPair === 'to' ? counterPairAmount * (1 / (1 - slippage)) : counterPairAmount
                 if (!isNaN(price)) {
+                    console.log(price)
                     return {
                         ...state,
                         [`${targetPair}Amount`]: inputAmount,
                         [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)),
                         status: getStatus(state),
                         slippage: slippage,
-                        price: targetPair === "to" ? 1 / price : price
+                        price: targetPair === "to" ? inputAmount / counterPairAmount : counterPairAmount / inputAmount
                     }
                 } else {
                     // empty, 0, no pool
