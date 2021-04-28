@@ -19,14 +19,14 @@ const columns = [
     name: 'Global Price',
     selector: 'xGlobalPrice',
     minWidth: "150px",
-    format: row => '$' + row.xGlobalPrice + row.poolName?.split('-')[0],
+    format: row => `$${row.xGlobalPrice} ${row?.poolName?.split('-')[0]}`,
     right: true,
   },
   {
     name: 'Global Price',
     selector: 'yGlobalPrice',
     minWidth: "150px",
-    format: row => '$' + row.yGlobalPrice + row.poolName?.split('-')[1],
+    format: row => `$${row.yGlobalPrice} ${row?.poolName?.split('-')[1]}`,
     right: true,
   },
   {
