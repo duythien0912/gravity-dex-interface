@@ -13,6 +13,14 @@ const columns = [
     name: 'Rank',
     selector: 'rank',
     center: true,
+    format: (row) => {
+      if (row.accountAddress !== "YOU") {
+        return <span className="rank">{row.rank}</span>
+      } else {
+        return <span className="myRank">{row.rank}</span>
+      }
+    }
+    ,
     minWidth: "40px",
     maxWidth: "60px"
   },
@@ -21,6 +29,13 @@ const columns = [
     selector: 'accountAddress',
     right: true,
     // sortable: true,
+    format: (row) => {
+      if (row.accountAddress !== "YOU") {
+        return row.accountAddress
+      } else {
+        return <span className="myRank">{row.accountAddress}</span>
+      }
+    },
     minWidth: "160px",
     maxWidth: "200px"
   },
@@ -45,6 +60,9 @@ const columns = [
     selector: 'totalScore',
     sortable: true,
     right: true,
+    format: (row) => {
+      return <span className="score">{row.totalScore}</span>
+    },
     minWidth: "160px",
     maxWidth: "200px"
   },
@@ -117,6 +135,22 @@ padding: 0 30px 10px 30px;
     color:  #e6b587;
   }
 
+}
+
+.rank {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.myRank {
+  font-size: 18px;
+  color:#F6743C;
+  font-weight: bold;
+}
+
+.score {
+  font-weight: bold;
+  font-size: 16px;
 }
 
 #column-rank {
