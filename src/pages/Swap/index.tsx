@@ -154,7 +154,6 @@ function SwapCard() {
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const poolData = poolsInfo?.poolsData
 
-    const [slippage, setSlippage] = React.useState(0)
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
         toCoin: '',
@@ -196,16 +195,13 @@ function SwapCard() {
     function reducer(state, action) {
         const { targetPair, counterTargetPair } = getPairs(action)
 
-        const selectedPairAmount = action.payload?.amount || ''
-        const counterPairAmount = state[`${counterTargetPair}Amount`]
+        const inputAmount = action.payload?.amount || ''
 
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
         const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
 
         const userFromCoinBalance = userBalances[getMinimalDenomCoin(state.fromCoin)] / 1000000
         const userToCoinBalance = userBalances[getMinimalDenomCoin(state.toCoin)] / 1000000
-
-        let price = targetPair === 'from' ? state.price : 1 / state.price
 
         let isOver = false
         let isEmpty = false
@@ -220,67 +216,81 @@ function SwapCard() {
 
             case TYPES.AMOUNT_CHANGE:
 
+                let swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000 + 2 * inputAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000
+                let counterPairAmount = inputAmount / swapPrice * 0.9985 / 1000000 / 1000000
+
+                if (targetPair !== "from") {
+                    swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000 + 2 * inputAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000
+                    counterPairAmount = ((inputAmount / 0.9985 / 0.9985) / swapPrice) / 1000000 / 1000000
+                }
+
+                let swapAmount = inputAmount
+                let swapPoolReserveCoin = `${targetPair}Coin`
+
+                let price = 1 / swapPrice / 1000000 / 1000000
+                // if (targetPair !== "from") {
+                //     price = 1 / price
+                // }
+                console.log('price', price)
+                if (targetPair !== "from") {
+                    swapAmount = inputAmount * price
+                    swapPoolReserveCoin = `${counterTargetPair}Coin`
+                }
+
+                const slippage = calculateSlippage((swapAmount * 1000000), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[swapPoolReserveCoin])])
+
+
+
                 if (targetPair === 'from') {
-                    if (selectedPairAmount > userFromCoinBalance) {
+                    if (inputAmount > userFromCoinBalance) {
                         isOver = true
                     } else {
                         isOver = false
                     }
                 } else {
-                    // if (selectedPairAmount > userFromCoinBalance) {
+                    // if (inputAmount > userFromCoinBalance) {
                     //     isOver = true
                     // } else {
                     //     isOver = false
                     // }
                 }
 
-                if (selectedPairAmount === '' || selectedPairAmount === '0') {
+                if (inputAmount === '' || inputAmount === '0') {
                     isEmpty = true
                 } else {
                     isEmpty = false
                 }
 
-
-                let swapAmount = selectedPairAmount
-                let swapPoolReserveCoin = `${targetPair}Coin`
-
-                if (targetPair !== "from") {
-                    swapAmount = selectedPairAmount * price
-                    swapPoolReserveCoin = `${counterTargetPair}Coin`
-                }
-                let swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000 + 2 * selectedPairAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000
-                let counterPairAmount = selectedPairAmount / swapPrice * 0.9985 / 1000000 / 1000000
-                if (targetPair !== "from") {
-                    swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000 + 2 * selectedPairAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000
-                    counterPairAmount = ((selectedPairAmount / 0.9985) / swapPrice) / 1000000 / 1000000
-                }
-                const slippage = calculateSlippage((swapAmount * 1000000), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[swapPoolReserveCoin])])
-                setSlippage(slippage)
-
-
-
-
-                console.log('counterPairAmount', counterPairAmount)
-                console.log('')
-
-                price = 1 / swapPrice / 1000000 / 1000000
-
+                // console.log('counterPairAmount', counterPairAmount)
                 // console.log('swapamount', swapAmount)
                 // console.log('swapPoolReserveCoin', swapPoolReserveCoin)
                 // console.log('price', price)
-                // console.log('selectedPairAmount', selectedPairAmount, selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
+                // console.log('inputAmount', inputAmount, selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
                 // console.log('swapPrice', swapPrice)
                 // console.log('slippage', slippage)
 
-                if (price !== '-' && !isNaN(price)) {
-                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)), status: getStatus(state), slippage: slippage, price: price }
+                if (!isNaN(price)) {
+                    return {
+                        ...state,
+                        [`${targetPair}Amount`]: inputAmount,
+                        [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)),
+                        status: getStatus(state),
+                        slippage: slippage,
+                        price: price
+                    }
                 } else {
-                    return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: '', status: getStatus(state) }
+                    // empty, 0, no pool
+                    return {
+                        ...state,
+                        [`${targetPair}Amount`]: inputAmount,
+                        [`${counterTargetPair}Amount`]: '',
+                        status: getStatus(state)
+                    }
                 }
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: (cutNumber(selectedPairAmount * price, 6)), status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: (cutNumber(inputAmount * price, 6)), status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
@@ -343,12 +353,12 @@ function SwapCard() {
         }
 
         function setAmountCheckVariables() {
-            if (selectedPairAmount > selectedPairMyBalance || counterPairAmount > counterPairMyBalance) {
+            if (inputAmount > selectedPairMyBalance) {
                 isOver = true
             } else {
                 isOver = false
             }
-            if (selectedPairAmount === 0) {
+            if (inputAmount === 0) {
                 isEmpty = true
             } else {
                 isEmpty = false
@@ -435,7 +445,7 @@ function SwapCard() {
                     {/* Swap detail */}
                     <div className="swap-detail">
                         <div className="left">Price</div>
-                        <div className="right">{(state.price !== '-' && !isNaN(state.price)) ? `${cutNumber(state.price, 6)} ${state.fromCoin.toUpperCase()} per ${state.toCoin.toUpperCase()}` : '-'}</div>
+                        <div className="right">{(state.price !== '-' && !isNaN(state.price)) ? `${cutNumber(state.price, 6)} ${state.toCoin.toUpperCase()} per ${state.fromCoin.toUpperCase()}` : '-'}</div>
                     </div>
 
                     <div className="swap-detail">
