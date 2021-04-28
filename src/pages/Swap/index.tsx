@@ -253,7 +253,7 @@ function SwapCard() {
                     }
                 }
 
-                if (inputAmount === '' || inputAmount === '0') {
+                if (inputAmount === '' || inputAmount === '0' || counterPairAmount === 0) {
                     isEmpty = true
                 } else {
                     isEmpty = false
@@ -324,6 +324,7 @@ function SwapCard() {
                         counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
                         if (counterPairAmount < 0) {
                             counterPairAmount = 0
+                            isEmpty = true
                         }
                         console.log('FROM: counterPairAmount', counterPairAmount)
                     } else {
