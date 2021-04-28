@@ -139,7 +139,8 @@ const TYPES = {
     SELECT_COIN: 'SELECT_COIN',
     SET_MAX_AMOUNT: 'SET_MAX_AMOUNT',
     CHANGE_FROM_TO_COIN: 'CHANGE_FROM_TO_COIN',
-    UPDATE_PRICE: 'UPDATE_PRICE'
+    UPDATE_PRICE: 'UPDATE_PRICE',
+    SET_FROM_QUERY: 'SET_FROM_QUERY'
 }
 
 // component function
@@ -189,6 +190,11 @@ function SwapCard() {
             // console.log('need both coins')
         }
 
+        const searchParams = new URLSearchParams(history.location.search);
+        if (searchParams.has('from')) {
+            dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
+        }
+
     }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
 
     //reducer for useReducer
@@ -232,7 +238,7 @@ function SwapCard() {
                     if (counterPairAmount < 0) {
                         counterPairAmount = 0
                     }
-                    console.log('FROM: counterPairAmount', counterPairAmount)
+                    // console.log('FROM: counterPairAmount', counterPairAmount)
                 }
 
                 let price = 1 / swapPrice
@@ -341,6 +347,8 @@ function SwapCard() {
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]
                     return { ...fromToChangeObject, price, toAmount: cutNumber(counterPairAmount, 6), status: isOver ? 'over' : state.status, slippage: slippage }
                 }
+            case TYPES.SET_FROM_QUERY:
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
 
             default:
                 console.log("DEFAULT: SWAP REDUCER")
