@@ -116,26 +116,8 @@ padding: 0 30px 10px 30px;
     color: #fff;
     font-size: 20px;
     font-weight: bold;
-    padding-left: 0;
+    padding: 0;
   }
-
-.tradingButton {
-  background-color: transparent;
-  width: 64px;
-  height: 28px;
-  margin-left: 12px;
-  border-radius: 4px;
-  outline: none;
-  border: 1px solid #f58352;
-  cursor: pointer;
-  color: #f58352;
-
-  &:hover {
-    border: 1px solid #e6b587;
-    color:  #e6b587;
-  }
-
-}
 
 .rank {
   font-weight: bold;
@@ -153,8 +135,45 @@ padding: 0 30px 10px 30px;
   font-size: 16px;
 }
 
-#column-rank {
-  
+.search {
+  width: 100%;
+  .input {
+    width: 250px;
+    outline:none;
+    border: 1px solid #F6743C;
+    background-color: black;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 12px;
+    text-align: right;
+     
+    &::placeholder {
+      color:rgb(255, 255, 255);
+      font-weight: normal;
+    }
+  }
+
+  .searchButton {
+    border: 1px solid #F6743C;
+    padding: 0 12px;
+    height: 33px;
+    border-radius: 8px;
+    margin-left: 8px;
+    background-color: #F6743C;
+    color:#fff;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #fff;
+    }
+  }
+}
+
+.result {
+  height: 20px;
+  color: #fff;
 }
 `
 
@@ -162,6 +181,8 @@ padding: 0 30px 10px 30px;
 function Table() {
   const [tableData, setTableData] = React.useState([])
   const { userAddress } = useSelector(cosmosSelector.all);
+  const [searchKeyword, setSearchKeyword] = React.useState('')
+  const [searchResult, setSearchResult] = React.useState(null)
   // console.log(userAddress)
   // eslint-disable-next-line
   React.useEffect(async () => {
@@ -197,11 +218,32 @@ function Table() {
     console.log(response.data)
   }, [userAddress])
 
+  async function search() {
+    const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard/search?q=${searchKeyword}`)
+    if (response.data.Account) {
+      setSearchResult(response.data.Account)
+    } else {
+      setSearchResult("No")
+    }
+
+    console.log(response.data)
+  }
 
   return (
     <Wrapper>
+      <div className="result">
+        {searchResult ? searchResult !== "No" ? <div>Rank : {searchResult?.ranking} / Total Score : {searchResult.totalScore.toFixed(2)} / {searchResult.isValid}  {searchResult.isValid ? "Valid User 🤗" : "Invalid User 😂"}</div> : 'No Result  😂' : ''}
+      </div>
       {tableData !== null ? <DataTable
-        title={"Ranking"}
+        title={
+          <div className="search">
+            <input className="input" value={searchKeyword} onChange={(e) => { setSearchKeyword(e.target.value) }} type="text" placeholder="Search nickname or address" />
+            <button onClick={() => {
+              search()
+            }} className="searchButton" i>Search</button>
+          </div>
+
+        }
         overflowY={true}
         columns={columns}
         className="table"
