@@ -240,7 +240,7 @@ function SwapCard() {
                     isEmpty = false
                 }
 
-                let swapPrice = null;
+
                 let swapAmount = selectedPairAmount
                 let swapPoolReserveCoin = `${targetPair}Coin`
 
@@ -248,13 +248,20 @@ function SwapCard() {
                     swapAmount = selectedPairAmount * price
                     swapPoolReserveCoin = `${counterTargetPair}Coin`
                 }
-
+                let swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000 + 2 * selectedPairAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000
+                let counterPairAmount = selectedPairAmount / swapPrice * 0.9985 / 1000000 / 1000000
+                if (targetPair !== "from") {
+                    swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000 + 2 * selectedPairAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000
+                    counterPairAmount = ((selectedPairAmount / 0.9985) / swapPrice) / 1000000 / 1000000
+                }
                 const slippage = calculateSlippage((swapAmount * 1000000), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[swapPoolReserveCoin])])
                 setSlippage(slippage)
 
-                swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000 + 2 * selectedPairAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000
-                const counterPairAmount = selectedPairAmount / swapPrice * 0.9985 / 1000000 / 1000000
+
+
+
                 console.log('counterPairAmount', counterPairAmount)
+                console.log('')
 
                 price = 1 / swapPrice / 1000000 / 1000000
 
