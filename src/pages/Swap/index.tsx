@@ -316,11 +316,14 @@ function SwapCard() {
                 if (state.toCoin === '' || state.fromCoin === '') {
                     return fromToChangeObject
                 } else {
+                    swapPrice = ((fromCoinPoolAmount) + (2 * state.toAmount)) / (toCoinPoolAmount)
+                    counterPairAmount = cutNumber(state.toAmount / swapPrice * swapFeeRate, 6)
                     let isOver = state.fromAmount > userFromCoinBalance || state.toAmount > userToCoinBalance
+                    const slippage = calculateSlippage((state.toAmount * 1000000 * 100), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])])
                     const sortedCoins = [state.toCoin, state.fromCoin].sort()
                     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]
-                    return { ...fromToChangeObject, price, status: isOver ? 'over' : state.status }
+                    return { ...fromToChangeObject, price, toAmount: counterPairAmount, status: isOver ? 'over' : state.status, slippage: slippage }
                 }
 
             default:
