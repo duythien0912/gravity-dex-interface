@@ -251,11 +251,11 @@ function SwapCard() {
                         isOver = false
                     }
                 } else {
-                    // if (inputAmount > userFromCoinBalance) {
-                    //     isOver = true
-                    // } else {
-                    //     isOver = false
-                    // }
+                    if (counterPairAmount > userFromCoinBalance) {
+                        isOver = true
+                    } else {
+                        isOver = false
+                    }
                 }
 
                 if (inputAmount === '' || inputAmount === '0') {
