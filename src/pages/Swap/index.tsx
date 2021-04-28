@@ -306,7 +306,6 @@ function SwapCard() {
                 }
 
             case TYPES.CHANGE_FROM_TO_COIN:
-
                 const fromToChangeObject = { ...state, fromCoin: state.toCoin, toCoin: state.fromCoin, fromAmount: state.toAmount, toAmount: state.fromAmount }
 
                 if (state.status === 'create') {
@@ -316,14 +315,29 @@ function SwapCard() {
                 if (state.toCoin === '' || state.fromCoin === '') {
                     return fromToChangeObject
                 } else {
-                    swapPrice = ((fromCoinPoolAmount) + (2 * state.toAmount)) / (toCoinPoolAmount)
-                    counterPairAmount = cutNumber(state.toAmount / swapPrice * swapFeeRate, 6)
+                    const sortedCoins = [state.toCoin, state.fromCoin].sort()
+
+
+
+                    if (state.toCoin !== sortedCoins[0]) {
+                        counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
+                        if (counterPairAmount < 0) {
+                            counterPairAmount = 0
+                        }
+                        console.log('FROM: counterPairAmount', counterPairAmount)
+                    } else {
+                        swapPrice = ((toCoinPoolAmount) + (2 * state.toAmount)) / (fromCoinPoolAmount)
+                        counterPairAmount = state.toAmount / swapPrice * swapFeeRate
+                    }
+
+
+
                     let isOver = state.fromAmount > userFromCoinBalance || state.toAmount > userToCoinBalance
                     const slippage = calculateSlippage((state.toAmount * 1000000 * 100), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])])
-                    const sortedCoins = [state.toCoin, state.fromCoin].sort()
+
                     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]
-                    return { ...fromToChangeObject, price, toAmount: counterPairAmount, status: isOver ? 'over' : state.status, slippage: slippage }
+                    return { ...fromToChangeObject, price, toAmount: cutNumber(counterPairAmount, 6), status: isOver ? 'over' : state.status, slippage: slippage }
                 }
 
             default:
