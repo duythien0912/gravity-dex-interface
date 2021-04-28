@@ -193,15 +193,23 @@ function SwapCard() {
 
     //reducer for useReducer
     function reducer(state, action) {
+        // const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
         const { targetPair, counterTargetPair } = getPairs(action)
+        const swapFeeRate = 1 - params?.swap_fee_rate / 2 || 0.9985
 
         const inputAmount = action.payload?.amount || ''
+        const realInputAmount = inputAmount  // swaprate?
 
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
-        // const counterPairMyBalance = userBalances[state[`${counterTargetPair}Coin`]]
 
         const userFromCoinBalance = userBalances[getMinimalDenomCoin(state.fromCoin)] / 1000000
         const userToCoinBalance = userBalances[getMinimalDenomCoin(state.toCoin)] / 1000000
+
+        const fromCoinPoolAmount = Number(selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])]) / 1000000
+        const toCoinPoolAmount = Number(selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])]) / 1000000
+
+        let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
+        let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
 
         let isOver = false
         let isEmpty = false
@@ -215,24 +223,21 @@ function SwapCard() {
                 }
 
             case TYPES.AMOUNT_CHANGE:
-                const swapFeeRate = 1 - params?.swap_fee_rate / 2 || 0.9985
 
-                const fromCoinPoolAmount = Number(selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])]) / 1000000
-                const toCoinPoolAmount = Number(selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])]) / 1000000
-
-                const realInputAmount = inputAmount * swapFeeRate
-
-                let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
-                let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
+                // let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
+                // let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
 
                 if (targetPair === "to") {
-                    counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / inputAmount * swapFeeRate) - (2 / toCoinPoolAmount))
+                    counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / inputAmount) - (2 / toCoinPoolAmount))
+                    if (counterPairAmount < 0) {
+                        counterPairAmount = 0
+                    }
                     console.log('FROM: counterPairAmount', counterPairAmount)
                 }
 
                 let price = 1 / swapPrice
 
-                const slippage = calculateSlippage((realInputAmount * 1000000 * 100), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
+                const slippage = calculateSlippage((realInputAmount * 1000000 * 100), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
 
                 if (targetPair === 'from') {
                     if (inputAmount > userFromCoinBalance) {
@@ -255,7 +260,6 @@ function SwapCard() {
                 }
 
                 if (!isNaN(price)) {
-                    console.log(price)
                     return {
                         ...state,
                         [`${targetPair}Amount`]: inputAmount,
@@ -276,7 +280,8 @@ function SwapCard() {
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
-                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: (cutNumber(inputAmount * price, 6)), status: getStatus(state) }
+
+                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)), status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
