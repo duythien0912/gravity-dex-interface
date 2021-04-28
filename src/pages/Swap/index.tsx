@@ -280,8 +280,9 @@ function SwapCard() {
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
+                console.log(state[`${counterTargetPair}Coin`])
 
-                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)), status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: state[`${counterTargetPair}Coin`] ? (cutNumber(counterPairAmount, 6)) : '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
