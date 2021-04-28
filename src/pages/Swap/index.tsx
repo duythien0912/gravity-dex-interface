@@ -215,31 +215,38 @@ function SwapCard() {
                 }
 
             case TYPES.AMOUNT_CHANGE:
+                const swapFeeRate = 1 - params?.swap_fee_rate / 2 || 0.9985
 
-                let swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000 + 2 * inputAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000
-                let counterPairAmount = inputAmount / swapPrice * 0.9985 / 1000000 / 1000000
+                const fromCoinPoolAmount = Number(selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])]) / 1000000
+                const toCoinPoolAmount = Number(selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])]) / 1000000
 
-                if (targetPair !== "from") {
-                    swapPrice = (selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])] / 1000000 + 2 * inputAmount) / selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`fromCoin`])] / 1000000
-                    counterPairAmount = ((inputAmount / 0.9985 / 0.9985) / swapPrice) / 1000000 / 1000000
+                const realInputAmount = inputAmount * swapFeeRate
+
+                let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
+                let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
+
+                //to 입력시 from을 알 수 있게
+                // test2가 카운터페어 이미 알고 있는 값(인풋임)
+                let test2 = realInputAmount / ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount) * swapFeeRate
+
+                if (targetPair === "to") {
+                    swapPrice = (toCoinPoolAmount + 2 * realInputAmount) / fromCoinPoolAmount
+                    counterPairAmount = (inputAmount / swapPrice)
+                    console.log(counterPairAmount)
                 }
 
-                let swapAmount = inputAmount
-                let swapPoolReserveCoin = `${targetPair}Coin`
+                let price = 1 / swapPrice
 
-                let price = 1 / swapPrice / 1000000 / 1000000
-                // if (targetPair !== "from") {
-                //     price = 1 / price
-                // }
-                console.log('price', price)
-                if (targetPair !== "from") {
-                    swapAmount = inputAmount * price
-                    swapPoolReserveCoin = `${counterTargetPair}Coin`
+                console.log('swapPrice', swapPrice)
+
+                if (targetPair === "to") {
+                    price = 1 / price
+                    console.log('to price', price)
+                } else {
+                    console.log('price', price)
                 }
 
-                const slippage = calculateSlippage((swapAmount * 1000000), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[swapPoolReserveCoin])])
-
-
+                const slippage = calculateSlippage((realInputAmount * 1000000 * 100), selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
 
                 if (targetPair === 'from') {
                     if (inputAmount > userFromCoinBalance) {
@@ -268,7 +275,11 @@ function SwapCard() {
                 // console.log('inputAmount', inputAmount, selectedPoolData.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
                 // console.log('swapPrice', swapPrice)
                 // console.log('slippage', slippage)
+                // console.log((1 / (1 - slippage) * slippage))
 
+                // console.log(counterPairAmount * (1 / (1 - slippage)))
+                // console.log(counterPairAmount)
+                // let test = targetPair === 'to' ? counterPairAmount * (1 / (1 - slippage)) : counterPairAmount
                 if (!isNaN(price)) {
                     return {
                         ...state,
@@ -276,7 +287,7 @@ function SwapCard() {
                         [`${counterTargetPair}Amount`]: (cutNumber(counterPairAmount, 6)),
                         status: getStatus(state),
                         slippage: slippage,
-                        price: price
+                        price: targetPair === "to" ? 1 / price : price
                     }
                 } else {
                     // empty, 0, no pool
