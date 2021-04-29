@@ -145,11 +145,11 @@ padding: 0 30px 10px 30px;
     color: #fff;
     font-weight: bold;
     padding: 8px 12px;
-    border-radius: 12px;
+    border-radius: 20px;
     text-align: right;
      
     &::placeholder {
-      color:rgb(255, 255, 255);
+      color:rgba(255, 255, 255, 0.712);
       font-weight: normal;
     }
   }
@@ -158,7 +158,7 @@ padding: 0 30px 10px 30px;
     border: 1px solid #F6743C;
     padding: 0 12px;
     height: 33px;
-    border-radius: 8px;
+    border-radius: 20px;
     margin-left: 8px;
     background-color: #F6743C;
     color:#fff;
