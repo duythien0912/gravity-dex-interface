@@ -144,10 +144,11 @@ function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
   const history = useHistory();
   // eslint-disable-next-line
-  React.useEffect(async () => {
+  let intervalId = null
+  React.useEffect(() => {
 
     getPriceData()
-    setInterval(async () => {
+    intervalId = setInterval(() => {
       getPriceData()
     }, 10000)
 
@@ -183,6 +184,8 @@ function Table() {
 
       setTableData(priceData)
     }
+
+    return () => clearInterval(intervalId)
   }, [])
 
   return (
