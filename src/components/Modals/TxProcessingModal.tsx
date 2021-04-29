@@ -11,6 +11,8 @@ const SelectCoinWrapper = styled.div`
 @media(max-width: 500px) {
       width: 360px !important; 
 }
+
+padding-bottom: 20px;
 .header{
     display:flex;
     justify-content: space-between;
@@ -112,11 +114,11 @@ const SelectCoinWrapper = styled.div`
 }
 
 .result {
-    padding: 20px;
+    padding: 20px 20px 0 20px;
 }
 
 .pending {
-    color: #f39c1a!important;
+    color: #f1a04c!important;
 }
 
 
@@ -131,11 +133,28 @@ const SelectCoinWrapper = styled.div`
 .bold {
     font-weight: bold;
 }
+
+.finish-button {
+    display: block;
+    width: 60%;
+    margin: 20px auto 0 auto;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background-color: #f39c1a;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #d38819;
+    }
+}
 `
 
 const ResultBoard = styled.div`
 color: #fff;
-background: linear-gradient(91.43deg,#860fa5 0%,#9a4927 100%);
+background: linear-gradient(91.43deg,#860fa5 0%,#8a4223 100%);
 padding: 10px 12px;
 border-radius: 8px;
 
@@ -198,6 +217,8 @@ function getResultMessage(type, result) {
     }
 }
 
+
+
 function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }) {
 
     const { txModalData } = useSelector(storeSelector.all)
@@ -209,7 +230,9 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
         setTransactionResultStatus(txModalData.transactionResultStatus ? txModalData.transactionResultStatus : 'waiting')
     }, [txModalData])
 
-
+    function finish() {
+        toggle()
+    }
 
     return (
 
@@ -232,16 +255,18 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                     </div>
                 </div>
 
-                <div className="result">
+                {txModalData.resultData ? <div className="result">
                     {/* <div className="title">Result</div> */}
 
                     <ResultBoard>
                         <div className="result-title">RESULT</div>
                         {getResultMessage(txModalData.type, txModalData.resultData)}
+
                     </ResultBoard>
 
+                    <button className="finish-button" onClick={finish}>Close</button>
 
-                </div>
+                </div> : ''}
 
 
             </SelectCoinWrapper>
