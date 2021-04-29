@@ -183,7 +183,6 @@ function getResultMessage(type, result) {
         if (result.isSuccess) {
             switch (type) {
                 case 'Redeem':
-
                     const withdrawCoins = result.data.withdraw_coins?.split(',')
                     const coinA = withdrawCoins[0].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
                     const coinB = withdrawCoins[1].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
@@ -210,11 +209,24 @@ function getResultMessage(type, result) {
                     return "Pool Created! 🎉"
                 case 'Add Liquidity':
                     const receivedPoolCoinAmount = Math.floor(result.data.pool_coin_amount) / 1000000
+                    const addCoins = result.data.accepted_coins?.split(',')
+                    const A = addCoins[0].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+                    const B = addCoins[1].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+                    const AAmount = Math.floor(Number(A[0])) / 1000000
+                    const BAmount = Math.floor(Number(B[0])) / 1000000
                     return (
                         <>
                             <div className="detail">
                                 <div className="title">Status : </div>
                                 <div className="body"> Add Liquidity Success! 🎉</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Added to pool: </div>
+                                <div className="body"><span className="red">+ {AAmount}</span> {A[1].startsWith('u') ? A[1].substr(1).toUpperCase() : A[1].toUpperCase()}</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title"> </div>
+                                <div className="body"><span className="red">+ {BAmount}</span> {B[1].startsWith('u') ? B[1].substr(1).toUpperCase() : B[1].toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
