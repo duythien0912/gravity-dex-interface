@@ -125,20 +125,34 @@ const SelectCoinWrapper = styled.div`
 }
 
 .fail, .red {
-    color: red !important;
+    color: #ff0808 !important;
+}
+
+.bold {
+    font-weight: bold;
 }
 `
 
 const ResultBoard = styled.div`
 color: #fff;
-background-color: rgba(0, 0, 0, 0.8);
-padding: 20px 12px;
+background: linear-gradient(91.43deg,#860fa5 0%,#9a4927 100%);
+padding: 10px 12px;
 border-radius: 8px;
+
+.header {
+    text-align: center;
+}
 
 .detail {
     display:flex;
     justify-content: space-between;
     padding: 4px 0; 
+}
+
+.result-title {
+    font-size: 20px;
+    text-align: center;
+    padding-bottom: 20px;
 }
 `
 
@@ -165,7 +179,7 @@ function getResultMessage(type, result) {
                         <>
                             <div className="detail">
                                 <div className="title">Status : </div>
-                                <div className="body">Swap Success ({successPercentage}%)</div>
+                                <div className="body">Swap Success <span className="bold">({successPercentage}%)</span></div>
                             </div>
                             <div className="detail">
                                 <div className="title">Paid : </div>
@@ -179,7 +193,7 @@ function getResultMessage(type, result) {
                     )
             }
         } else {
-            return <div>Error</div>
+            return <div>{result.data}</div>
         }
     }
 }
@@ -222,6 +236,7 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                     {/* <div className="title">Result</div> */}
 
                     <ResultBoard>
+                        <div className="result-title">RESULT</div>
                         {getResultMessage(txModalData.type, txModalData.resultData)}
                     </ResultBoard>
 
