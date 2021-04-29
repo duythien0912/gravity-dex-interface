@@ -360,16 +360,17 @@ function SwapCard() {
 
 
 
-                    if (state.toCoin !== sortedCoins[0]) {
+                    if (false && state.toCoin !== sortedCoins[0]) {
                         counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
-                        if (counterPairAmount < 0) {
-                            counterPairAmount = 0
-                            isEmpty = true
-                        }
                         console.log('FROM: counterPairAmount', counterPairAmount)
                     } else {
                         swapPrice = ((toCoinPoolAmount) + (2 * state.toAmount)) / (fromCoinPoolAmount)
                         counterPairAmount = state.toAmount / swapPrice * swapFeeRate
+                    }
+
+                    if (counterPairAmount < 0) {
+                        counterPairAmount = 0
+                        isEmpty = true
                     }
 
 
