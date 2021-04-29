@@ -73,7 +73,7 @@ const columns = [
 const Wrapper = styled.div`
 width: 900px;
 margin: 0 auto;
-padding: 0 30px 10px 30px;
+padding: 0 30px 40px 30px;
 
 @media(max-width: 500px) {
   width: 100%;
@@ -187,6 +187,9 @@ padding: 0 30px 10px 30px;
 
 .green {
   color: #1ce01c;
+}
+.rdt_TableBody {
+  max-height: 100%;
 }
 
 .rdt_TableBody::-webkit-scrollbar {

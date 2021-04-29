@@ -45,8 +45,7 @@ const columns = [
     name: 'Arbitrage Chance',
     selector: 'discrepancyRate',
     format: (row) => {
-      const pairA = row?.poolName?.split('-')[0].toLowerCase()
-      const pairB = row?.poolName?.split('-')[1].toLowerCase()
+
 
       let color = null
       let isBold = false
@@ -61,12 +60,7 @@ const columns = [
         isBold = true
       }
 
-      return <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>
-        {row.discrepancyRate + '%'}
-        <button onClick={() => {
-          row.history.push(`/swap?from=${pairA}&to=${pairB}`)
-        }} className="tradingButton">Chance</button>
-      </span>
+      return <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
 
     },
     sortable: true,
@@ -77,6 +71,8 @@ const columns = [
 //Styled-components
 const Wrapper = styled.div`
 width: 100%;
+max-width: 1240px;
+margin: 0 auto;
 
 padding: 0 30px 60px 30px;
 /* border-radius: 20px; */
@@ -134,6 +130,17 @@ padding: 0 30px 60px 30px;
     color:  #e6b587;
   }
 
+}
+
+.rdt_TableBody {
+  max-height: 100%;
+  height: 100%;
+}
+
+.rdt_TableRow:hover {
+outline: none;
+border: none;
+background-color: hsla(36, 100%, 50%, 0.295) !important;
 }
 `
 
@@ -195,6 +202,13 @@ function Table() {
         className="table"
         defaultSortField="discrepancyRate"
         defaultSortAsc={false}
+        onRowClicked={(row) => {
+          const pairA = row?.poolName?.split('-')[0].toLowerCase()
+          const pairB = row?.poolName?.split('-')[1].toLowerCase()
+          row.history.push(`/swap?from=${pairA}&to=${pairB}`)
+        }}
+        pointerOnHover={true}
+        highlightOnHover={true}
         columns={columns}
         data={tableData}
         fixedHeader={true}
