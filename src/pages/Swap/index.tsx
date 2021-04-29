@@ -248,7 +248,7 @@ function SwapCard() {
 
                 let price = 1 / swapPrice
 
-                const slippage = calculateSlippage((realInputAmount * 1000000 * 100), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
+                const slippage = calculateSlippage((realInputAmount * 1000000), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
 
                 if (targetPair === 'from') {
                     if (inputAmount > userFromCoinBalance) {
@@ -490,7 +490,7 @@ function SwapCard() {
                         <div className="content">
                             <div className="detail">
                                 <div className="title">Estimated Receives</div>
-                                <div className="data">{state.toAmount}</div>
+                                <div className="data">{state.toAmount} {state.toCoin ? state.toCoin.toUpperCase() : ''}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Price Impact</div>
