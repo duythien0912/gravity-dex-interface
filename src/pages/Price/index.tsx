@@ -154,7 +154,7 @@ function Table() {
 
     async function getPriceData() {
       let priceData = [];
-      const response = await axios.get("http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/pools")
+      const response = await axios.get("https://competition.bharvest.io:8081/pools")
       response.data.pools.forEach((pool, index) => {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`

@@ -187,7 +187,7 @@ function Table() {
   // eslint-disable-next-line
   React.useEffect(async () => {
     let rankData = [];
-    const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard?address=${userAddress}`)
+    const response = await axios.get(`https://competition.bharvest.io:8081/scoreboard?address=${userAddress}`)
     response.data.accounts.forEach((account, index) => {
       const accountAddress = `${account.address.substr(0, 10)}...${account.address.substr(-5)}`
       const rank = account.ranking
@@ -220,7 +220,7 @@ function Table() {
 
   async function search() {
     if (searchKeyword) {
-      const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard/search?q=${searchKeyword}`)
+      const response = await axios.get(`https://competition.bharvest.io:8081/scoreboard/search?q=${searchKeyword}`)
       if (response.data.Account) {
         setSearchResult(response.data.Account)
       } else {
