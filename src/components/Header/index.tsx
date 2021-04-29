@@ -242,7 +242,7 @@ function AppHeader() {
     return (
       <Logo>
         <div className="logo">
-          <DesktopLogo />
+          {mobileCheck() ? <img src="/apple-touch-icon.png" style={{ width: "48px", height: "48px" }} alt="logo" /> : <DesktopLogo />}
         </div>
       </Logo>
     )
