@@ -183,11 +183,45 @@ function getResultMessage(type, result) {
         if (result.isSuccess) {
             switch (type) {
                 case 'Redeem':
-                    return "Redeem Success! 🎉"
+
+                    const withdrawCoins = result.data.withdraw_coins?.split(',')
+                    const coinA = withdrawCoins[0].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+                    const coinB = withdrawCoins[1].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+                    const coinAAmount = Math.floor(Number(coinA[0])) / 1000000
+                    const coinBAmount = Math.floor(Number(coinB[0])) / 1000000
+                    return (
+                        <>
+                            <div className="detail">
+                                <div className="title">Status : </div>
+                                <div className="body"> Redeem Success! 🎉</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Received : </div>
+                                <div className="body"><span className="green">+ {coinAAmount}</span> {coinA[1].startsWith('u') ? coinA[1].substr(1).toUpperCase() : coinA[1].toUpperCase()}</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title"> </div>
+                                <div className="body"><span className="green">+ {coinBAmount}</span> {coinB[1].startsWith('u') ? coinB[1].substr(1).toUpperCase() : coinB[1].toUpperCase()}</div>
+                            </div>
+                        </>
+                    )
+
                 case 'Create':
                     return "Pool Created! 🎉"
                 case 'Add Liquidity':
-                    return "  Add Liquidity Success! 🎉"
+                    const receivedPoolCoinAmount = Math.floor(result.data.pool_coin_amount) / 1000000
+                    return (
+                        <>
+                            <div className="detail">
+                                <div className="title">Status : </div>
+                                <div className="body"> Add Liquidity Success! 🎉</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Received : </div>
+                                <div className="body"><span className="green">+ {receivedPoolCoinAmount}</span> POOL COIN</div>
+                            </div>
+                        </>
+                    )
                 case 'Swap':
                     const successPercentage = Math.round(result.data.offer_coin_amount / result.data.offer_coin_amount * 100)
                     const paidAmount = result.data.exchanged_offer_coin_amount / 1000000
