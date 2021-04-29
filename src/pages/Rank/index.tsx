@@ -188,6 +188,21 @@ padding: 0 30px 10px 30px;
 .green {
   color: #1ce01c;
 }
+
+.rdt_TableBody::-webkit-scrollbar {
+    width: 10px;
+  }
+  .rdt_TableBody::-webkit-scrollbar-thumb {
+    background-color: hsla(18.064516129032256, 91.17647058823533%, 60%, 0.829);
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+  .rdt_TableBody::-webkit-scrollbar-track {
+    background-color: hsla(24.878048780487806, 66.48648648648648%, 63.725490196078425%, 0.459);
+    /* border-radius: 10px; */
+    box-shadow: inset 0px 0px 5px rgba(78, 47, 11, 0.411);
+  }
 `
 
 
