@@ -12,6 +12,7 @@ const columns = [
   {
     name: 'Rank',
     selector: 'rank',
+    sortable: true,
     center: true,
     format: (row) => {
       if (row.accountAddress !== "YOU") {
@@ -36,8 +37,8 @@ const columns = [
         return <span className="myRank">{row.accountAddress}</span>
       }
     },
-    minWidth: "160px",
-    maxWidth: "200px"
+    minWidth: "230px",
+    maxWidth: "230px"
   },
   {
     name: 'Action Score',
@@ -70,7 +71,7 @@ const columns = [
 
 //Styled-components
 const Wrapper = styled.div`
-max-width: 800px;
+width: 900px;
 margin: 0 auto;
 padding: 0 30px 10px 30px;
 
@@ -175,6 +176,18 @@ padding: 0 30px 10px 30px;
   height: 20px;
   color: #fff;
 }
+
+#column-rank {
+  padding-left: 30px;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: #1ce01c;
+}
 `
 
 
@@ -189,7 +202,7 @@ function Table() {
     let rankData = [];
     const response = await axios.get(`https://competition.bharvest.io:8081/scoreboard?address=${userAddress}`)
     response.data.accounts.forEach((account, index) => {
-      const accountAddress = `${account.address.substr(0, 10)}...${account.address.substr(-5)}`
+      const accountAddress = <div>{account.address.substr(0, 10)}...{account.address.substr(-5)} ({account.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div>
       const rank = account.ranking
       const actionScore = cutNumber(account.actionScore, 2)
       const tradingScore = cutNumber(account.tradingScore, 2)

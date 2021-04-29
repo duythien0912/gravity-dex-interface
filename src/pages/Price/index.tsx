@@ -30,13 +30,13 @@ const columns = [
     right: true,
   },
   {
-    name: 'Global Ratio',
+    name: 'Global Price Ratio',
     selector: 'globalRatio',
     right: true,
     minWidth: "200px"
   },
   {
-    name: 'Internal Ratio',
+    name: 'Internal Price Ratio',
     selector: 'internalRatio',
     minWidth: "200px",
     right: true,
