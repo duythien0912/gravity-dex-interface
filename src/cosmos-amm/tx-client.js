@@ -36,7 +36,7 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
     console.log(msg)
     try {
-        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg])
+        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], { fee: { amount: [], gas: "300000" } })
         console.log(txBroadcastResponse)
         if (txBroadcastResponse.code !== undefined) {
             const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
@@ -50,12 +50,21 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
             dispatch(getTxProcessingStatus('broadcastSuccess', data))
 
-            let isSuccess = false;
+            const txResult = setInterval(async () => {
+                try {
+                    const response = await getTxResult(txBroadcastResponse.height + 3, data)
+                    const Msg = { type: data.type, resultData: response }
+                    console.log('response', response)
+                    if (response.resultData) {
+                        dispatch(getTxProcessingStatus('txSuccess', Msg))
+                    } else {
+                        dispatch(getTxProcessingStatus('txFail', Msg))
+                    }
 
-            setTimeout(async () => {
-                isSuccess = await getTxResult(txBroadcastResponse.height, data)
-                const successMsg = { type: data.type, resultData: isSuccess }
-                dispatch(getTxProcessingStatus('txSuccess', successMsg))
+                    clearInterval(txResult)
+                } catch (e) {
+                    console.log(e)
+                }
             }, 3000)
 
 
@@ -71,25 +80,31 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
     async function getTxResult(height, data) {
         const response = await axios.get(`${chainInfo.rpc}/block_results?height=${height}`)
+        console.log(response)
         const checks = getEndBlockChecks(data)
-        let isSuccess = false
+        let successData = false
         console.log(response.data.result.end_block_events)
         if (data.type === "Create") {
-            isSuccess = true
+            successData = true
         } else {
-            response.data.result.end_block_events.forEach((item) => {
-                if (item.type === checks.type) {
-                    item.attributes.forEach((result) => {
+            if (response.data.result?.end_block_events) {
+                response.data.result?.end_block_events?.forEach((item) => {
+                    if (item.type === checks.type) {
+                        item.attributes.forEach((result) => {
 
-                        if (atob(result.key) === checks.txAddress) {
-                            console.log('isUserExecuted', checks.userAddress === atob(result.value))
-                            isSuccess = true
-                        }
+                            if (atob(result.key) === checks.txAddress) {
+                                console.log('isUserExecuted', checks.userAddress === atob(result.value))
+                                successData[atob(result.key)] = atob(result.value)
+                            }
 
-                        console.log(atob(result.key), atob(result.value))
-                    })
-                }
-            })
+                            console.log(atob(result.key), atob(result.value))
+                        })
+                    }
+                })
+            } else {
+                successData = false
+            }
+
         }
 
         // const test = await axios.get(`${chainInfo.rest}/tendermint/liquidity/v1beta1/pools/6/batch/swaps`)
@@ -100,7 +115,8 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         //         })
         // })
         // atob()
-        return isSuccess
+        console.log(successData)
+        return successData
     }
 
     function getTxProcessingStatus(status, data) {
