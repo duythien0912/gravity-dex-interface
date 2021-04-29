@@ -1,8 +1,14 @@
 import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity/tendermint.liquidity.v1beta1/module"
+import { mobileCheck } from "../utils/global-functions"
 import axios from "axios";
 import { chainInfo } from "./config"
 
 export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
+
+    if (mobileCheck()) {
+        alert('Please use Desktop! 🙏')
+        return
+    }
     dispatch(getTxProcessingStatus('init', data))
 
     const signer = window.getOfflineSigner(chainInfo.chainId);

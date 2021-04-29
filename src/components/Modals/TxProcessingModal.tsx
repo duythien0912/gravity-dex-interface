@@ -180,7 +180,7 @@ border-radius: 8px;
 //helpers
 function getResultMessage(type, result) {
     if (result) {
-        console.log('getResultMessage / result', result)
+        // console.log('getResultMessage / result', result)
         if (result.isSuccess) {
             switch (type) {
                 case 'Redeem':
