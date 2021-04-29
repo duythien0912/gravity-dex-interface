@@ -534,7 +534,7 @@ function SwapCard() {
                 </SwapWrapper>
             </BaseCard>
             <SemiFoooter>
-                <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank">{"T&C"}</a>
+                <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">{"T&C"}</a>
             </SemiFoooter>
         </>
     )

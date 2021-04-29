@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from "styled-components"
 import { Route, Switch, useHistory } from 'react-router-dom'
-import { useToggle } from "ahooks"
 import { ToastContainer, Flip } from "react-toastify";
 
 import AppHeader from "../components/Header"
@@ -74,9 +73,16 @@ function App() {
   // const { params, pools } = useSelector(liquiditySelector.all);
 
   React.useEffect(() => {
+    async function setCoinPrices() {
+      const prices = await axios.get("https://competition.bharvest.io:8081/prices")
+      // console.log("response prices", prices.data)
+      dispatch({ type: 'store/setCoinPrices', payload: { prices: prices.data.prices } })
+    }
+
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
+
     dispatch(requestQueryParams())
     setInterval(() => {
       dispatch(requestQueryLiquidityPools())
@@ -87,11 +93,7 @@ function App() {
     setCoinPrices()
   }, [history, dispatch])
 
-  async function setCoinPrices() {
-    const prices = await axios.get("https://competition.bharvest.io:8081/prices")
-    // console.log("response prices", prices.data)
-    dispatch({ type: 'store/setCoinPrices', payload: { prices: prices.data.prices } })
-  }
+
 
   return (
     <AppWrapper>

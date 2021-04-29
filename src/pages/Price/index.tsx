@@ -1,7 +1,6 @@
 // @ts-nocheck
 import * as React from 'react'
 import styled from "styled-components"
-import { useSelector } from "react-redux";
 import { cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 
@@ -63,6 +62,7 @@ const columns = [
       return <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
 
     },
+    minWidth: "190px",
     sortable: true,
     right: true,
   },
@@ -151,9 +151,9 @@ function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
   const history = useHistory();
   // eslint-disable-next-line
-  let intervalId = null
-  React.useEffect(() => {
 
+  React.useEffect(() => {
+    let intervalId = null
     getPriceData()
     intervalId = setInterval(() => {
       getPriceData()
@@ -193,7 +193,7 @@ function Table() {
     }
 
     return () => clearInterval(intervalId)
-  }, [])
+  }, [history])
 
   return (
     <Wrapper>
