@@ -151,6 +151,49 @@ padding-bottom: 20px;
         background-color: #d38819;
     }
 }
+
+.spinner {
+  width: 24px;
+  height: 24px;
+
+  position: relative;
+  margin-left: 6px;
+  /* margin: 100px auto; */
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(206, 139, 39);
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
 `
 
 const ResultBoard = styled.div`
@@ -305,8 +348,18 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                         <div className={`order ${transactionResultStatus}`} style={{ color: "darkgray" }}>②</div>
                     </div>
                     <div className="step-details">
-                        <div className="detail">Transaction Broadcast - <span className={`status ${broadcastStatus}`}>{broadcastStatus.toUpperCase()}</span></div>
-                        <div className={`detail`} style={{ color: transactionResultStatus === "waiting" ? "darkgray" : "#fff" }}>Transaction Result - <span className={`status ${transactionResultStatus}`}>{transactionResultStatus.toUpperCase()}</span></div>
+                        <div className="detail">Transaction Broadcast - <span className={`status ${broadcastStatus}`}>{broadcastStatus.toUpperCase()}</span>
+                            {broadcastStatus === "pending" ? <div className="spinner">
+                                <div className="double-bounce1"></div>
+                                <div className="double-bounce2"></div>
+                            </div> : ''}
+                        </div>
+                        <div className={`detail`} style={{ color: transactionResultStatus === "waiting" ? "darkgray" : "#fff" }}>Transaction Result - <span className={`status ${transactionResultStatus}`}>{transactionResultStatus.toUpperCase()}</span>
+                            {transactionResultStatus === "pending" ? <div className="spinner">
+                                <div className="double-bounce1"></div>
+                                <div className="double-bounce2"></div>
+                            </div> : ''}
+                        </div>
                     </div>
                 </div>
 
