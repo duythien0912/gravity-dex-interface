@@ -88,9 +88,9 @@ function App() {
   }, [history, dispatch])
 
   async function setCoinPrices() {
-    const prices = await axios.get("http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/prices")
+    const prices = await axios.get("https://competition.bharvest.io:8081/prices")
     // console.log("response prices", prices.data)
-    dispatch({type:'store/setCoinPrices', payload: {prices: prices.data.prices }})
+    dispatch({ type: 'store/setCoinPrices', payload: { prices: prices.data.prices } })
   }
 
   return (
