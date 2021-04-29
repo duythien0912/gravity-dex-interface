@@ -179,8 +179,8 @@ border-radius: 8px;
 //helpers
 function getResultMessage(type, result) {
     if (result) {
-        console.log('result.data', result)
-        if (result.data.success === "success") {
+        console.log('getResultMessage / result', result)
+        if (result.isSuccess) {
             switch (type) {
                 case 'Redeem':
                     return "Redeem Success! 🎉"
@@ -212,7 +212,7 @@ function getResultMessage(type, result) {
                     )
             }
         } else {
-            return <div>{result.data}</div>
+            return <div>{String(result.data)}</div>
         }
     }
 }

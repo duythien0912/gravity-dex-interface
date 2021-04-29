@@ -35,9 +35,9 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
     }
 
     console.log(msg)
+
     try {
         const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], { fee: { amount: [], gas: "300000" } })
-        console.log(txBroadcastResponse)
         if (txBroadcastResponse.code !== undefined) {
             const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
             dispatch(getTxProcessingStatus('broadcastFail', failMsg))
@@ -52,14 +52,16 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
             const txResult = setInterval(async () => {
                 try {
-                    const response = await getTxResult(txBroadcastResponse.height, data)
+                    let response = await getTxResult(txBroadcastResponse.height, data)
 
                     if (data.type === "Swap") {
                         response.demand_coin_denom = data?.demandCoinDenom
+                        if (response.success === 'fail') {
+                            response = "There may have been a drastic change in pool price recently or increase slippage tolerance(top-right gear button)"
+                        }
                     }
 
                     const result = { type: data.type, resultData: response }
-
                     if (result.resultData.success === "success") {
                         dispatch(getTxProcessingStatus('txSuccess', result))
                     } else {
@@ -69,7 +71,7 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
                 } catch (e) {
                     console.log(e)
                 }
-            }, 3000)
+            }, 1000)
         }
 
     } catch (e) {
@@ -93,6 +95,8 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
                 response.data.result?.end_block_events?.forEach((item) => {
                     if (item.type === checks.type) {
                         item.attributes.forEach((result) => {
+                            console.log(atob(result.key), atob(result.value))
+
                             if (atob(result.key) === checks.txAddress) {
                                 if (atob(result.value) === checks.userAddress) {
                                     isMine = true
@@ -100,16 +104,15 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
                                     isMine = false
                                 }
                             }
-                            console.log(atob(result.key), atob(result.value))
-
                             if (isMine) {
                                 successData[atob(result.key)] = atob(result.value)
                             }
+
                         })
                     }
                 })
             } else {
-                successData = { success: "fail" }
+                successData.success = "fail"
             }
         }
         return successData
@@ -135,21 +138,21 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
             }
         }
         if (status === 'txFail') {
-            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: "success" } }
+            return { type: 'store/setTxModalStatus', payload: { type: data.type, broadcastStatus: 'success', transactionResultStatus: 'fail', resultData: { data: data.resultData, isSuccess: false } } }
         }
     }
+}
 
-    function getEndBlockChecks(data) {
-        if (data.type === "Swap") {
-            return { type: "swap_transacted", txAddress: 'swap_requester', userAddress: data.userAddress }
-        }
+function getEndBlockChecks(data) {
+    if (data.type === "Swap") {
+        return { type: "swap_transacted", txAddress: 'swap_requester', userAddress: data.userAddress }
+    }
 
-        if (data.type === "Redeem") {
-            return { type: "withdraw_from_pool", txAddress: 'withdrawer', userAddress: data.userAddress }
-        }
+    if (data.type === "Redeem") {
+        return { type: "withdraw_from_pool", txAddress: 'withdrawer', userAddress: data.userAddress }
+    }
 
-        if (data.type === "Add Liquidity") {
-            return { type: "deposit_to_pool", txAddress: 'depositor', userAddress: data.userAddress }
-        }
+    if (data.type === "Add Liquidity") {
+        return { type: "deposit_to_pool", txAddress: 'depositor', userAddress: data.userAddress }
     }
 }
