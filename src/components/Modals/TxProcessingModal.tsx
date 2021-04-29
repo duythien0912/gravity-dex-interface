@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { useSelector } from "react-redux"
+import { useHistory } from 'react-router-dom'
+
 // useDispatch,
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
-import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { storeSelector } from "../../modules/store/slice"
 import { checkImageExsistence } from "../../utils/global-functions"
 
@@ -270,13 +271,21 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
     const { txModalData } = useSelector(storeSelector.all)
     const [broadcastStatus, setBroadcastStatus] = React.useState('pending')
     const [transactionResultStatus, setTransactionResultStatus] = React.useState('waiting')
-
+    const history = useHistory()
     React.useEffect(() => {
         setBroadcastStatus(txModalData.broadcastStatus ? txModalData.broadcastStatus : 'pending')
         setTransactionResultStatus(txModalData.transactionResultStatus ? txModalData.transactionResultStatus : 'waiting')
     }, [txModalData])
 
-    function finish() {
+    function finish(type) {
+        if (txModalData.resultData.isSuccess) {
+            if (type !== "Swap") {
+                history.push('/pool')
+            } else {
+                history.push(`/swap?from=btsg&to=xprt&time=${new Date().getTime()}`)
+            }
+        }
+
         toggle()
     }
 
@@ -310,7 +319,7 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
 
                     </ResultBoard>
 
-                    <button className="finish-button" onClick={finish}>Close</button>
+                    <button className="finish-button" onClick={() => { finish(txModalData.type) }}>Close</button>
 
                 </div> : ''}
 

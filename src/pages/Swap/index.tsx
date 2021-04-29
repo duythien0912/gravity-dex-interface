@@ -175,7 +175,7 @@ function SwapCard() {
             const isReverse = sortedCoinsData.isReverse
 
             //get slected pairs pool data
-            const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
+            const selectedPairsPoolData = poolData?.[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
             //when pool exists
             if (selectedPairsPoolData !== undefined) {
@@ -190,12 +190,17 @@ function SwapCard() {
             // console.log('need both coins')
         }
 
+
+
+    }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
+
+    React.useEffect(() => {
         const searchParams = new URLSearchParams(history.location.search);
         if (searchParams.has('from')) {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
-
-    }, [poolsInfo, poolData, state.fromCoin, state.toCoin, state.toAmount])
+        console.log('set Query')
+    }, [history.location])
 
     //reducer for useReducer
     function reducer(state, action) {
@@ -348,8 +353,7 @@ function SwapCard() {
                     return { ...fromToChangeObject, price, toAmount: cutNumber(counterPairAmount, 6), status: isOver ? 'over' : state.status, slippage: slippage }
                 }
             case TYPES.SET_FROM_QUERY:
-                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to }
-
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, fromAmount: '', toAmount: '', status: 'empty' }
             default:
                 console.log("DEFAULT: SWAP REDUCER")
                 return state;
