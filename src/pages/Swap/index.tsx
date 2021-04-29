@@ -404,7 +404,7 @@ function SwapCard() {
                 offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
             }
-        }, reduxDispatch, { type: 'Swap', userAddress: userAddress }
+        }, reduxDispatch, { type: 'Swap', userAddress: userAddress, demandCoinDenom: getMinimalDenomCoin(state.toCoin) }
         )
     }
 

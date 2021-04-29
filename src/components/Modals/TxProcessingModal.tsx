@@ -58,11 +58,11 @@ const SelectCoinWrapper = styled.div`
 
 .wrapper {
     height: 90px;
-
+    color: #fff;
     padding: 0 20px 0 0;
     display: flex;
 
-   background-color: #f77e4a33;
+    background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
     margin: 0 20px;
     
@@ -102,7 +102,7 @@ const SelectCoinWrapper = styled.div`
             display:flex;
             align-items: center;
             height: 45px;
-
+            color: #fff;
             .status {
                 font-weight: 600;
                 padding-left: 4px;
@@ -111,19 +111,8 @@ const SelectCoinWrapper = styled.div`
     }
 }
 
-
 .result {
     padding: 20px;
-    font-size: 20px;
-
-    .title {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .detail {
-        text-align: center;
-    }
 }
 
 .pending {
@@ -131,20 +120,34 @@ const SelectCoinWrapper = styled.div`
 }
 
 
-.success {
-    color: green !important;
+.success, .green {
+    color: #0fe20f !important;
 }
 
-.fail {
+.fail, .red {
     color: red !important;
+}
+`
+
+const ResultBoard = styled.div`
+color: #fff;
+background-color: rgba(0, 0, 0, 0.8);
+padding: 20px 12px;
+border-radius: 8px;
+
+.detail {
+    display:flex;
+    justify-content: space-between;
+    padding: 4px 0; 
 }
 `
 
 
 //helpers
-function getResultMessage(type, data) {
-    if (data) {
-        if (data.isSuccess) {
+function getResultMessage(type, result) {
+    if (result) {
+        console.log('result.data', result)
+        if (result.data.success === "success") {
             switch (type) {
                 case 'Redeem':
                     return "Redeem Success! 🎉"
@@ -153,10 +156,30 @@ function getResultMessage(type, data) {
                 case 'Add Liquidity':
                     return "  Add Liquidity Success! 🎉"
                 case 'Swap':
-                    return "Swap Success! 🎉"
+                    const successPercentage = Math.round(result.data.offer_coin_amount / result.data.offer_coin_amount * 100)
+                    const paidAmount = result.data.exchanged_offer_coin_amount / 1000000
+                    const paidDenom = result.data.offer_coin_denom.startsWith('u') ? result.data.offer_coin_denom.substr(1) : result.data.offer_coin_denom
+                    const receivedAmount = Math.floor(result.data.exchanged_offer_coin_amount / result.data.swap_price / 100) / 10000
+                    const receivedDenom = result.data.demand_coin_denom.startsWith('u') ? result.data.demand_coin_denom.substr(1) : result.data.demand_coin_denom
+                    return (
+                        <>
+                            <div className="detail">
+                                <div className="title">Status : </div>
+                                <div className="body">Swap Success ({successPercentage}%)</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Paid : </div>
+                                <div className="body"><span className="red">- {paidAmount}</span> {paidDenom.toUpperCase()}</div>
+                            </div>
+                            <div className="detail">
+                                <div className="title">Received : </div>
+                                <div className="body"><span className="green">+ {receivedAmount}</span> {receivedDenom.toUpperCase()}</div>
+                            </div>
+                        </>
+                    )
             }
         } else {
-            return data.data
+            return <div>Error</div>
         }
     }
 }
@@ -191,16 +214,17 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
                     </div>
                     <div className="step-details">
                         <div className="detail">Transaction Broadcast - <span className={`status ${broadcastStatus}`}>{broadcastStatus.toUpperCase()}</span></div>
-                        <div className={`detail`} style={{ color: transactionResultStatus === "waiting" ? "darkgray" : "black" }}>Transaction Result - <span className={`status ${transactionResultStatus}`}>{transactionResultStatus.toUpperCase()}</span></div>
+                        <div className={`detail`} style={{ color: transactionResultStatus === "waiting" ? "darkgray" : "#fff" }}>Transaction Result - <span className={`status ${transactionResultStatus}`}>{transactionResultStatus.toUpperCase()}</span></div>
                     </div>
                 </div>
 
                 <div className="result">
                     {/* <div className="title">Result</div> */}
-                    <div className="detail">
 
+                    <ResultBoard>
                         {getResultMessage(txModalData.type, txModalData.resultData)}
-                    </div>
+                    </ResultBoard>
+
 
                 </div>
 

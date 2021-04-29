@@ -52,22 +52,24 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
             const txResult = setInterval(async () => {
                 try {
-                    const response = await getTxResult(txBroadcastResponse.height + 3, data)
-                    const Msg = { type: data.type, resultData: response }
-                    console.log('response', response)
-                    if (response.resultData) {
-                        dispatch(getTxProcessingStatus('txSuccess', Msg))
-                    } else {
-                        dispatch(getTxProcessingStatus('txFail', Msg))
+                    const response = await getTxResult(txBroadcastResponse.height, data)
+
+                    if (data.type === "Swap") {
+                        response.demand_coin_denom = data?.demandCoinDenom
                     }
 
+                    const result = { type: data.type, resultData: response }
+
+                    if (result.resultData.success === "success") {
+                        dispatch(getTxProcessingStatus('txSuccess', result))
+                    } else {
+                        dispatch(getTxProcessingStatus('txFail', result))
+                    }
                     clearInterval(txResult)
                 } catch (e) {
                     console.log(e)
                 }
             }, 3000)
-
-
         }
 
     } catch (e) {
@@ -80,42 +82,36 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
     async function getTxResult(height, data) {
         const response = await axios.get(`${chainInfo.rpc}/block_results?height=${height}`)
-        console.log(response)
         const checks = getEndBlockChecks(data)
-        let successData = false
-        console.log(response.data.result.end_block_events)
+        let successData = {}
+
         if (data.type === "Create") {
-            successData = true
+            successData = { success: "success" }
         } else {
             if (response.data.result?.end_block_events) {
+                let isMine = false
                 response.data.result?.end_block_events?.forEach((item) => {
                     if (item.type === checks.type) {
                         item.attributes.forEach((result) => {
-
                             if (atob(result.key) === checks.txAddress) {
-                                console.log('isUserExecuted', checks.userAddress === atob(result.value))
+                                if (atob(result.value) === checks.userAddress) {
+                                    isMine = true
+                                } else {
+                                    isMine = false
+                                }
+                            }
+                            console.log(atob(result.key), atob(result.value))
+
+                            if (isMine) {
                                 successData[atob(result.key)] = atob(result.value)
                             }
-
-                            console.log(atob(result.key), atob(result.value))
                         })
                     }
                 })
             } else {
-                successData = false
+                successData = { success: "fail" }
             }
-
         }
-
-        // const test = await axios.get(`${chainInfo.rest}/tendermint/liquidity/v1beta1/pools/6/batch/swaps`)
-        // console.log('poolId/bathch/swaps', test)
-        // response.data.result.txs_results[0].events.forEach((item) => {
-        //         item.attributes.forEach((result) => {
-        //             console.log(atob(result.key), atob(result.value))
-        //         })
-        // })
-        // atob()
-        console.log(successData)
         return successData
     }
 
