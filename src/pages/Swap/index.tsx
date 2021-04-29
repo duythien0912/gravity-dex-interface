@@ -110,6 +110,35 @@ const SwapWrapper = styled.div`
    }
 `
 
+
+const SemiFoooter = styled.div`
+position: absolute;
+display: flex;
+align-items: center;
+bottom: 8px;
+right: 8px;
+background-color: black;
+/* width: 40px; */
+/* height: 30px; */
+padding: 4px 12px;
+color: gray;
+border-radius: 20px;
+font-size: 12px;
+
+a {
+    text-decoration:none;
+    color: gray;
+    
+    &:visited {
+        color: gray;
+    }
+    
+    &:hover {
+    color: #fff;
+    }
+}
+`
+
 //for display
 function getButtonNameByStatus(status, fromCoin, toCoin) {
     if (fromCoin === '' || toCoin === '') {
@@ -504,6 +533,9 @@ function SwapCard() {
                     </div>
                 </SwapWrapper>
             </BaseCard>
+            <SemiFoooter>
+                <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank">{"T&C"}</a>
+            </SemiFoooter>
         </>
     )
 }
