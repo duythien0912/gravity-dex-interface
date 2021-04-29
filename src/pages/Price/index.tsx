@@ -145,37 +145,45 @@ function Table() {
   const history = useHistory();
   // eslint-disable-next-line
   React.useEffect(async () => {
-    let priceData = [];
-    const response = await axios.get("http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/pools")
-    response.data.pools.forEach((pool, index) => {
-      const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
-      const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
-      const poolName = `${xCoinName}-${yCoinName}`
 
-      const xGlobalPrice = Number(cutNumber(pool.reserveCoins[0].globalPrice * 1000000, 4))
-      const yGlobalPrice = Number(cutNumber(pool.reserveCoins[1].globalPrice * 1000000, 4))
+    getPriceData()
+    setInterval(async () => {
+      getPriceData()
+    }, 10000)
 
-      const globalRatio = pool.reserveCoins[0].globalPrice / pool.reserveCoins[1].globalPrice
-      const internalRatio = pool.reserveCoins[1].amount / pool.reserveCoins[0].amount
+    async function getPriceData() {
+      let priceData = [];
+      const response = await axios.get("http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/pools")
+      response.data.pools.forEach((pool, index) => {
+        const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
+        const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
+        const poolName = `${xCoinName}-${yCoinName}`
 
-      const discrepancyRate = (internalRatio / globalRatio) - 1 > 0 ? (internalRatio / globalRatio) - 1 : ((internalRatio / globalRatio) - 1) * -1
+        const xGlobalPrice = Number(cutNumber(pool.reserveCoins[0].globalPrice * 1000000, 4))
+        const yGlobalPrice = Number(cutNumber(pool.reserveCoins[1].globalPrice * 1000000, 4))
 
-      if (!isNaN(internalRatio)) {
-        priceData.push({
-          id: index,
-          poolName: poolName,
-          xGlobalPrice: xGlobalPrice,
-          yGlobalPrice: yGlobalPrice,
-          globalRatio: `${cutNumber(globalRatio, 4)} ${yCoinName} per ${xCoinName}`,
-          internalRatio: `${cutNumber(internalRatio, 4)} ${yCoinName} per ${xCoinName}`,
-          discrepancyRate: Number(`${cutNumber(discrepancyRate * 100, 2)}`),
-          history: history
-        })
-      }
-    })
-    setTableData(priceData)
+        const globalRatio = pool.reserveCoins[0].globalPrice / pool.reserveCoins[1].globalPrice
+        const internalRatio = pool.reserveCoins[1].amount / pool.reserveCoins[0].amount
+
+        const discrepancyRate = (internalRatio / globalRatio) - 1 > 0 ? (internalRatio / globalRatio) - 1 : ((internalRatio / globalRatio) - 1) * -1
+
+        if (!isNaN(internalRatio)) {
+          priceData.push({
+            id: index,
+            poolName: poolName,
+            xGlobalPrice: xGlobalPrice,
+            yGlobalPrice: yGlobalPrice,
+            globalRatio: `${cutNumber(globalRatio, 4)} ${yCoinName} per ${xCoinName}`,
+            internalRatio: `${cutNumber(internalRatio, 4)} ${yCoinName} per ${xCoinName}`,
+            discrepancyRate: Number(`${cutNumber(discrepancyRate * 100, 2)}`),
+            history: history
+          })
+        }
+      })
+
+      setTableData(priceData)
+    }
   }, [])
-
 
   return (
     <Wrapper>

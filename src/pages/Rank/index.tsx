@@ -215,18 +215,23 @@ function Table() {
 
     setTableData(rankData)
 
-    console.log(response.data)
+    console.log("rankData : ", response.data)
   }, [userAddress])
 
   async function search() {
-    const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard/search?q=${searchKeyword}`)
-    if (response.data.Account) {
-      setSearchResult(response.data.Account)
+    if (searchKeyword) {
+      const response = await axios.get(`http://gravity-rpc-603263776.ap-northeast-1.elb.amazonaws.com:8080/scoreboard/search?q=${searchKeyword}`)
+      if (response.data.Account) {
+        setSearchResult(response.data.Account)
+      } else {
+        setSearchResult("No")
+      }
+
+      console.log("resultData : ", response.data)
     } else {
-      setSearchResult("No")
+      alert('Please, input nickname or address')
     }
 
-    console.log(response.data)
   }
 
   return (
@@ -240,7 +245,7 @@ function Table() {
             <input className="input" value={searchKeyword} onChange={(e) => { setSearchKeyword(e.target.value) }} type="text" placeholder="Search nickname or address" />
             <button onClick={() => {
               search()
-            }} className="searchButton" i>Search</button>
+            }} className="searchButton">Search</button>
           </div>
 
         }
