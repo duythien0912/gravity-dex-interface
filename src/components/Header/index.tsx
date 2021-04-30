@@ -11,6 +11,7 @@ import DesktopLogo from "../../assets/svgs/DesktopLogo"
 
 import wallet from '../../assets/wallets/dollar_wallet.png'
 import GearButton from "../../components/Buttons/Gear"
+import ListButton from "../../components/Buttons/ListButton"
 import { GridSpinner } from 'react-spinners-kit'
 
 //modals
@@ -308,7 +309,8 @@ function AppHeader() {
       <NavigationFrame>
         {navigationLinks()}
         {walletWidget()}
-        <GearButton onClick={() => { settingModalToggle() }} />
+        {mobileCheck() ? '' : <GearButton onClick={() => { settingModalToggle() }} />}
+        <ListButton onClick={() => { settingModalToggle() }} />
       </NavigationFrame>
 
 

@@ -13,7 +13,7 @@ import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins, getMinimalDenomCoin, mobileCheck } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins, getMinimalDenomCoin } from "../../utils/global-functions"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -534,9 +534,9 @@ function SwapCard() {
                     </div>
                 </SwapWrapper>
             </BaseCard>
-            {!mobileCheck() ? <SemiFoooter>
+            {/* {!mobileCheck() ? <SemiFoooter>
                 <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">{"T&C"}</a>
-            </SemiFoooter> : ''}
+            </SemiFoooter> : ''} */}
         </>
     )
 }
