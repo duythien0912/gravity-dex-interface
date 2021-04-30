@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { cutNumber } from "../../utils/global-functions"
+import { cutNumber, getMinimalDenomCoin } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
@@ -182,8 +182,8 @@ function RedeemCard() {
     const sortedCoins = [state.fromCoin, state.toCoin].sort()
     if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
         const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
-        coinXAmount = reserveCoins[`u${state.fromCoin}`]
-        coinYAmount = reserveCoins[`u${state.toCoin}`]
+        coinXAmount = reserveCoins[`${getMinimalDenomCoin(state.fromCoin)}`]
+        coinYAmount = reserveCoins[`${getMinimalDenomCoin(state.toCoin)}`]
 
         totalPoolCoinAmount = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_amount
         poolCoinDenom = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].pool_coin_denom

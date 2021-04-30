@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from 'react-router-dom'
-import { cutNumber } from "../../utils/global-functions"
+import { cutNumber, getMinimalDenomCoin } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 
@@ -174,8 +174,8 @@ function CreateCard() {
         const selectedPairAmount = action.payload?.amount || ''
         const counterPairAmount = state[`${counterTargetPair}Amount`]
 
-        const selectedPairUserBalances = userBalances['u' + state[`${targetPair}Coin`]] / 1000000
-        const counterPairUserBalances = userBalances['u' + state[`${counterTargetPair}Coin`]] / 1000000
+        const selectedPairUserBalances = userBalances[getMinimalDenomCoin(state[`${targetPair}Coin`])] / 1000000
+        const counterPairUserBalances = userBalances[getMinimalDenomCoin(state[`${counterTargetPair}Coin`])] / 1000000
 
         let isOver = false
         let isEmpty = false
@@ -221,7 +221,7 @@ function CreateCard() {
                     return { ...state, [`${targetPair}Coin`]: action.payload.coin, [`${targetPair}Amount`]: '', [`${counterTargetPair}Amount`]: '' }
                 } else {
 
-                    if (userBalances['u' + action.payload.coin] && counterPairUserBalances) {
+                    if (userBalances[getMinimalDenomCoin(action.payload.coin)] && counterPairUserBalances) {
                         isEmpty = true
                     } else {
                         isOver = true
@@ -232,7 +232,7 @@ function CreateCard() {
 
             case TYPES.SET_FROM_QUERY:
 
-                if (userBalances['u' + action.payload.from] && userBalances['u' + action.payload.to]) {
+                if (userBalances[getMinimalDenomCoin(action.payload.from)] && userBalances[getMinimalDenomCoin(action.payload.to)]) {
                     isEmpty = true
                 } else {
                     isOver = true
@@ -273,7 +273,8 @@ function CreateCard() {
 
     async function create() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const sortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+        console.log(sortedCoins)
         let isReverse = false
         if (state.fromCoin !== sortedCoins[0]) {
             isReverse = true
@@ -284,10 +285,10 @@ function CreateCard() {
                 type: 'msgDeposit',
                 data: {
                     depositorAddress: userAddress,
-                    poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
+                    poolId: Number(poolsData[`${sortedCoins[0].substr(1)}/${sortedCoins[1].substr(1)}`].id),
                     depositCoins: [
-                        { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
+                        { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                        { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
                     ]
                 }
             })
@@ -298,8 +299,8 @@ function CreateCard() {
                     poolCreatorAddress: userAddress,
                     poolTypeId: 1,
                     depositCoins: [
-                        { denom: 'u' + (isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                        { denom: 'u' + (isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
+                        { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                        { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
                     ]
                 }
             }, storeDispatch, { type: 'Create', userAddress: userAddress })

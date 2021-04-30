@@ -52,7 +52,7 @@ export const currencies = [
     coinDecimals: 6
   },
   {
-    coinDenom: "XRUN",
+    coinDenom: "RUN",
     coinMinimalDenom: "xrun",
     coinDecimals: 6
   }

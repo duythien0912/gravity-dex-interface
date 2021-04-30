@@ -57,7 +57,7 @@ export function sortCoins(x, y) {
 }
 
 export function checkImageExsistence(coinName) {
-    if (coinName === 'xrun' || coinName === 'run' || coinName === 'gcyb' || coinName === 'xrn') {
+    if (coinName === 'xrn') {
         return false
     } else {
         return true
@@ -68,6 +68,7 @@ export function getSelectedPairsPoolData(state, action, counterTarget, poolData)
     let coinA = state[`${counterTarget}Coin`]
     let coinB = action.payload.coin
     const sortedCoins = [coinA, coinB].sort()
+    console.log(poolData, coinA, coinB) // TEST-CODE
     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
     return selectedPairsPoolData === undefined ? false : selectedPairsPoolData
