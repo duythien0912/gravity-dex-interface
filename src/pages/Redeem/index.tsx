@@ -179,7 +179,8 @@ function RedeemCard() {
     let userPoolCoinAmount = null
     let userShare = null
 
-    const sortedCoins = [state.fromCoin, state.toCoin].sort()
+    const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+    const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
     if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
         const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
         coinXAmount = reserveCoins[`${getMinimalDenomCoin(state.fromCoin)}`]
@@ -218,7 +219,8 @@ function RedeemCard() {
     }
 
     async function redeem() {
-        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+        const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
         BroadcastLiquidityTx({
             type: 'msgWithdraw',
             data: {
