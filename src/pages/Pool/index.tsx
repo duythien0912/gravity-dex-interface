@@ -421,7 +421,7 @@ function Pool() {
         }
 
         if (!isUser && keyword !== '') {
-            result = result.filter((s => s.key.includes(keyword)))
+            result = result.filter((s => s.key.includes(keyword.toLowerCase())))
         }
 
         return result

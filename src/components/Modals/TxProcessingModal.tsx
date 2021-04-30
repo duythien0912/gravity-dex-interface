@@ -279,8 +279,6 @@ function getResultMessage(type, result) {
                         </>
                     )
                 case 'Swap':
-
-
                     const paidDenom = result.data.offer_coin_denom.startsWith('u') ? result.data.offer_coin_denom.substr(1) : result.data.offer_coin_denom
                     const receivedDenom = result.data.demand_coin_denom.startsWith('u') ? result.data.demand_coin_denom.substr(1) : result.data.demand_coin_denom
 

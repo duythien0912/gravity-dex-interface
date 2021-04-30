@@ -216,7 +216,7 @@ function SwapCard() {
             } else {
                 // console.log('no pool/creat a new pool')
             }
-            console.log('poolPrice', selectedPoolPrice)
+            // console.log('poolPrice', selectedPoolPrice)
         } else {
             // console.log('need both coins')
         }
