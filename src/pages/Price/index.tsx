@@ -4,8 +4,12 @@ import styled from "styled-components"
 import { cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 
+import Tooltip from "../../components/Tooltips/QuestionMarkTooltip"
+
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
+
+
 
 const columns = [
   {
@@ -15,33 +19,33 @@ const columns = [
     maxWidth: "140px"
   },
   {
-    name: 'Global Price',
+    name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
     selector: 'xGlobalPrice',
-    minWidth: "150px",
+    minWidth: "160px",
     format: row => `$${row.xGlobalPrice} ${row?.poolName?.split('-')[0]}`,
     right: true,
   },
   {
-    name: 'Global Price',
+    name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
     selector: 'yGlobalPrice',
-    minWidth: "150px",
+    minWidth: "160px",
     format: row => `$${row.yGlobalPrice} ${row?.poolName?.split('-')[1]}`,
     right: true,
   },
   {
-    name: 'Global Price Ratio',
+    name: <div className="column-with-tooltip">Global Price Ratio &nbsp;<Tooltip text="Price ratio calculated from global price" /></div>,
     selector: 'globalRatio',
     right: true,
-    minWidth: "200px"
+    minWidth: "210px"
   },
   {
-    name: 'Internal Price Ratio',
+    name: <div className="column-with-tooltip">Internal Price Ratio &nbsp;<Tooltip text="Pool price ratio" /></div>,
     selector: 'internalRatio',
-    minWidth: "200px",
+    minWidth: "210px",
     right: true,
   },
   {
-    name: 'Arbitrage Chance',
+    name: <div className="column-with-tooltip">Arbitrage Chance &nbsp;<Tooltip text="Diversion of global ratio and internal ratio results in arbitrage chances" /></div>,
     selector: 'discrepancyRate',
     format: (row) => {
 
@@ -62,7 +66,7 @@ const columns = [
       return <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
 
     },
-    minWidth: "190px",
+    minWidth: "220px",
     sortable: true,
     right: true,
   },
@@ -141,6 +145,11 @@ padding: 0 30px 60px 30px;
 outline: none;
 border: none;
 background-color: hsla(36, 100%, 50%, 0.295) !important;
+}
+
+.column-with-tooltip {
+  display: flex;
+  align-items: center;
 }
 `
 
