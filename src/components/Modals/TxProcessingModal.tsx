@@ -279,7 +279,7 @@ function getResultMessage(type, result) {
                         </>
                     )
                 case 'Swap':
-                    const successPercentage = Math.round(result.data.offer_coin_amount / result.data.offer_coin_amount * 100)
+                    const successPercentage = Math.round(result.data.exchanged_offer_coin_amount / result.data.offer_coin_amount * 100)
                     const paidAmount = result.data.exchanged_offer_coin_amount / 1000000
                     const paidDenom = result.data.offer_coin_denom.startsWith('u') ? result.data.offer_coin_denom.substr(1) : result.data.offer_coin_denom
                     const receivedAmount = Math.floor(result.data.exchanged_offer_coin_amount / result.data.swap_price / 100) / 10000

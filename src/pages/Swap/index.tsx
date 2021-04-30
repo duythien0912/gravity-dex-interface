@@ -182,6 +182,7 @@ function SwapCard() {
     const { poolsInfo, params } = useSelector(liquiditySelector.all)
 
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
+    const [selectedPoolPrice, setSelectedPoolPrice] = React.useState(null)
     const poolData = poolsInfo?.poolsData
 
     const [state, dispatch] = React.useReducer(reducer, {
@@ -210,11 +211,12 @@ function SwapCard() {
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)] / selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.fromCoin)]
                 setSelectedPoolData(selectedPairsPoolData)
+                setSelectedPoolPrice(Number(selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(sortedCoins[0])]) / Number(selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(sortedCoins[1])]))
                 dispatch({ type: TYPES.UPDATE_PRICE, payload: { price: cutNumber(price, 6), isReverse: isReverse } })
             } else {
                 // console.log('no pool/creat a new pool')
             }
-
+            console.log('poolPrice', selectedPoolPrice)
         } else {
             // console.log('need both coins')
         }
@@ -436,7 +438,8 @@ function SwapCard() {
                 offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000)) },
                 demandCoinDenom: getMinimalDenomCoin(state.toCoin),
                 offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
-                orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
+                // orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
+                orderPrice: String((selectedPoolPrice * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
             }
         }, reduxDispatch, { type: 'Swap', userAddress: userAddress, demandCoinDenom: getMinimalDenomCoin(state.toCoin) }
         )
