@@ -279,11 +279,17 @@ function getResultMessage(type, result) {
                         </>
                     )
                 case 'Swap':
-                    const successPercentage = Math.round(result.data.exchanged_offer_coin_amount / result.data.offer_coin_amount * 100)
-                    const paidAmount = result.data.exchanged_offer_coin_amount / 1000000
+
+
                     const paidDenom = result.data.offer_coin_denom.startsWith('u') ? result.data.offer_coin_denom.substr(1) : result.data.offer_coin_denom
-                    const receivedAmount = Math.floor(result.data.exchanged_offer_coin_amount / result.data.swap_price / 100) / 10000
                     const receivedDenom = result.data.demand_coin_denom.startsWith('u') ? result.data.demand_coin_denom.substr(1) : result.data.demand_coin_denom
+
+                    const isRevese = [paidDenom, receivedDenom].sort()[0] === paidDenom ? false : true
+
+                    const paidAmount = result.data.exchanged_offer_coin_amount / 1000000
+                    const receivedAmount = Math.floor(result.data.exchanged_offer_coin_amount / (isRevese ? 1 / result.data.swap_price : result.data.swap_price) / 100) / 10000
+
+                    const successPercentage = Math.round(result.data.exchanged_offer_coin_amount / result.data.offer_coin_amount * 100)
                     return (
                         <>
                             <div className="detail">
@@ -321,11 +327,12 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
     }, [txModalData])
 
     function finish(type) {
+        console.log(txModalData.resultData)
         if (txModalData.resultData.isSuccess) {
             if (type !== "Swap") {
                 history.push('/pool')
             } else {
-                history.push(`/swap?from=btsg&to=xprt&time=${new Date().getTime()}`)
+                history.push(`/swap?from=${txModalData.resultData.data.offer_coin_denom.substr(1)}&to=${txModalData.resultData.data.demand_coin_denom.substr(1)}&time=${new Date().getTime()}`)
             }
         }
 
