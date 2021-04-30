@@ -55,6 +55,22 @@ export const currencies = [
     coinDenom: "RUN",
     coinMinimalDenom: "xrun",
     coinDecimals: 6
+  },
+
+  {
+    coinDenom: "REGEN",
+    coinMinimalDenom: "uregen",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "COM",
+    coinMinimalDenom: "ucom",
+    coinDecimals: 6
+  },
+  {
+    coinDenom: "DSM",
+    coinMinimalDenom: "udsm",
+    coinDecimals: 6
   }
 ]
 
