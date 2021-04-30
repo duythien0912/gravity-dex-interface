@@ -207,7 +207,7 @@ function SwapCard() {
 
             //get slected pairs pool data
             const selectedPairsPoolData = poolData?.[`${sortedCoins[0]}/${sortedCoins[1]}`]
-            console.log(selectedPairsPoolData)
+
             //when pool exists
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)] / selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.fromCoin)]
@@ -364,13 +364,15 @@ function SwapCard() {
 
 
 
-                    if (false && state.toCoin !== sortedCoins[0]) {
-                        counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
-                        console.log('FROM: counterPairAmount', counterPairAmount)
-                    } else {
-                        swapPrice = ((toCoinPoolAmount) + (2 * state.toAmount)) / (fromCoinPoolAmount)
-                        counterPairAmount = state.toAmount / swapPrice * swapFeeRate
-                    }
+                    // if (false && state.toCoin !== sortedCoins[0]) {
+                    //     // counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
+                    //     // console.log('FROM: counterPairAmount', counterPairAmount)
+                    // } else {
+
+                    // }
+
+                    swapPrice = ((toCoinPoolAmount) + (2 * state.toAmount)) / (fromCoinPoolAmount)
+                    counterPairAmount = state.toAmount / swapPrice * swapFeeRate
 
                     if (counterPairAmount < 0) {
                         counterPairAmount = 0
@@ -380,7 +382,7 @@ function SwapCard() {
 
 
                     let isOver = state.fromAmount > userFromCoinBalance || state.toAmount > userToCoinBalance
-                    const slippage = calculateSlippage((state.toAmount * 1000000 * 100), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])])
+                    const slippage = calculateSlippage((state.toAmount * 1000000), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])])
 
                     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
                     const price = selectedPairsPoolData[state.toCoin] / selectedPairsPoolData[state.fromCoin]
