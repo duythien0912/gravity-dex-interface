@@ -240,11 +240,11 @@ function getResultMessage(type, result) {
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
-                                <div className="body"><span className="green">+ {coinAAmount}</span> {coinA[1].startsWith('u') ? coinA[1].substr(1).toUpperCase() : coinA[1].toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {coinAAmount}</span> {coinA[1].substr(1).toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title"> </div>
-                                <div className="body"><span className="green">+ {coinBAmount}</span> {coinB[1].startsWith('u') ? coinB[1].substr(1).toUpperCase() : coinB[1].toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {coinBAmount}</span> {coinB[1].substr(1).toUpperCase()}</div>
                             </div>
                         </>
                     )
@@ -266,11 +266,11 @@ function getResultMessage(type, result) {
                             </div>
                             <div className="detail">
                                 <div className="title">Added to pool: </div>
-                                <div className="body"><span className="red">+ {AAmount}</span> {A[1].startsWith('u') ? A[1].substr(1).toUpperCase() : A[1].toUpperCase()}</div>
+                                <div className="body"><span className="red">+ {AAmount}</span> {A[1].substr(1).toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title"> </div>
-                                <div className="body"><span className="red">+ {BAmount}</span> {B[1].startsWith('u') ? B[1].substr(1).toUpperCase() : B[1].toUpperCase()}</div>
+                                <div className="body"><span className="red">+ {BAmount}</span> {B[1].substr(1).toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
@@ -296,11 +296,11 @@ function getResultMessage(type, result) {
                             </div>
                             <div className="detail">
                                 <div className="title">Paid : </div>
-                                <div className="body"><span className="red">- {paidAmount}</span> {paidDenom.toUpperCase()}</div>
+                                <div className="body"><span className="red">- {paidAmount}</span> {paidDenom === "xrun" ? paidDenom.substr(1).toUpperCase() : paidDenom.toUpperCase()}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
-                                <div className="body"><span className="green">+ {receivedAmount}</span> {receivedDenom.toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {receivedAmount}</span> {receivedDenom === "xrun" ? receivedDenom.substr(1).toUpperCase() : receivedDenom.toUpperCase()}</div>
                             </div>
                         </>
                     )
