@@ -156,13 +156,16 @@ function AddLiquidityCard() {
 
     let coinXAmount = null
     let coinYAmount = null
+    const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+    const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
 
-    const sortedCoins = [state.fromCoin, state.toCoin].sort()
     if (poolsData && poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`]) {
         const reserveCoins = poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].reserve_coin_balances
         coinXAmount = reserveCoins[getMinimalDenomCoin(`${state.fromCoin}`)]
         coinYAmount = reserveCoins[getMinimalDenomCoin(`${state.toCoin}`)]
+
     }
+
 
     const history = useHistory();
     const storeDispatch = useDispatch()
@@ -183,7 +186,9 @@ function AddLiquidityCard() {
         const counterPairUserBalances = userBalances[getMinimalDenomCoin(state[`${counterTargetPair}Coin`])] / 1000000
 
         const poolsData = poolsInfo?.poolsData
-        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+        const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
+
         let coinXAmount = null
         let coinYAmount = null
         let poolPrice = null
@@ -288,12 +293,13 @@ function AddLiquidityCard() {
     }
 
     async function add() {
-        const sortedCoins = [state.fromCoin, state.toCoin].sort()
+        const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+        const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
         let isReverse = false
         if (state.fromCoin !== sortedCoins[0]) {
             isReverse = true
         }
-        console.log(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`])
+
         BroadcastLiquidityTx({
             type: 'msgDeposit',
             data: {
