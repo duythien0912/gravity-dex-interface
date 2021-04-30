@@ -46,11 +46,11 @@ export const currencies = [
     coinMinimalDenom: "uxprt",
     coinDecimals: 6
   },
-  {
-    coinDenom: "XRN",
-    coinMinimalDenom: "uxrn",
-    coinDecimals: 6
-  },
+  // {
+  //   coinDenom: "XRN",
+  //   coinMinimalDenom: "uxrn",
+  //   coinDecimals: 6
+  // },
   {
     coinDenom: "RUN",
     coinMinimalDenom: "xrun",
