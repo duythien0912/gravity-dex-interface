@@ -231,7 +231,7 @@ function SwapCard() {
         if (searchParams.has('from')) {
             dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
         }
-        console.log('set Query')
+        // console.log('set Query')
     }, [history.location])
 
     //reducer for useReducer
