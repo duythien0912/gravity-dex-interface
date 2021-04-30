@@ -200,13 +200,14 @@ function SwapCard() {
     React.useEffect(() => {
         if (state.fromCoin !== '' && state.toCoin) {
             //get and set pool pair status
-            const sortedCoinsData = sortCoins(state.fromCoin, state.toCoin)
-            const sortedCoins = sortedCoinsData.coins
-            const isReverse = sortedCoinsData.isReverse
+            const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+            const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
+
+            const isReverse = preSortedCoins[0].substr(1) === state.toCoin
 
             //get slected pairs pool data
             const selectedPairsPoolData = poolData?.[`${sortedCoins[0]}/${sortedCoins[1]}`]
-
+            console.log(selectedPairsPoolData)
             //when pool exists
             if (selectedPairsPoolData !== undefined) {
                 const price = selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.toCoin)] / selectedPairsPoolData.reserve_coin_balances[getMinimalDenomCoin(state.fromCoin)]
@@ -358,7 +359,8 @@ function SwapCard() {
                 if (state.toCoin === '' || state.fromCoin === '') {
                     return fromToChangeObject
                 } else {
-                    const sortedCoins = [state.toCoin, state.fromCoin].sort()
+                    const preSortedCoins = [getMinimalDenomCoin(state.toCoin), getMinimalDenomCoin(state.fromCoin)].sort()
+                    const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
 
 
 

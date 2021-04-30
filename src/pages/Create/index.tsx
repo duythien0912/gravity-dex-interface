@@ -273,8 +273,8 @@ function CreateCard() {
 
     async function create() {
         // const sortedCoins = [state.fromCoin, state.toCoin].sort()
-        const sortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
-        console.log(sortedCoins)
+        const preSortedCoins = [getMinimalDenomCoin(state.fromCoin), getMinimalDenomCoin(state.toCoin)].sort()
+        const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
         let isReverse = false
         if (state.fromCoin !== sortedCoins[0]) {
             isReverse = true
@@ -285,13 +285,13 @@ function CreateCard() {
                 type: 'msgDeposit',
                 data: {
                     depositorAddress: userAddress,
-                    poolId: Number(poolsData[`${sortedCoins[0].substr(1)}/${sortedCoins[1].substr(1)}`].id),
+                    poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                     depositCoins: [
-                        { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                        { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
+                        { denom: preSortedCoins[0], amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
+                        { denom: preSortedCoins[1], amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) }
                     ]
                 }
-            })
+            }, storeDispatch, { type: 'Add Liquidity', userAddress: userAddress })
         } else {
             BroadcastLiquidityTx({
                 type: 'msgCreatePool',

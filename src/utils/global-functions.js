@@ -67,7 +67,9 @@ export function checkImageExsistence(coinName) {
 export function getSelectedPairsPoolData(state, action, counterTarget, poolData) {
     let coinA = state[`${counterTarget}Coin`]
     let coinB = action.payload.coin
-    const sortedCoins = [coinA, coinB].sort()
+    const preSortedCoins = [getMinimalDenomCoin(coinA), getMinimalDenomCoin(coinB)].sort()
+    const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
+
     console.log(poolData, coinA, coinB) // TEST-CODE
     const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
@@ -85,7 +87,8 @@ export function getPoolPrice(state, action, counterTarget, poolData) {
         coinB = state[`${counterTarget}Coin`]
     }
 
-    const sortedCoins = [coinA, coinB].sort()
+    const preSortedCoins = [getMinimalDenomCoin(coinA), getMinimalDenomCoin(coinB)].sort()
+    const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
     const slectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
     const price = slectedPairsPoolData[coinA] / slectedPairsPoolData[coinB]

@@ -96,6 +96,7 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
         if (data.type === "Create") {
             successData = { success: "success" }
         } else {
+            console.log(response.data)
             if (response.data.result?.end_block_events) {
                 let isMine = false
                 response.data.result?.end_block_events?.forEach((item) => {
