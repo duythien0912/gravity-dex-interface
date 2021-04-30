@@ -70,8 +70,7 @@ export function getSelectedPairsPoolData(state, action, counterTarget, poolData)
     const preSortedCoins = [getMinimalDenomCoin(coinA), getMinimalDenomCoin(coinB)].sort()
     const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
 
-    console.log(poolData, coinA, coinB) // TEST-CODE
-    const selectedPairsPoolData = poolData[`${sortedCoins[0]}/${sortedCoins[1]}`]
+    const selectedPairsPoolData = poolData?.[`${sortedCoins[0]}/${sortedCoins[1]}`]
 
     return selectedPairsPoolData === undefined ? false : selectedPairsPoolData
 }

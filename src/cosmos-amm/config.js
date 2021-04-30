@@ -81,9 +81,14 @@ export const stakingCurrency = {
 };
 
 export const chainInfo = {
-  rpc: "https://competition.bharvest.io",
-  rest: "https://competition.bharvest.io:1317",
-  chainId: "swap-testnet-2004",
+
+
+
+  // rpc: "https://competition.bharvest.io",
+  // rest: "https://competition.bharvest.io:1317",
+  rpc: "https://rpc.gravity.bharvest.io",
+  rest: "https://api.gravity.bharvest.io",
+  chainId: "swap-testnet-2005",
   chainName: "Competition",
   stakeCurrency: stakingCurrency,
   bip44: {

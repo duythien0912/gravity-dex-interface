@@ -150,7 +150,7 @@ background-color: #F6743C;
 font-size: 16px;
 font-weight: 500;
 border: none;
-cursor: pointer;
+/* cursor: pointer; */
 color:#fff;
 outline:none;
 text-align: center;
@@ -164,9 +164,9 @@ div {
   margin: 0 8px;
 }
 
-&:hover {
+/* &:hover {
   border: 2px solid #fff;
-}
+} */
 `
 
 const NavigationFrame = styled.div`
@@ -254,8 +254,8 @@ function AppHeader() {
       <Navigation>
         <StyledNavLink to={"/swap"}>Swap</StyledNavLink>
         <StyledNavLink to={"/pool"}>Pool</StyledNavLink>
-        <StyledNavLink to={"/price"}>Price</StyledNavLink>
-        <StyledNavLink to={"/rank"}>Rank</StyledNavLink>
+        {/* <StyledNavLink to={"/price"}>Price</StyledNavLink>
+        <StyledNavLink to={"/rank"}>Rank</StyledNavLink> */}
       </Navigation>
     )
   }
