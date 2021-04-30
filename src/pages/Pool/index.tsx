@@ -325,10 +325,11 @@ function Pool() {
                     return <div className="no-pool">No liquidity found</div>
                 }
             }
-
+            // console.log(data)
 
 
             for (let pool in data) {
+
                 const pairPoolData = data[pool]
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
@@ -336,7 +337,7 @@ function Pool() {
                 const myShare = Math.round(pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount * 100) / 100
                 // console.log(uppercasePoolNames, pairPoolData.userPoolData.poolTokenAmount, pairPoolData.pool_coin_amount)
 
-                if (isUser && data[pool].userPoolData.poolTokenAmount) {
+                if (!pool.startsWith('bc/') && isUser && data[pool].userPoolData.poolTokenAmount) {
                     result.push(
                         (<div className="pool" key={pool + '*'}>
                             <div className="pool-title">
@@ -379,7 +380,7 @@ function Pool() {
 
                         </div>)
                     )
-                } else if (!isUser && pairPoolData.reserve_coin_balances[getMinimalDenomCoin(coinX)] !== '0') {
+                } else if (!isUser && !pool.startsWith('bc/') && pairPoolData.reserve_coin_balances[getMinimalDenomCoin(coinX)] !== '0') {
 
                     result.push(
                         <div className="pool all-pool" key={pool}>
