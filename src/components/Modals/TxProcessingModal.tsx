@@ -202,6 +202,13 @@ background: linear-gradient(91.43deg,#860fa5 0%,#8a4223 100%);
 padding: 10px 12px;
 border-radius: 8px;
 
+.coin-image {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-bottom: -4px;
+}
+
 .header {
     text-align: center;
 }
@@ -215,7 +222,7 @@ border-radius: 8px;
 .result-title {
     font-size: 20px;
     text-align: center;
-    padding-bottom: 20px;
+    padding: 4px 0px 20px;
 }
 `
 
@@ -236,45 +243,49 @@ function getResultMessage(type, result) {
                         <>
                             <div className="detail">
                                 <div className="title">Status : </div>
-                                <div className="body"> Redeem Success! 🎉</div>
+                                <div className="body bold"> Redeem Success!</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
-                                <div className="body"><span className="green">+ {coinAAmount}</span> {coinA[1].substr(1).toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {coinAAmount}</span> {coinA[1].substr(1).toUpperCase()} {getCoinImage(coinA[1])}</div>
                             </div>
                             <div className="detail">
                                 <div className="title"> </div>
-                                <div className="body"><span className="green">+ {coinBAmount}</span> {coinB[1].substr(1).toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {coinBAmount}</span> {coinB[1].substr(1).toUpperCase()} {getCoinImage(coinB[1])}</div>
                             </div>
                         </>
                     )
 
                 case 'Create':
-                    return "Pool Created! 🎉"
+                    return (<div className="detail">
+                        <div className="title">Status:</div>
+                        <div className="body bold">Pool Creation Success!</div>
+                    </div>)
                 case 'Add Liquidity':
                     const receivedPoolCoinAmount = Math.floor(result.data.pool_coin_amount) / 1000000
                     const addCoins = result.data.accepted_coins?.split(',')
                     const A = addCoins[0].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
                     const B = addCoins[1].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+                    console.log(A, B)
                     const AAmount = Math.floor(Number(A[0])) / 1000000
                     const BAmount = Math.floor(Number(B[0])) / 1000000
                     return (
                         <>
                             <div className="detail">
                                 <div className="title">Status : </div>
-                                <div className="body"> Add Liquidity Success! 🎉</div>
+                                <div className="body bold"> Add Liquidity Success!</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Added to pool: </div>
-                                <div className="body"><span className="red">+ {AAmount}</span> {A[1].substr(1).toUpperCase()}</div>
+                                <div className="body"><span className="red">- {AAmount}</span> {A[1].substr(1).toUpperCase()} {getCoinImage(A[1])}</div>
                             </div>
                             <div className="detail">
                                 <div className="title"> </div>
-                                <div className="body"><span className="red">+ {BAmount}</span> {B[1].substr(1).toUpperCase()}</div>
+                                <div className="body"><span className="red">- {BAmount}</span> {B[1].substr(1).toUpperCase()} {getCoinImage(B[1])}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
-                                <div className="body"><span className="green">+ {receivedPoolCoinAmount}</span> POOL COIN</div>
+                                <div className="body"><span className="green">+ {receivedPoolCoinAmount}</span> POOL COIN <img className="coin-image" src={`/assets/coins/pool.png`} alt="result coin" /></div>
                             </div>
                         </>
                     )
@@ -296,11 +307,11 @@ function getResultMessage(type, result) {
                             </div>
                             <div className="detail">
                                 <div className="title">Paid : </div>
-                                <div className="body"><span className="red">- {paidAmount}</span> {paidDenom === "xrun" ? paidDenom.substr(1).toUpperCase() : paidDenom.toUpperCase()}</div>
+                                <div className="body"><span className="red">- {paidAmount}</span> {paidDenom === "xrun" ? paidDenom.substr(1).toUpperCase() : paidDenom.toUpperCase()} {getCoinImage(result.data.offer_coin_denom)}</div>
                             </div>
                             <div className="detail">
                                 <div className="title">Received : </div>
-                                <div className="body"><span className="green">+ {receivedAmount}</span> {receivedDenom === "xrun" ? receivedDenom.substr(1).toUpperCase() : receivedDenom.toUpperCase()}</div>
+                                <div className="body"><span className="green">+ {receivedAmount}</span> {receivedDenom === "xrun" ? receivedDenom.substr(1).toUpperCase() : receivedDenom.toUpperCase()} {getCoinImage(result.data.demand_coin_denom)}</div>
                             </div>
                         </>
                     )
@@ -309,6 +320,11 @@ function getResultMessage(type, result) {
             return <div>{String(result.data)}</div>
         }
     }
+}
+
+function getCoinImage(pair) {
+
+    return <img className="coin-image" src={`/assets/coins/${pair.substr(1)}.png`} alt="result coin" />
 }
 
 
