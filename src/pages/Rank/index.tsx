@@ -253,8 +253,8 @@ function Table() {
   async function search() {
     if (searchKeyword) {
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/scoreboard/search?q=${searchKeyword}`)
-      if (response.data.Account) {
-        setSearchResult(response.data.Account)
+      if (response.data.account) {
+        setSearchResult(response.data.account)
       } else {
         setSearchResult("No")
       }
