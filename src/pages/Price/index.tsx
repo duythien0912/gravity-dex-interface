@@ -3,7 +3,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
-
+import { chainInfo } from "../../cosmos-amm/config"
 import Tooltip from "../../components/Tooltips/QuestionMarkTooltip"
 
 import DataTable from 'react-data-table-component';
@@ -170,7 +170,8 @@ function Table() {
 
     async function getPriceData() {
       let priceData = [];
-      const response = await axios.get("https://competition.bharvest.io:8081/pools")
+      const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
+      console.log(response.data.pools)
       response.data.pools.forEach((pool, index) => {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`

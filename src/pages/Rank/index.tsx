@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { useSelector } from "react-redux";
 import { cutNumber } from "../../utils/global-functions"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
+import { chainInfo } from "../../cosmos-amm/config"
 
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
@@ -218,7 +219,7 @@ function Table() {
   // eslint-disable-next-line
   React.useEffect(async () => {
     let rankData = [];
-    const response = await axios.get(`https://competition.bharvest.io:8081/scoreboard?address=${userAddress}`)
+    const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/scoreboard?address=${userAddress}`)
     response.data.accounts.forEach((account, index) => {
       const accountAddress = <div>{account.address.substr(0, 10)}...{account.address.substr(-5)} ({account.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div>
       const rank = account.ranking
@@ -251,7 +252,7 @@ function Table() {
 
   async function search() {
     if (searchKeyword) {
-      const response = await axios.get(`https://competition.bharvest.io:8081/scoreboard/search?q=${searchKeyword}`)
+      const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/scoreboard/search?q=${searchKeyword}`)
       if (response.data.Account) {
         setSearchResult(response.data.Account)
       } else {
