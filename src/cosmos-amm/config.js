@@ -81,14 +81,14 @@ export const stakingCurrency = {
 };
 
 export const chainInfo = {
-  // swap-testnet-2004 > competition.bharvest.io
+  // swap-testnet-2005 > gravity.bharvest.io
   // rpc: "https://rpc.gravity.bharvest.io",
   // rest: "https://api.gravity.bharvest.io",
 
   //price and rank pages api endpoint for swap-testnet-2004
   competitionInfoBaseUrl: "https://competition.bharvest.io:8081",
 
-  // swap-testnet-2005 > gravity.bharvest.io
+  // swap-testnet-2004 > competition.bharvest.io
   rpc: "https://competition.bharvest.io",
   rest: "https://competition.bharvest.io:1317",
 

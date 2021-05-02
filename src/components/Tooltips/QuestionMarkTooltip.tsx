@@ -1,12 +1,7 @@
 import * as React from 'react';
 // import styled from "styled-components";
 import ReactTooltip from 'react-tooltip';
-const tooltipData = {
-    globalPrice: "USD price on coinmarketcap",
-    globalPriceRatio: "Price ratio calculated from global price",
-    internalPriceRatio: "Pool price ratio",
-    arbitrage: "Diversion of global ratio and internal ratio results in arbitrage chances"
-}
+
 function Tooltip(props) {
 
     return (

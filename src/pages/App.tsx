@@ -12,6 +12,7 @@ import Add from "../pages/Add"
 import Redeem from "../pages/Redeem"
 import Rank from "../pages/Rank"
 import Price from "../pages/Price"
+import QuestButton from "../components/Buttons/DailyQuestButton"
 
 import TxProcessingModal from "../components/Modals/TxProcessingModal"
 
@@ -126,6 +127,7 @@ function App() {
 
       <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({ isTxModal: false })) }} />
 
+      <QuestButton />
     </AppWrapper>
   );
 }
