@@ -7,8 +7,17 @@ import { chainInfo } from "../../cosmos-amm/config"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { useSelector } from "react-redux";
 import axios from 'axios';
-import { math } from 'polished';
 
+
+const OverLay = styled.div`
+position: fixed;
+top:0;
+left: 0;
+height: 100%;
+width: 100%;
+background-color: transparent;
+z-index: 99;
+`
 const Wrapper = styled.div`
     position: fixed;
     bottom: 20px;
@@ -21,7 +30,7 @@ const Wrapper = styled.div`
     border-radius: 52px;
     background-color: transparent;
     cursor:pointer;
-
+    z-index: 100;
     .wave {
         position: absolute;
         text-align: center;
@@ -88,24 +97,25 @@ border-radius: 4px;
     margin: 0 auto;
 
     .title-underline {
-        width: 100%;
+        /* width: 100%;
         height: 3px;
         margin-top: 5px;
         border-radius: 4px;
-        background: purple;
+        background: purple; */
     }
 }
 
 .quest-subtitle {
     text-align: center;
-    margin-top: 12px;
+    margin-top: 6px;
+    margin-bottom: 20px;
 }
 
 .quests {
     margin-top: 12px;
 
     .complete {
-        background-color: #178a45;
+        background: linear-gradient(91.43deg,#12ec23e8 0%,#138483d9 100%);
     }
 
     .quest{
@@ -211,12 +221,12 @@ function DailyQuestButton() {
             blockHeight: 111111,
             deposit: {
                 numDifferentPools: 3,
-                todayCount: 3,
+                todayCount: 1,
                 todayMaxCount: 3,
             },
             swap: {
                 numDifferentPools: 3,
-                todayCount: 2,
+                todayCount: 3,
                 todayMaxCount: 3,
             },
             updatedAt: "1234-12-12"
@@ -231,6 +241,7 @@ function DailyQuestButton() {
 
     return (
         <>
+
             <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}">
                 <div className="wave" />
                 <svg
@@ -275,6 +286,9 @@ function DailyQuestButton() {
             </Wrapper >
 
             <ToolTipWrapper>
+                {statusData.isUpdate ? <OverLay onClick={() => {
+                    ReactTooltip.hide()
+                }} /> : ''}
                 <ReactTooltip
                     id="quest"
                     place="top"
@@ -283,6 +297,13 @@ function DailyQuestButton() {
                     clickable={true}
                     afterShow={() => {
                         getUserDailyQuestStatus()
+                    }}
+                    afterHide={() => {
+                        setStatusData({
+                            swapCount: 0,
+                            depositCount: 0,
+                            isUpdate: false
+                        })
                     }}
                 >
                     <QuestBoard>
@@ -298,7 +319,7 @@ function DailyQuestButton() {
                         <div className="quests">
                             <div className={`quest ${statusData.swapCount === 3 ? 'complete' : ''}`} >
                                 <div className="quest-title">
-                                    1. Swap 3 times in different pools
+                                    ① &nbsp; Swap 3 times in different pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.swapCount} / 3
@@ -310,7 +331,7 @@ function DailyQuestButton() {
 
                             <div className={`quest ${statusData.depositCount === 3 ? 'complete' : ''}`}>
                                 <div className="quest-title">
-                                    2. Deposit 3 times in different pools
+                                    ② &nbsp; Deposit 3 times in different pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.depositCount} / 3
@@ -322,7 +343,7 @@ function DailyQuestButton() {
                         </div>
 
                         <div className="mission-status">
-                            {statusData.depositCount + statusData.swapCount === 6 ? `COMPLETE ` : "Mission in progress 🚀"}
+                            {statusData.depositCount + statusData.swapCount === 6 ? `Today Mission COMPLETE!` : "Mission in PROGRESS 🚀"}
                         </div>
 
                         <div className="time-left">
