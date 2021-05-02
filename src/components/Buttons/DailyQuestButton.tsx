@@ -1,11 +1,13 @@
 import * as React from 'react';
 import styled from "styled-components";
 import ReactTooltip from 'react-tooltip';
+import Countdown from 'react-countdown';
 
 import { chainInfo } from "../../cosmos-amm/config"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { useSelector } from "react-redux";
 import axios from 'axios';
+import { math } from 'polished';
 
 const Wrapper = styled.div`
     position: fixed;
@@ -77,6 +79,7 @@ padding: 20px;
 border: 2px solid rgb(89 59 95);
 background-color: rgb(15, 6, 17);
 border-radius: 4px;
+
 .title {
     font-size: 20px;
     width: 140px;
@@ -112,14 +115,17 @@ border-radius: 4px;
         border-radius: 4px;
         padding: 12px;
         font-size: 16px;
+
         &-title {
             padding-bottom: 12px;
             border-bottom: 1px solid #4b4a4a;
         }
+
         &-counting {
             padding: 12px 0;
             
         }
+
         &-progress-bar {
             position: relative;
             height: 8px;
@@ -141,14 +147,63 @@ border-radius: 4px;
     font-size: 20px;
     font-weight: bold;
 }
+
+.time-left {
+    color: gray;
+    margin: 24px 0 0;
+    .title {
+        font-size: 16px;
+        width: 100%;
+        
+        text-align: center;
+    }
+}
 `
 
+const TimeLeft = styled.div`
+display: flex;
+width: 240px;
+margin: 10px auto 0 auto;
+justify-content: space-around;
+
+div {
+    min-width: 80px;
+    text-align: center;
+    font-size: 18px;
+}
+
+`
+// Renderer callback with condition
+const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+        // Render a completed state
+        return <div>The time is up 😂</div>;
+    } else {
+        // Render a countdown
+        return <TimeLeft><div>{hours} hour</div><div> {minutes} min</div> <div>{seconds} sec</div></TimeLeft>;
+    }
+};
+
+
 function DailyQuestButton() {
+    console.log()
     // const { userAddress } = useSelector(cosmosSelector.all);
     const [statusData, setStatusData] = React.useState({
         swapCount: 0,
         depositCount: 0,
+        isUpdate: false
     })
+
+    const Timer = React.useMemo(() => {
+        const UTCDate = new Date().getUTCDate()
+        const tomorrow = new Date(Date.UTC(2021, 4, UTCDate + 1, 0, 0, 0)).getTime()
+
+        return <Countdown
+            date={Date.now() + tomorrow - Date.now()}
+            renderer={renderer}
+        />
+    }, [statusData.isUpdate])
+
     async function getUserDailyQuestStatus() {
         // const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
         // return response
@@ -166,7 +221,12 @@ function DailyQuestButton() {
             },
             updatedAt: "1234-12-12"
         }
-        setStatusData({ swapCount: response.swap.todayCount > 3 ? 3 : response.swap.todayCount, depositCount: response.deposit.todayCount > 3 ? 3 : response.deposit.todayCount })
+
+        setStatusData({
+            swapCount: response.swap.todayCount > 3 ? 3 : response.swap.todayCount,
+            depositCount: response.deposit.todayCount > 3 ? 3 : response.deposit.todayCount,
+            isUpdate: !statusData.isUpdate
+        })
     }
 
     return (
@@ -183,9 +243,9 @@ function DailyQuestButton() {
                     viewBox="0 0 512 512"
                     xmlSpace="preserve"
                 >
-                    <circle cx="256" cy="256" r="256" fill="#a53fb8"></circle>
+                    <circle cx="256" cy="256" r="256" fill="#c25bd8"></circle>
                     <path
-                        fill="#a53fb8"
+                        fill="#c25bd8"
                         d="M512 256c0-16.341-1.55-32.319-4.476-47.809L384.333 85l-17.015 32.318-44.985-44.985-194.666 345.334 91.715 91.715A258.138 258.138 0 00256 512c141.385 0 256-114.615 256-256z"
                     ></path>
                     <path
@@ -266,7 +326,8 @@ function DailyQuestButton() {
                         </div>
 
                         <div className="time-left">
-                            Time Left : 9 hour 21min
+                            <div className="title">Time Remaining</div>
+                            {Timer}
                         </div>
                     </QuestBoard>
                 </ReactTooltip>
