@@ -197,7 +197,7 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
 
 function DailyQuestButton() {
     console.log()
-    // const { userAddress } = useSelector(cosmosSelector.all);
+    const { userAddress } = useSelector(cosmosSelector.all);
     const [statusData, setStatusData] = React.useState({
         swapCount: 0,
         depositCount: 0,
@@ -238,10 +238,12 @@ function DailyQuestButton() {
             isUpdate: !statusData.isUpdate
         })
     }
-
+    console.log(userAddress)
+    if (!userAddress) {
+        return <></>
+    }
     return (
         <>
-
             <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}">
                 <div className="wave" />
                 <svg

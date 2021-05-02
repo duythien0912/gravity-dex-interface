@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { liquidityAction } from "../modules/liquidityRest/slice"
 import { storeSelector, storeAction } from "../modules/store/slice"
 import axios from 'axios';
+import { mobileCheck } from '../utils/global-functions';
 
 
 
@@ -127,7 +128,7 @@ function App() {
 
       <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({ isTxModal: false })) }} />
 
-      <QuestButton />
+      {mobileCheck() ? '' : <QuestButton />}
     </AppWrapper>
   );
 }
