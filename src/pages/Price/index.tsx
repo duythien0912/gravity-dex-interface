@@ -19,7 +19,7 @@ const columns = [
     maxWidth: "140px"
   },
   {
-    name: <div className="column-with-tooltip">Apy &nbsp;<Tooltip text="Annual percentage yield" /></div>,
+    name: <div className="column-with-tooltip">Apy &nbsp;<Tooltip text="Annual percentage yield (updated every hour)" /></div>,
     selector: 'apy',
     minWidth: "120px",
     maxWidth: "120px",
@@ -180,7 +180,7 @@ function Table() {
     async function getPriceData() {
       let priceData = [];
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
-      console.log(response.data.pools)
+
       response.data.pools.forEach((pool, index) => {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
