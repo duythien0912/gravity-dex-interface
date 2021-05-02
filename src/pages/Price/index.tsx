@@ -19,6 +19,15 @@ const columns = [
     maxWidth: "140px"
   },
   {
+    name: <div className="column-with-tooltip">Apy &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
+    selector: 'apy',
+    minWidth: "120px",
+    maxWidth: "120px",
+    sortable: true,
+    format: row => `${cutNumber(row.apy * 100, 2)}%`,
+    right: true,
+  },
+  {
     name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
     selector: 'xGlobalPrice',
     minWidth: "160px",
@@ -176,6 +185,7 @@ function Table() {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
         const poolName = `${xCoinName}-${yCoinName}`
+        const apy = pool.apy
 
         const xGlobalPrice = Number(cutNumber(pool.reserveCoins[0].globalPrice * 1000000, 4))
         const yGlobalPrice = Number(cutNumber(pool.reserveCoins[1].globalPrice * 1000000, 4))
@@ -189,6 +199,7 @@ function Table() {
           priceData.push({
             id: index,
             poolName: poolName,
+            apy: apy,
             xGlobalPrice: xGlobalPrice,
             yGlobalPrice: yGlobalPrice,
             globalRatio: `${cutNumber(globalRatio, 4)} ${yCoinName} per ${xCoinName}`,
