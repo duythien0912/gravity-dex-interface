@@ -207,7 +207,7 @@ function DailyQuestButton() {
 
     const [isComplete, setIsComplete] = React.useState(false)
     React.useEffect(() => {
-        getUserDailyQuestStatus()
+        getUserDailyQuestStatus(false)
     }, [])
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
@@ -219,7 +219,7 @@ function DailyQuestButton() {
         />
     }, [statusData.isUpdate])
 
-    async function getUserDailyQuestStatus() {
+    async function getUserDailyQuestStatus(isOpen) {
         // const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
         // return response
         const response = {
@@ -243,7 +243,7 @@ function DailyQuestButton() {
         setStatusData({
             swapCount:swapCount,
             depositCount: depositCount,
-            isUpdate: !statusData.isUpdate
+            isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
         })
         if(swapCount + depositCount === 6) {
             setIsComplete(true)
@@ -341,7 +341,7 @@ function DailyQuestButton() {
                     effect="solid"
                     clickable={true}
                     afterShow={() => {
-                        getUserDailyQuestStatus()
+                        getUserDailyQuestStatus(true)
                     }}
                     afterHide={() => {
                         setStatusData({
