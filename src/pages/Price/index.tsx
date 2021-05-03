@@ -9,7 +9,6 @@ import Tooltip from "../../components/Tooltips/QuestionMarkTooltip"
 
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
-import { borderRadius } from 'polished'
 
 const columns = [
   {
@@ -184,6 +183,19 @@ height: auto;
 
   .detail {
     padding: 4px;
+    line-height: 1.5;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-bottom: -4px;
+    background-color:#fff;
+  }
+
+  .bold {
+    font-weight: bold;
   }
 }
 `
@@ -213,11 +225,11 @@ function Table() {
     <div className="sub-title">Evaluation of tokens in USD at the end of competition</div>
 
     <div className="details">
-      <div className="detail"> - BITSONG, SENTINEL, PERSISTENCE, AKASH, TERRA, E-Money, IRIS, ATOM : coinmarketcap price in USD</div>
-      <div className="detail"> - CYBER : ICO price at (https://cyber.page/port/progress)</div>
-      <div className="detail"> - REGEN, DESMOS : Random price generation by B-Harvest, starting at 10 USD</div>
-      <div className="detail"> - RUN : Fixed price at 1 USD</div>
-      <div className="detail"> - COM : 1 EUR in USD </div>
+      <div className="detail"> - BITSONG<img src="/assets/coins/btsg.png" alt="coin"/>(BTSG), SENTINEL<img src="/assets/coins/dvpn.png" alt="coin"/>(DVPN), PERSISTENCE<img src="/assets/coins/xprt.png" alt="coin"/>(XPRT), AKASH<img src="/assets/coins/akt.png" alt="coin"/>(AKT), TERRA<img src="/assets/coins/luna.png" alt="coin"/>(LUNA), E-Money<img src="/assets/coins/ngm.png" alt="coin"/>(NGM), IRIS<img src="/assets/coins/iris.png" alt="coin"/>(IRIS), ATOM<img src="/assets/coins/atom.png" alt="coin"/>(ATOM) : <span className="bold">coinmarketcap price in USD</span></div>
+      <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin"/>(GCYB) : <span className="bold">ICO price at (https://cyber.page/port/progress)</span></div>
+      <div className="detail"> - REGEN<img src="/assets/coins/regen.png" alt="coin"/>(REGEN), DESMOS(DSM)<img src="/assets/coins/dsm.png" alt="coin"/> :  <span className="bold">Random price generation by B-Harvest, starting at 10 USD</span></div>
+      <div className="detail"> - RUN<img src="/assets/coins/run.png" alt="coin"/>(RUN) : <span className="bold">Fixed price at 1 USD</span></div>
+      <div className="detail"> - COM<img src="/assets/coins/gcyb.png" alt="coin"/> :  <span className="bold">1 EUR in USD</span></div>
     </div>
     </CoinPrice>
   </ReactTooltip>
