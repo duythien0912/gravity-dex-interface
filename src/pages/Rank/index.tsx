@@ -27,19 +27,28 @@ const columns = [
     maxWidth: "60px"
   },
   {
-    name: 'Account',
+    name: <div style={{paddingLeft: "40px"}}>Account</div>,
     selector: 'accountAddress',
-    right: true,
+    left: true,
     // sortable: true,
     format: (row) => {
       if (row.accountAddress !== "YOU") {
-        return row.accountAddress
+        return (
+          <div className="my-info">
+          <div className="user"><div className="user-name">{row.userName ? row.userName : 'Trader'}</div><div className="is-valid">({row.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div> </div>
+          <div className="account">{row.accountAddress}</div>
+          </div>
+      )
       } else {
-        return <span className="myRank">{row.accountAddress}</span>
+        return (
+          <div className="my-info">
+            <div className="user"><div className="user-name">{row.userName ? row.userName : 'Me'}</div><div className="is-valid">({row.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div> </div>
+            <div className="account myRank">{row.accountAddress}</div>
+          </div>)
       }
     },
-    minWidth: "230px",
-    maxWidth: "230px"
+    minWidth: "170px",
+    maxWidth: "170px"
   },
   {
     name: 'Action Score',
@@ -47,7 +56,7 @@ const columns = [
     sortable: true,
     right: true,
     minWidth: "160px",
-    maxWidth: "200px"
+    maxWidth: "160px"
   },
   {
     name: 'Trading Score',
@@ -128,8 +137,32 @@ padding: 0 30px 40px 30px;
 
 .myRank {
   font-size: 18px;
+  width: 120px;
   color:#F6743C;
   font-weight: bold;
+}
+
+.my-info {
+  text-align:center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  .user {
+    display:flex;
+    margin: 0 auto;
+    align-items: center;
+    .user-name {
+      display:inline-block;
+      padding-right: 6px;
+    }
+    .is-valid {
+      display:inline-block;
+      padding-left: 6px;
+    }
+  }
+
+  .account {
+    padding-top: 8px;
+  }
 }
 
 .score {
@@ -222,7 +255,7 @@ function Table() {
     let rankData = [];
     const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/scoreboard?address=${userAddress}`)
     response.data.accounts.forEach((account, index) => {
-      const accountAddress = <div>{account.address.substr(0, 10)}...{account.address.substr(-5)} ({account.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div>
+      const accountAddress = <div>{account.address.substr(0, 10)}...{account.address.substr(-5)} </div>
       const rank = account.ranking
       const actionScore = cutNumber(account.actionScore, 2)
       const tradingScore = cutNumber(account.tradingScore, 2)
