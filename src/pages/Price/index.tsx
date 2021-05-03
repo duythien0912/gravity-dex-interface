@@ -19,7 +19,7 @@ const columns = [
     maxWidth: "140px"
   },
   {
-    name: <div className="column-with-tooltip">Apy &nbsp;<Tooltip text="Annual percentage yield (updated every hour)" /></div>,
+    name: <div className="column-with-tooltip">APY &nbsp;<Tooltip text="Annual percentage yield (updated every hour)" /></div>,
     selector: 'apy',
     minWidth: "120px",
     maxWidth: "120px",
