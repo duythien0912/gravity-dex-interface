@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { chainInfo } from "../../cosmos-amm/config"
 import Countdown from 'react-countdown'
 import axios from "axios"
+import { mobileCheck } from '../../utils/global-functions';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -38,6 +39,7 @@ const Wrapper = styled.div`
       .banner-content {
         text-decoration: none;
         display: flex;
+        flex-wrap: wrap;
         color: #fff !important;
         width: 100%;
         cursor:pointer;
@@ -143,8 +145,8 @@ function HeaderTopBanner() {
         // const response = {
         //   data: {
         //     banner: {
-        //       endsAt: "2021-05-03T17:36:00Z",
-        //       startsAt: "2021-05-03T17:35:25Z",
+        //       endsAt: "2021-05-03T23:36:00Z",
+        //       startsAt: "2021-05-03T23:35:25Z",
         //       state: "Upcomings",
         //       text: "You must verify your session through reCAPTCHA!",
         //       url: "/price"
@@ -182,11 +184,15 @@ function HeaderTopBanner() {
   }, [])
 
   const counter = React.useMemo(() => {
-    if (remainingTime > 0) {
-      return (<Countdown
-        date={Date.now() + remainingTime}
-        renderer={renderer}
-      />)
+    if (remainingTime > 0 && !mobileCheck()) {
+      return (
+        <>
+        <div className="timer">Time Remaining - </div>
+        <Countdown
+          date={Date.now() + remainingTime}
+          renderer={renderer}
+        />
+      </>)
     } else {
       return ''
     }
@@ -202,10 +208,10 @@ function HeaderTopBanner() {
         <div className="bg bg3"></div>
       </div>
       <div className="banner">
-        {bannerData?.url?.startsWith('http') ? <a className="banner-content" href={bannerData?.url} target="_blank" rel="noopener noreferrer">{bannerData?.text} <div className="timer">Time Remaining - </div> {counter}
+        {bannerData?.url?.startsWith('http') ? <a className="banner-content" href={bannerData?.url} target="_blank" rel="noopener noreferrer">{bannerData?.text}  {counter}
         </a> : <div className="banner-content" onClick={() => {
           history.push(bannerData?.url)
-        }}>{bannerData?.text} <div className="timer">Time Remaining - </div> {counter}</div>}
+        }}>{bannerData?.text} {counter}</div>}
 
         <div onClick={() => {
           setIsClose(true)
