@@ -36,6 +36,7 @@ const Wrapper = styled.div`
         text-align: center;
         top: 0;
         right: 0;
+        margin-right: -2px;
         width: 52px;
         height: 52px;
         border-radius: 50%;
@@ -47,11 +48,19 @@ const Wrapper = styled.div`
         
     }
 
-    &:hover {
+    /* &:hover {
        .wave {
-        animation: Waveeffects .5s linear infinite;
+        animation: Waveeffects 2s linear infinite;
+       }
+    } */
+
+    .not-complete {
+        .wave {
+        animation: Waveeffects 4s linear 10;
        }
     }
+
+    
 
     @keyframes Waveeffects {
         0% {
@@ -208,7 +217,8 @@ function DailyQuestButton() {
     const [isComplete, setIsComplete] = React.useState(false)
     React.useEffect(() => {
         getUserDailyQuestStatus(false)
-    }, [])
+        console.log('here')
+    }, [userAddress])
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
         const tomorrow = new Date(Date.UTC(2021, 4, UTCDate + 1, 0, 0, 0)).getTime()
@@ -220,38 +230,25 @@ function DailyQuestButton() {
     }, [statusData.isUpdate])
 
     async function getUserDailyQuestStatus(isOpen) {
-        // const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
-        // return response
-        const response = {
-            blockHeight: 111111,
-            deposit: {
-                numDifferentPools: 3,
-                todayCount: 3,
-                todayMaxCount: 3,
-            },
-            swap: {
-                numDifferentPools: 3,
-                todayCount: 3,
-                todayMaxCount: 3,
-            },
-            updatedAt: "1234-12-12"
-        }
+        const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
 
-        const swapCount =  response.swap.todayCount > 3 ? 3 : response.swap.todayCount
-        const depositCount = response.deposit.todayCount > 3 ? 3 : response.deposit.todayCount
+        if(response.data.account !== null) {
+            const swapCount =  response?.data.account.swap?.todayCount > 3 ? 3 : response.data.account.swap.todayCount
+            const depositCount = response?.data.account.deposit.todayCount > 3 ? 3 : response.data.account.deposit.todayCount
 
-        setStatusData({
-            swapCount:swapCount,
-            depositCount: depositCount,
-            isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
-        })
-        if(swapCount + depositCount === 6) {
-            setIsComplete(true)
+            setStatusData({
+                swapCount:swapCount,
+                depositCount: depositCount,
+                isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
+            })
+            if(swapCount + depositCount === 6) {
+                setIsComplete(true)
+            } else {
+                setIsComplete(false)
+            }
         } else {
-            setIsComplete(false)
-        }
 
-        
+        }
     }
     
     if (!userAddress) {
@@ -260,7 +257,9 @@ function DailyQuestButton() {
     return (
         <>
             <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}">
+                <div className={`${isComplete ? "" : "not-complete"}`}>
                 <div className="wave" />
+                </div>
                 {!isComplete ? <svg
                     xmlns="http://www.w3.org/2000/svg"
                     data-author="Icon made by Freepik from www.flaticon.com"
@@ -304,7 +303,7 @@ function DailyQuestButton() {
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="52px"
-                height="52x"
+                height="52px"
                 viewBox="0 0 512 512"
               >
                 <linearGradient
