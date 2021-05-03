@@ -13,7 +13,7 @@ import ActionButton from "../../components/Buttons/ActionButton"
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
-import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, sortCoins, getMinimalDenomCoin } from "../../utils/global-functions"
+import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, getMinimalDenomCoin } from "../../utils/global-functions"
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -267,15 +267,11 @@ function SwapCard() {
 
             case TYPES.AMOUNT_CHANGE:
 
-                // let swapPrice = ((fromCoinPoolAmount) + (2 * realInputAmount)) / (toCoinPoolAmount)
-                // let counterPairAmount = realInputAmount / swapPrice * swapFeeRate
-
                 if (targetPair === "to") {
                     counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / inputAmount) - (2 / toCoinPoolAmount))
                     if (counterPairAmount < 0) {
                         counterPairAmount = 0
                     }
-                    // console.log('FROM: counterPairAmount', counterPairAmount)
                 }
 
                 let price = 1 / swapPrice
@@ -362,8 +358,6 @@ function SwapCard() {
                     const preSortedCoins = [getMinimalDenomCoin(state.toCoin), getMinimalDenomCoin(state.fromCoin)].sort()
                     const sortedCoins = [preSortedCoins[0].substr(1), preSortedCoins[1].substr(1)]
 
-
-
                     // if (false && state.toCoin !== sortedCoins[0]) {
                     //     // counterPairAmount = (fromCoinPoolAmount / toCoinPoolAmount) / ((swapFeeRate / state.toAmount) - (2 / toCoinPoolAmount))
                     //     // console.log('FROM: counterPairAmount', counterPairAmount)
@@ -379,8 +373,6 @@ function SwapCard() {
                         isEmpty = true
                     }
 
-
-
                     let isOver = state.fromAmount > userFromCoinBalance || state.toAmount > userToCoinBalance
                     const slippage = calculateSlippage((state.toAmount * 1000000), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`toCoin`])])
 
@@ -389,7 +381,7 @@ function SwapCard() {
                     return { ...fromToChangeObject, price, toAmount: cutNumber(counterPairAmount, 6), status: isOver ? 'over' : state.status, slippage: slippage }
                 }
             case TYPES.SET_FROM_QUERY:
-                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, fromAmount: '', toAmount: '', status: 'empty' }
+                return { ...state, fromCoin: action.payload.from, toCoin: action.payload.to, fromAmount: '', toAmount: '', status: 'empty', slippage: null }
             default:
                 console.log("DEFAULT: SWAP REDUCER")
                 return state;
