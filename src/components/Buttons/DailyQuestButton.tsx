@@ -260,7 +260,7 @@ function DailyQuestButton() {
     }
     return (
         <>
-            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}" style={{display: `${userAddress ? 'unset' : 'none'}`}}>
+            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}" style={{display: `${isDisplay ? 'unset' : 'none'}`}}>
                 <div className={`${isComplete ? "" : "not-complete"}`}>
                 <div className="wave" />
                 </div>
