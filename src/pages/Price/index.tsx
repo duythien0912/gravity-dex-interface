@@ -4,12 +4,12 @@ import styled from "styled-components"
 import { cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
 import { chainInfo } from "../../cosmos-amm/config"
+import ReactTooltip from 'react-tooltip';
 import Tooltip from "../../components/Tooltips/QuestionMarkTooltip"
 
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
-
-
+import { borderRadius } from 'polished'
 
 const columns = [
   {
@@ -161,13 +161,68 @@ background-color: hsla(36, 100%, 50%, 0.295) !important;
   align-items: center;
 }
 `
+const CoinPrice = styled.div`
+width: 300px;
+height: auto;
+/* background-color: #555; */
+.title {
+  text-align:center;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 12px 0;
+}
 
+.sub-title {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.details {
+  border: 1px solid gray;
+  padding: 8px;
+  margin-bottom: 20px;
+
+  .detail {
+    padding: 4px;
+  }
+}
+`
 
 
 
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
   const history = useHistory();
+  const title = <div>Pool Price 
+ <div data-tip data-for="coin-price"  data-event="click" style={{ 
+   padding: "4px 12px", 
+   display: "inline-block", 
+   marginLeft: "12px",
+   fontSize: " 15px",
+   color: "#fff",
+   backgroundColor:"#F6743C",
+   border: "1px solid #F6743C",
+   borderRadius: "20px",
+   cursor:"pointer"
+   }}>
+   Coin Price
+  </div>
+  <ReactTooltip id="coin-price" place="bottom" type="dark" effect="solid" clickable={true}>
+    <CoinPrice>
+    <div className="title">Coin Price</div>
+    <div className="sub-title">Evaluation of tokens in USD at the end of competition</div>
+
+    <div className="details">
+      <div className="detail"> - BITSONG, SENTINEL, PERSISTENCE, AKASH, TERRA, E-Money, IRIS, ATOM : coinmarketcap price in USD</div>
+      <div className="detail"> - CYBER : ICO price at (https://cyber.page/port/progress)</div>
+      <div className="detail"> - REGEN, DESMOS : Random price generation by B-Harvest, starting at 10 USD</div>
+      <div className="detail"> - RUN : Fixed price at 1 USD</div>
+      <div className="detail"> - COM : 1 EUR in USD </div>
+    </div>
+    </CoinPrice>
+  </ReactTooltip>
+  
+  </div>
   // eslint-disable-next-line
 
   React.useEffect(() => {
@@ -219,7 +274,7 @@ function Table() {
   return (
     <Wrapper>
       {tableData !== null ? <DataTable
-        title="Pool Price"
+        title={title}
         className="table"
         defaultSortField="discrepancyRate"
         defaultSortAsc={false}
