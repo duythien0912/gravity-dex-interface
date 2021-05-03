@@ -229,7 +229,7 @@ function AddLiquidityCard() {
                     isEmpty = true
                 }
 
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? cutNumber(selectedPairAmount * price, 6) : '', status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? Math.ceil(selectedPairAmount * price * 10000) / 10000 : '', status: getStatus(state) }
 
             case TYPES.SET_MAX_AMOUNT:
                 if (selectedPairAmount * price > counterPairUserBalances || isNaN(counterPairUserBalances)) {
@@ -239,7 +239,7 @@ function AddLiquidityCard() {
                 }
 
 
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? cutNumber(selectedPairAmount * price, 6) : '', status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? Math.ceil(selectedPairAmount * price * 10000) / 10000: '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
