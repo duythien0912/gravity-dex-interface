@@ -207,6 +207,7 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
 function DailyQuestButton() {
     console.log()
     const { userAddress } = useSelector(cosmosSelector.all);
+    const [isDisplay, setIsDisplay] = React.useState(false)
     const [statusData, setStatusData] = React.useState({
         swapCount: 0,
         depositCount: 0,
@@ -228,24 +229,29 @@ function DailyQuestButton() {
     }, [statusData.isUpdate])
 
     async function getUserDailyQuestStatus(isOpen) {
-        const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
-        console.log(response)
-        if(response.data.account !== null) {
-            const swapCount =  response?.data.account.swap?.numDifferentPoolsToday > 3 ? 3 : response.data.account.swap.numDifferentPoolsToday
-            const depositCount = response?.data.account.deposit.numDifferentPoolsToday > 3 ? 3 : response.data.account.deposit.numDifferentPoolsToday
+        if(userAddress) {
+            const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
+           
+            if(response.data.account !== null) {
+                const swapCount =  response?.data.account.swap?.numDifferentPoolsToday > 3 ? 3 : response.data.account.swap.numDifferentPoolsToday
+                const depositCount = response?.data.account.deposit.numDifferentPoolsToday > 3 ? 3 : response.data.account.deposit.numDifferentPoolsToday
 
-            setStatusData({
-                swapCount:swapCount,
-                depositCount: depositCount,
-                isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
-            })
-            if(swapCount + depositCount === 6) {
-                setIsComplete(true)
+                setStatusData({
+                    swapCount:swapCount,
+                    depositCount: depositCount,
+                    isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
+                })
+                if(swapCount + depositCount === 6) {
+                    setIsComplete(true)
+                } else {
+                    setIsComplete(false)
+                }
+                setIsDisplay(true)
             } else {
-                setIsComplete(false)
+                setIsDisplay(false)
             }
         } else {
-
+            setIsDisplay(false)
         }
     }
     
@@ -254,7 +260,7 @@ function DailyQuestButton() {
     }
     return (
         <>
-            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}">
+            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}" style={{display: `${userAddress ? 'unset' : 'none'}`}}>
                 <div className={`${isComplete ? "" : "not-complete"}`}>
                 <div className="wave" />
                 </div>
