@@ -220,7 +220,7 @@ function DailyQuestButton() {
         getUserDailyQuestStatus(false)
         // eslint-disable-next-line 
     }, [userAddress])
-    
+
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
         const tomorrow = new Date(Date.UTC(2021, 4, UTCDate + 1, 0, 0, 0)).getTime()
@@ -371,7 +371,7 @@ function DailyQuestButton() {
                         <div className="quests">
                             <div className={`quest ${statusData.swapCount === 3 ? 'complete' : ''}`} >
                                 <div className="quest-title">
-                                    ① &nbsp; Swap 3 times in different pools
+                                    ①&nbsp; Swap 3 times in <span style={{fontWeight: "bold"}}>different</span> pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.swapCount} / 3
@@ -383,7 +383,7 @@ function DailyQuestButton() {
 
                             <div className={`quest ${statusData.depositCount === 3 ? 'complete' : ''}`}>
                                 <div className="quest-title">
-                                    ② &nbsp; Deposit 3 times in different pools
+                                    ②&nbsp; Add liquidity 3 times in <span style={{fontWeight: "bold"}}>different</span> pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.depositCount} / 3
