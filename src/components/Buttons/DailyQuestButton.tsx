@@ -36,9 +36,8 @@ const Wrapper = styled.div`
         text-align: center;
         top: 0;
         right: 0;
-        margin-right: -2px;
-        width: 52px;
-        height: 52px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         border: 1px solid #fff;
         /* background-color: #2d3436; */
@@ -56,7 +55,7 @@ const Wrapper = styled.div`
 
     .not-complete {
         .wave {
-        animation: Waveeffects 4s linear 10;
+        animation: Waveeffects 3.6s linear 10;
        }
     }
 
@@ -217,7 +216,6 @@ function DailyQuestButton() {
     const [isComplete, setIsComplete] = React.useState(false)
     React.useEffect(() => {
         getUserDailyQuestStatus(false)
-        console.log('here')
     }, [userAddress])
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
@@ -231,10 +229,10 @@ function DailyQuestButton() {
 
     async function getUserDailyQuestStatus(isOpen) {
         const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
-
+        console.log(response)
         if(response.data.account !== null) {
-            const swapCount =  response?.data.account.swap?.todayCount > 3 ? 3 : response.data.account.swap.todayCount
-            const depositCount = response?.data.account.deposit.todayCount > 3 ? 3 : response.data.account.deposit.todayCount
+            const swapCount =  response?.data.account.swap?.numDifferentPoolsToday > 3 ? 3 : response.data.account.swap.numDifferentPoolsToday
+            const depositCount = response?.data.account.deposit.numDifferentPoolsToday > 3 ? 3 : response.data.account.deposit.numDifferentPoolsToday
 
             setStatusData({
                 swapCount:swapCount,
