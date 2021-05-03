@@ -266,7 +266,7 @@ function getResultMessage(type, result) {
                     const addCoins = result.data.accepted_coins?.split(',')
                     const A = addCoins[0].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
                     const B = addCoins[1].match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
-                    console.log(A, B)
+                    // console.log(A, B)
                     const AAmount = Math.floor(Number(A[0])) / 1000000
                     const BAmount = Math.floor(Number(B[0])) / 1000000
                     return (
@@ -341,7 +341,7 @@ function TxProcessingModal({ isOpen, toggle }: { isOpen: boolean, toggle: any, }
     }, [txModalData])
 
     function finish(type) {
-        console.log(txModalData.resultData)
+        // console.log(txModalData.resultData)
         if (txModalData.resultData.isSuccess) {
             if (type !== "Swap") {
                 history.push('/pool')

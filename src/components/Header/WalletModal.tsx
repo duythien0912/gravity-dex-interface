@@ -108,29 +108,32 @@ function ConnectWalletModal({ close, priceData, userBalances, totalValue }: { cl
             }
 
             let pairValue = null
-
+            let flowDigits = 100
             if (pair.startsWith('pool')) {
                 pairValue = (Math.floor(balance[pair] * priceData[pair] * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                flowDigits = 1000000
             } else {
                 pairValue = (Math.floor(balance[pair] * priceData[coinName] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
             }
 
-            const pairBalance = (Math.floor(balance[pair] / 1000000 * 100) / 100).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-
-            result.push(
-                <div className="row"
-                    onClick={() => {
-
-                    }} key={pair}>
-                    <div className="coin-info">
-                        {checkImageExsistence(coinName) ?
-                            <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />
-                            : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>
-                                ?</div>}{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
+            const pairBalance = (Math.floor(balance[pair] / 1000000 * flowDigits) / flowDigits).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            
+            if(balance[pair] !== 0) {
+                result.push(
+                    <div className="row"
+                        onClick={() => {
+    
+                        }} key={pair}>
+                        <div className="coin-info">
+                            {checkImageExsistence(coinName) ?
+                                <img className="coin-img" src={`/assets/coins/${coinName}.png`} alt="coin pair" />
+                                : <div className="coin-img" style={{ padding: "3px 0 0 0", textAlign: "center" }}>
+                                    ?</div>}{coinName === "pool" ? `${poolTokenIndexer[pair].toUpperCase()} POOL` : coinName.toUpperCase()}
+                        </div>
+                        <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
                     </div>
-                    <div className="coin-balance">{pairBalance || 0} <span style={{ color: '#8a8a8a' }}>({pairValue === "NaN" ? '?' : '$' + pairValue})</span></div>
-                </div>
-            )
+                )
+            }
         }
         return result
     }
