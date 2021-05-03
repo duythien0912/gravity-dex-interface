@@ -166,6 +166,7 @@ padding: 0 30px 40px 30px;
     color:#fff;
     font-weight: bold;
     cursor: pointer;
+    outline: none;
 
     &:hover {
       border: 1px solid #fff;
