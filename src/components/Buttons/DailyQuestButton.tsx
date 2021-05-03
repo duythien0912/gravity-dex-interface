@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 
     &:hover {
        .wave {
-        animation: Waveeffects .5s linear 1;
+        animation: Waveeffects .5s linear infinite;
        }
     }
 
@@ -91,8 +91,9 @@ border-radius: 4px;
 
 .title {
     font-size: 20px;
-    width: 140px;
+    width: 160px;
     text-align: center;
+    font-weight: bold;
     display: block;
     margin: 0 auto;
 
@@ -108,14 +109,14 @@ border-radius: 4px;
 .quest-subtitle {
     text-align: center;
     margin-top: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .quests {
     margin-top: 12px;
 
     .complete {
-        background: linear-gradient(91.43deg,#12ec23e8 0%,#138483d9 100%);
+        background: linear-gradient(91.43deg,#18ef96 0%,#01abeac4 100%);
     }
 
     .quest{
@@ -204,6 +205,10 @@ function DailyQuestButton() {
         isUpdate: false
     })
 
+    const [isComplete, setIsComplete] = React.useState(false)
+    React.useEffect(() => {
+        getUserDailyQuestStatus()
+    }, [])
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
         const tomorrow = new Date(Date.UTC(2021, 4, UTCDate + 1, 0, 0, 0)).getTime()
@@ -221,7 +226,7 @@ function DailyQuestButton() {
             blockHeight: 111111,
             deposit: {
                 numDifferentPools: 3,
-                todayCount: 1,
+                todayCount: 3,
                 todayMaxCount: 3,
             },
             swap: {
@@ -232,13 +237,23 @@ function DailyQuestButton() {
             updatedAt: "1234-12-12"
         }
 
+        const swapCount =  response.swap.todayCount > 3 ? 3 : response.swap.todayCount
+        const depositCount = response.deposit.todayCount > 3 ? 3 : response.deposit.todayCount
+
         setStatusData({
-            swapCount: response.swap.todayCount > 3 ? 3 : response.swap.todayCount,
-            depositCount: response.deposit.todayCount > 3 ? 3 : response.deposit.todayCount,
+            swapCount:swapCount,
+            depositCount: depositCount,
             isUpdate: !statusData.isUpdate
         })
+        if(swapCount + depositCount === 6) {
+            setIsComplete(true)
+        } else {
+            setIsComplete(false)
+        }
+
+        
     }
-    console.log(userAddress)
+    
     if (!userAddress) {
         return <></>
     }
@@ -246,7 +261,7 @@ function DailyQuestButton() {
         <>
             <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}">
                 <div className="wave" />
-                <svg
+                {!isComplete ? <svg
                     xmlns="http://www.w3.org/2000/svg"
                     data-author="Icon made by Freepik from www.flaticon.com"
                     x="0"
@@ -285,6 +300,34 @@ function DailyQuestButton() {
                         <path d="M184.732 338.552L164.367 316.731 176.795 305.132 185.561 314.524 210.38 291.36 221.979 303.788z"></path>
                     </g>
                 </svg>
+                :
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="52px"
+                height="52x"
+                viewBox="0 0 512 512"
+              >
+                <linearGradient
+                  id="a"
+                  x1="0"
+                  x2="512"
+                  y1="-9718"
+                  y2="-9718"
+                  gradientTransform="matrix(1 0 0 -1 0 -9462)"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0" stopColor="#00f38d"></stop>
+                  <stop offset="1" stopColor="#009eff"></stop>
+                </linearGradient>
+                <path
+                  fill="url(#a)"
+                  d="M512 256c0 141.387-114.613 256-256 256S0 397.387 0 256 114.613 0 256 0s256 114.613 256 256zm0 0"
+                ></path>
+                <path
+                  fill="#fff"
+                  d="M414.324 131.426L214.156 354.969 95.836 242.484l-20.672 21.743 140.727 133.777 220.785-246.566zm0 0"
+                ></path>
+              </svg> }
             </Wrapper >
 
             <ToolTipWrapper>
