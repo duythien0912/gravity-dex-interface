@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom'
 import BasicModal from "./BasicModal"
 import styled from "styled-components"
 import { storeSelector } from "../../modules/store/slice"
-import { checkImageExsistence } from "../../utils/global-functions"
 
 const SelectCoinWrapper = styled.div`
 @media(max-width: 500px) {

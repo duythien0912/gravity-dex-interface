@@ -215,9 +215,12 @@ function DailyQuestButton() {
     })
 
     const [isComplete, setIsComplete] = React.useState(false)
+   
     React.useEffect(() => {
         getUserDailyQuestStatus(false)
+        // eslint-disable-next-line 
     }, [userAddress])
+    
     const Timer = React.useMemo(() => {
         const UTCDate = new Date().getUTCDate()
         const tomorrow = new Date(Date.UTC(2021, 4, UTCDate + 1, 0, 0, 0)).getTime()
@@ -226,6 +229,7 @@ function DailyQuestButton() {
             date={Date.now() + tomorrow - Date.now()}
             renderer={renderer}
         />
+        // eslint-disable-next-line 
     }, [statusData.isUpdate])
 
     async function getUserDailyQuestStatus(isOpen) {

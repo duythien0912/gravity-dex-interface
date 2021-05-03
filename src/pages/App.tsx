@@ -101,8 +101,8 @@ function App() {
               break;
           }
       }
-      return function() {
-          // if (c) document.addEventListener(eventKey, c);
+      return function(c?) {
+          if (c) document.addEventListener(eventKey, c);
           return !document[stateKey];
       }
   })();
