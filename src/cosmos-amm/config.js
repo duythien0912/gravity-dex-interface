@@ -92,7 +92,8 @@ export const chainInfo = {
   rpc: "https://competition.bharvest.io",
   rest: "https://competition.bharvest.io:1317",
 
-  chainId: "swap-testnet-2004",
+  // chainId: "swap-testnet-2004",
+  chainId: "competition-0001",
   chainName: "Competition",
   stakeCurrency: stakingCurrency,
   bip44: {

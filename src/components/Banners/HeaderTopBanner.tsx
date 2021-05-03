@@ -1,5 +1,9 @@
 import * as React from 'react';
 import styled from "styled-components";
+import { useHistory } from 'react-router-dom'
+import {chainInfo} from "../../cosmos-amm/config"
+import Countdown from 'react-countdown'
+import axios from "axios"
 
 const Wrapper = styled.div`
     width: 100%;
@@ -23,8 +27,11 @@ const Wrapper = styled.div`
         cursor: pointer;
     }
 
-    a {
-        color: #fff !important;
+    .banner-content {
+      text-decoration: none;
+      color: #fff !important;
+      width: 100%;
+      cursor:pointer;
     }
 }
 
@@ -81,8 +88,79 @@ const Wrapper = styled.div`
 }
 `
 
+const TimeLeft = styled.div`
+display: flex;
+width: 240px;
+margin: 10px auto 0 auto;
+justify-content: space-around;
+
+div {
+    min-width: 80px;
+    text-align: center;
+    font-size: 18px;
+}
+`
+// Renderer callback with condition
+const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+        // Render a completed state
+        return <div>The time is up 😂</div>;
+    } else {
+        // Render a countdown
+        return <TimeLeft><div>{hours} hour</div><div> {minutes} min</div> <div>{seconds} sec</div></TimeLeft>;
+    }
+};
+//test data
+// endsAt: "2021-05-03T12:25:00Z"
+// startsAt: "2021-05-03T12:10:00Z"
+// state: "started"
+// text: "You must verify your session through reCAPTCHA!"
+// url: "https://google.com"
+
+
 function HeaderTopBanner() {
-    const [isClose, setIsClose] = React.useState(false)
+    const [isClose, setIsClose] = React.useState(true)
+    const [bannerData, setBannerData] = React.useState(null)
+    const [remainingTime, setRemainingTime] = React.useState(null)
+    const history = useHistory()
+    
+
+    React.useEffect( () => {
+      async function getBannerData() {
+        try {
+          const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/banner`)
+          if(response.data.banner === null) {
+            setIsClose(true)
+          } else {
+            setBannerData(response.data.banner)
+            console.log(response.data.banner)
+            const UTCNow= new Date().getTime()
+            const upComingEvent = new Date(response.data.banner.startsAt).getTime()
+            const remainingTime = upComingEvent - UTCNow
+            
+            if(remainingTime > 0) {
+              setRemainingTime(remainingTime)
+            }
+
+            setIsClose(false)
+          }
+        } catch {
+          setIsClose(true)
+        }
+      }
+
+      getBannerData()
+      setInterval(() => {
+        getBannerData()
+        
+      }, 10000)
+     
+    },[])
+    const counter = remainingTime > 0 ?  <Countdown
+    date={Date.now() + remainingTime}
+    renderer={renderer}
+/> : ''
+
     return (
         <Wrapper style={{ display: isClose ? 'none' : 'unset' }}>
             <div className="background">
@@ -91,7 +169,11 @@ function HeaderTopBanner() {
                 <div className="bg bg3"></div>
             </div>
             <div className="banner">
-                <div className="banner-content">Soon™️, There will be Sudden Price Change 📈  and APY Boosting 🚀  (More info at <a href="https://gravitydex.io" target="_blank" rel="noopener noreferrer">Here</a>)</div>
+                {bannerData?.url?.startsWith('http') ? <a className="banner-content" href={bannerData?.url} target="_blank" rel="noopener noreferrer">{bannerData?.text}
+                </a> : <div className="banner-content" onClick={() => {
+                  history.push(bannerData?.url)
+                }}>{bannerData?.text}</div>}
+
                 <div onClick={() => {
                     setIsClose(true)
                 }} className="banner-close">X</div>
