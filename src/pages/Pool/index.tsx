@@ -333,10 +333,11 @@ function Pool() {
                 const coinX = pool.split('/')[0]
                 const coinY = pool.split('/')[1]
                 const uppercasePoolNames = pool.toUpperCase()
-                const myShare = Math.round(pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount * 100) / 100
+                const myShare = pairPoolData.userPoolData.poolTokenAmount / pairPoolData.pool_coin_amount 
                 // console.log(uppercasePoolNames, pairPoolData.userPoolData.poolTokenAmount, pairPoolData.pool_coin_amount)
 
                 if (isUser && data[pool].userPoolData.poolTokenAmount) {
+                    
                     result.push(
                         (<div className="pool" key={pool + '*'}>
                             <div className="pool-title">
@@ -356,7 +357,7 @@ function Pool() {
                             <div className="pool-details">
                                 <div className="detail">
                                     <div>Your total pool tokens:</div>
-                                    <div>{cutNumber(pairPoolData.userPoolData.poolTokenAmount / 1000000, 4)} PoolToken</div>
+                                    <div>{cutNumber(pairPoolData.userPoolData.poolTokenAmount / 1000000, 6)} PoolToken</div>
                                 </div>
                                 <div className="detail">
                                     <div>Pooled {uppercasePoolNames.split('/')[0]}:</div>
