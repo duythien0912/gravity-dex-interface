@@ -55,7 +55,7 @@ const Wrapper = styled.div`
 
     .not-complete {
         .wave {
-        animation: Waveeffects 3.6s linear 10;
+        animation: Waveeffects 3.6s linear 15;
        }
     }
 
@@ -215,7 +215,7 @@ function DailyQuestButton() {
     })
 
     const [isComplete, setIsComplete] = React.useState(false)
-   
+
     React.useEffect(() => {
         getUserDailyQuestStatus(false)
         // eslint-disable-next-line 
@@ -233,19 +233,19 @@ function DailyQuestButton() {
     }, [statusData.isUpdate])
 
     async function getUserDailyQuestStatus(isOpen) {
-        if(userAddress) {
+        if (userAddress) {
             const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/actions?address=${userAddress}`)
-           
-            if(response.data.account !== null) {
-                const swapCount =  response?.data.account.swap?.numDifferentPoolsToday > 3 ? 3 : response.data.account.swap.numDifferentPoolsToday
+
+            if (response.data.account !== null) {
+                const swapCount = response?.data.account.swap?.numDifferentPoolsToday > 3 ? 3 : response.data.account.swap.numDifferentPoolsToday
                 const depositCount = response?.data.account.deposit.numDifferentPoolsToday > 3 ? 3 : response.data.account.deposit.numDifferentPoolsToday
 
                 setStatusData({
-                    swapCount:swapCount,
+                    swapCount: swapCount,
                     depositCount: depositCount,
                     isUpdate: isOpen ? !statusData.isUpdate : statusData.isUpdate
                 })
-                if(swapCount + depositCount === 6) {
+                if (swapCount + depositCount === 6) {
                     setIsComplete(true)
                 } else {
                     setIsComplete(false)
@@ -258,15 +258,15 @@ function DailyQuestButton() {
             setIsDisplay(false)
         }
     }
-    
+
     if (!userAddress) {
         return <></>
     }
     return (
         <>
-            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}" style={{display: `${isDisplay ? 'unset' : 'none'}`}}>
+            <Wrapper data-tip data-for="quest" data-event='click' data-offset="{'top': 10, 'left': 180}" style={{ display: `${isDisplay ? 'unset' : 'none'}` }}>
                 <div className={`${isComplete ? "" : "not-complete"}`}>
-                <div className="wave" />
+                    <div className="wave" />
                 </div>
                 {!isComplete ? <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -278,9 +278,9 @@ function DailyQuestButton() {
                     viewBox="0 0 512 512"
                     xmlSpace="preserve"
                 >
-                    <circle cx="256" cy="256" r="256" fill="#c25bd8"></circle>
+                    <circle cx="256" cy="256" r="256" fill="#c96af1"></circle>
                     <path
-                        fill="#c25bd8"
+                        fill="#c96af1"
                         d="M512 256c0-16.341-1.55-32.319-4.476-47.809L384.333 85l-17.015 32.318-44.985-44.985-194.666 345.334 91.715 91.715A258.138 258.138 0 00256 512c141.385 0 256-114.615 256-256z"
                     ></path>
                     <path
@@ -307,34 +307,34 @@ function DailyQuestButton() {
                         <path d="M184.732 338.552L164.367 316.731 176.795 305.132 185.561 314.524 210.38 291.36 221.979 303.788z"></path>
                     </g>
                 </svg>
-                :
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="52px"
-                height="52px"
-                viewBox="0 0 512 512"
-              >
-                <linearGradient
-                  id="a"
-                  x1="0"
-                  x2="512"
-                  y1="-9718"
-                  y2="-9718"
-                  gradientTransform="matrix(1 0 0 -1 0 -9462)"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop offset="0" stopColor="#00f38d"></stop>
-                  <stop offset="1" stopColor="#009eff"></stop>
-                </linearGradient>
-                <path
-                  fill="url(#a)"
-                  d="M512 256c0 141.387-114.613 256-256 256S0 397.387 0 256 114.613 0 256 0s256 114.613 256 256zm0 0"
-                ></path>
-                <path
-                  fill="#fff"
-                  d="M414.324 131.426L214.156 354.969 95.836 242.484l-20.672 21.743 140.727 133.777 220.785-246.566zm0 0"
-                ></path>
-              </svg> }
+                    :
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="52px"
+                        height="52px"
+                        viewBox="0 0 512 512"
+                    >
+                        <linearGradient
+                            id="a"
+                            x1="0"
+                            x2="512"
+                            y1="-9718"
+                            y2="-9718"
+                            gradientTransform="matrix(1 0 0 -1 0 -9462)"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0" stopColor="#00f38d"></stop>
+                            <stop offset="1" stopColor="#009eff"></stop>
+                        </linearGradient>
+                        <path
+                            fill="url(#a)"
+                            d="M512 256c0 141.387-114.613 256-256 256S0 397.387 0 256 114.613 0 256 0s256 114.613 256 256zm0 0"
+                        ></path>
+                        <path
+                            fill="#fff"
+                            d="M414.324 131.426L214.156 354.969 95.836 242.484l-20.672 21.743 140.727 133.777 220.785-246.566zm0 0"
+                        ></path>
+                    </svg>}
             </Wrapper >
 
             <ToolTipWrapper>
@@ -371,7 +371,7 @@ function DailyQuestButton() {
                         <div className="quests">
                             <div className={`quest ${statusData.swapCount === 3 ? 'complete' : ''}`} >
                                 <div className="quest-title">
-                                    ①&nbsp; Swap 3 times in <span style={{fontWeight: "bold"}}>different</span> pools
+                                    ①&nbsp; Swap 3 times in <span style={{ fontWeight: "bold" }}>different</span> pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.swapCount} / 3
@@ -383,7 +383,7 @@ function DailyQuestButton() {
 
                             <div className={`quest ${statusData.depositCount === 3 ? 'complete' : ''}`}>
                                 <div className="quest-title">
-                                    ②&nbsp; Add liquidity 3 times in <span style={{fontWeight: "bold"}}>different</span> pools
+                                    ②&nbsp; Add liquidity 3 times in <span style={{ fontWeight: "bold" }}>different</span> pools
                                 </div>
                                 <div className="quest-counting">
                                     {statusData.depositCount} / 3
