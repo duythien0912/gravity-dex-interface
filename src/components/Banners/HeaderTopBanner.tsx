@@ -115,13 +115,13 @@ div {
 }
 `
 // Renderer callback with condition
-const renderer = ({ hours, minutes, completed }) => {
+const renderer = ({ days, hours, minutes, completed }) => {
   if (completed) {
     // Render a completed state
     return <TimeLeft><div>0 hour</div><div> 0 min</div></TimeLeft>;
   } else {
     // Render a countdown
-    return <TimeLeft><div>{hours} hour</div><div> {minutes} min</div></TimeLeft>
+    return <TimeLeft><div>{hours + days * 24} hour</div><div> {minutes} min</div></TimeLeft>
   }
 };
 //test data
@@ -147,7 +147,7 @@ function HeaderTopBanner() {
         //   data: {
         //     banner: {
         //       endsAt: "2021-05-03T23:36:00Z",
-        //       startsAt: "2021-05-03T23:35:25Z",
+        //       startsAt: "2021-05-05T23:35:25Z",
         //       state: "Upcomings",
         //       text: "Attention!!! Price distortion and trading volume hike will happen in random pools soon. Search pools and take the opportunity!",
         //       url: "/price"
