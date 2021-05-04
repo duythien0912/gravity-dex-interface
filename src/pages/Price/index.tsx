@@ -19,8 +19,8 @@ const columns = [
         getPoolNameWithCoinImages(row.poolName)
       )
     },
-    minWidth: "120px",
-    maxWidth: "140px"
+    minWidth: "150px",
+    maxWidth: "150px"
   },
   {
     name: <div className="column-with-tooltip">Arbitrage Chance &nbsp;<Tooltip text="Diversion of global ratio and internal ratio results in arbitrage chances" /></div>,
@@ -144,6 +144,7 @@ padding: 0 30px 60px 30px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
+      background-color: #fff;
     }
 
     .pool-name {
@@ -274,7 +275,7 @@ function getPoolNameWithCoinImages(poolName) {
     <div className="pool-name">
       <img src={`/assets/coins/${coins[0]}.png`} alt="pool coin A" className="coin-image" />
       <img src={`/assets/coins/${coins[1]}.png`} alt="pool coin B" className="coin-image" />
-      {poolName}
+      &nbsp;{poolName}
     </div>
   )
 }
