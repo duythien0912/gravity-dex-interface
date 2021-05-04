@@ -239,7 +239,7 @@ function AddLiquidityCard() {
                 }
 
 
-                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? Math.ceil(selectedPairAmount * price * 10000) / 10000: '', status: getStatus(state) }
+                return { ...state, [`${targetPair}Amount`]: selectedPairAmount, [`${counterTargetPair}Amount`]: selectedPairAmount ? Math.ceil(selectedPairAmount * price * 10000) / 10000 : '', status: getStatus(state) }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
@@ -298,6 +298,17 @@ function AddLiquidityCard() {
         let isReverse = false
         if (state.fromCoin !== sortedCoins[0]) {
             isReverse = true
+        }
+
+
+
+        if (state.fromCoin === 'atom' || state.toCoin === 'atom') {
+            if ((userBalances.uatom / 1000000 - (state.fromCoin === 'atom' ? state.fromAmount : state.toAmount)) < 2) {
+                if (window.confirm('🚨ALERT🚨  If you use all the atom, you can NOT make any transaction. Continue anyway?')) {
+                } else {
+                    return
+                }
+            }
         }
 
         BroadcastLiquidityTx({
