@@ -186,6 +186,11 @@ height: auto;
     line-height: 1.5;
   }
 
+  a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: normal;
+  }
   img {
     width: 16px;
     height: 16px;
@@ -217,7 +222,7 @@ function Table() {
    borderRadius: "20px",
    cursor:"pointer"
    }}>
-   Coin Price
+   Coin Price Evaluation Rule 
   </div>
   <ReactTooltip id="coin-price" place="bottom" type="dark" effect="solid" clickable={true}>
     <CoinPrice>
@@ -226,7 +231,7 @@ function Table() {
 
     <div className="details">
       <div className="detail"> - BITSONG<img src="/assets/coins/btsg.png" alt="coin"/>(BTSG), SENTINEL<img src="/assets/coins/dvpn.png" alt="coin"/>(DVPN), PERSISTENCE<img src="/assets/coins/xprt.png" alt="coin"/>(XPRT), AKASH<img src="/assets/coins/akt.png" alt="coin"/>(AKT), TERRA<img src="/assets/coins/luna.png" alt="coin"/>(LUNA), E-Money<img src="/assets/coins/ngm.png" alt="coin"/>(NGM), IRIS<img src="/assets/coins/iris.png" alt="coin"/>(IRIS), ATOM<img src="/assets/coins/atom.png" alt="coin"/>(ATOM) : <span className="bold">coinmarketcap price in USD</span></div>
-      <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin"/>(GCYB) : <span className="bold">ICO price at (https://cyber.page/port/progress)</span></div>
+      <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin"/>(GCYB) : <span className="bold">ICO price at <a href="https://cyber.page/port/progress" target="_blank" rel="noopener noreferrer">(https://cyber.page/port/progress)</a></span></div>
       <div className="detail"> - REGEN<img src="/assets/coins/regen.png" alt="coin"/>(REGEN), DESMOS(DSM)<img src="/assets/coins/dsm.png" alt="coin"/> :  <span className="bold">Random price generation by B-Harvest, starting at 10 USD</span></div>
       <div className="detail"> - RUN<img src="/assets/coins/run.png" alt="coin"/>(RUN) : <span className="bold">Fixed price at 1 USD</span></div>
       <div className="detail"> - COM<img src="/assets/coins/gcyb.png" alt="coin"/> :  <span className="bold">1 EUR in USD</span></div>
