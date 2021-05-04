@@ -533,6 +533,7 @@ function SwapCard() {
                     </div>
                 </SwapWrapper>
             </BaseCard>
+            <div style={{height:"100px"}}></div>
             {/* {!mobileCheck() ? <SemiFoooter>
                 <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">{"T&C"}</a>
             </SemiFoooter> : ''} */}
