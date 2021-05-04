@@ -35,14 +35,15 @@ const columns = [
       if (row.accountAddress !== "YOU") {
         return (
           <div className="my-info">
-          <div className="user"><div className="user-name">{row.userName ? row.userName : 'Trader'}</div><div className="is-valid">({row.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div> </div>
+          <div className="user"><div className="user-name">{row.username ? row.username : 'Trader'}</div><div className="is-valid">({row.isValid ? <span className="green">Eligible</span> : <span className="red">Ineligible</span>})</div> </div>
           <div className="account">{row.accountAddress}</div>
           </div>
       )
       } else {
+        console.log(row.isValid)
         return (
           <div className="my-info">
-            <div className="user"><div className="user-name">{row.userName ? row.userName : 'Me'}</div><div className="is-valid">({row.isValid ? <span className="green">Valid</span> : <span className="red">Invalid</span>})</div> </div>
+            <div className="user"><div className="user-name">{row.username ? row.username : 'Me'}</div><div className="is-valid">({row.isValid ? <span className="green">Eligible</span> : <span className="red">Ineligible</span>})</div> </div>
             <div className="account myRank">{row.accountAddress}</div>
           </div>)
       }
@@ -262,6 +263,7 @@ function Table() {
       const totalScore = cutNumber(account.totalScore, 2)
       rankData.push({
         accountAddress: accountAddress,
+        isValid: account.isValid,
         rank: rank,
         actionScore: actionScore,
         tradingScore: tradingScore,
@@ -272,6 +274,7 @@ function Table() {
       rankData.unshift({
         ...response.data.me,
         accountAddress: "YOU",
+        isValid: account.isValid,
         rank: response.data.me.ranking,
         actionScore: cutNumber(response.data.me.actionScore, 2),
         tradingScore: cutNumber(response.data.me.tradingScore, 2),
