@@ -108,5 +108,10 @@ export const chainInfo = {
       coinDecimals: 6
     }
   ],
-  features: ["stargate"]
+  features: ["stargate"],
+  gasPriceStep: {
+    low: 0.1,
+    average: 1,
+    high: 10
+}
 };

@@ -2,6 +2,7 @@ import { txClient } from "@starport/tendermint-liquidity-js/tendermint/liquidity
 import { mobileCheck } from "../utils/global-functions"
 import axios from "axios";
 import { chainInfo } from "./config"
+const { coins } = require("cosmjs-amm/launchpad");
 
 export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
 
@@ -41,9 +42,12 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
     }
 
     console.log(msg)
-
+    const fee = {
+        amount: coins(2000, "uatom"),
+        gas: "300000", // 180k
+      };
     try {
-        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], { fee: { amount: [], gas: "300000" } })
+        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], {fee:fee} )
         if (txBroadcastResponse.code !== undefined) {
             const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
             dispatch(getTxProcessingStatus('broadcastFail', failMsg))
