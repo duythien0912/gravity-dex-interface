@@ -14,8 +14,8 @@ const Wrapper = styled.div`
   color: #fff;
 
   .timer {
-    font-size: 16px;
-    border-left: 2px solid #fff;
+    font-size: 14px;
+    border-left: 1px solid #fff;
     margin-left: 10px;
     padding-left: 10px;
   }
@@ -42,6 +42,7 @@ const Wrapper = styled.div`
         flex-wrap: wrap;
         color: #fff !important;
         width: 100%;
+        font-size: 14px;
         cursor:pointer;
       }
   }
@@ -109,7 +110,7 @@ margin-left: 4px;
 div {
     min-width: 60px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     padding-right: 8px;
 }
 `
@@ -148,7 +149,7 @@ function HeaderTopBanner() {
         //       endsAt: "2021-05-03T23:36:00Z",
         //       startsAt: "2021-05-03T23:35:25Z",
         //       state: "Upcomings",
-        //       text: "You must verify your session through reCAPTCHA!",
+        //       text: "Attention!!! Price distortion and trading volume hike will happen in random pools soon. Search pools and take the opportunity!",
         //       url: "/price"
         //     }
         //   }
