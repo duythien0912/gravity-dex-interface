@@ -431,10 +431,9 @@ function SwapCard() {
                 swapRequesterAddress: userAddress,
                 poolId: Number(selectedPoolData.id),
                 swapTypeId: 1,
-                offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000)) },
+                offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * (1 - params?.swap_fee_rate / 2) * 1000000)) },
                 demandCoinDenom: getMinimalDenomCoin(state.toCoin),
-                offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * 1000000 * 0.001500000000000000)) },
-                // orderPrice: String((state.price * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
+                offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * (1 - params?.swap_fee_rate / 2) * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((selectedPoolPrice * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
             }
         }, reduxDispatch, { type: 'Swap', userAddress: userAddress, demandCoinDenom: getMinimalDenomCoin(state.toCoin) }
@@ -533,7 +532,7 @@ function SwapCard() {
                     </div>
                 </SwapWrapper>
             </BaseCard>
-            <div style={{height:"100px"}}></div>
+            <div style={{ height: "100px" }}></div>
             {/* {!mobileCheck() ? <SemiFoooter>
                 <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">{"T&C"}</a>
             </SemiFoooter> : ''} */}
