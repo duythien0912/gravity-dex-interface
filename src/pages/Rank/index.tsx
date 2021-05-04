@@ -309,7 +309,7 @@ function Table() {
   return (
     <Wrapper>
       <div className="result">
-        {searchResult ? searchResult !== "No" ? <div>Rank : {searchResult?.ranking} / Total Score : {searchResult.totalScore.toFixed(2)} / {searchResult.isValid}  {searchResult.isValid ? "Valid User 🤗" : "Invalid User 😂"}</div> : 'No Result  😂' : ''}
+        {searchResult ? searchResult !== "No" ? <div>Rank : {searchResult?.ranking} / Total Score : {searchResult.totalScore.toFixed(2)} / {searchResult.isValid}  {searchResult.isValid ? "Eligible User 🤗" : "Ineligible User 😂"}</div> : 'No Result  😂' : ''}
       </div>
       {tableData !== null ? <DataTable
         title={
