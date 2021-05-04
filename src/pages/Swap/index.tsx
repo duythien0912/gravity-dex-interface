@@ -184,6 +184,7 @@ function SwapCard() {
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const [selectedPoolPrice, setSelectedPoolPrice] = React.useState(null)
     const poolData = poolsInfo?.poolsData
+    console.log(poolData)
 
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',
@@ -241,7 +242,7 @@ function SwapCard() {
         const swapFeeRate = 1 - params?.swap_fee_rate / 2 || 0.9985
 
         const inputAmount = action.payload?.amount || ''
-        const realInputAmount = inputAmount  // swaprate?
+        const realInputAmount = inputAmount * swapFeeRate// swaprate?
 
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
 
