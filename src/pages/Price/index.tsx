@@ -83,7 +83,7 @@ const columns = [
 //Styled-components
 const Wrapper = styled.div`
 width: 100%;
-max-width: 1240px;
+max-width: 1340px;
 margin: 0 auto;
 
 padding: 0 30px 60px 30px;
@@ -210,35 +210,35 @@ height: auto;
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
   const history = useHistory();
-  const title = <div>Pool Price 
- <div data-tip data-for="coin-price"  data-event="click" style={{ 
-   padding: "4px 12px", 
-   display: "inline-block", 
-   marginLeft: "12px",
-   fontSize: " 15px",
-   color: "#fff",
-   backgroundColor:"#F6743C",
-   border: "1px solid #F6743C",
-   borderRadius: "20px",
-   cursor:"pointer"
-   }}>
-   Coin Price Evaluation Rule 
+  const title = <div>Pool Price
+ <div data-tip data-for="coin-price" data-event="click" style={{
+      padding: "4px 12px",
+      display: "inline-block",
+      marginLeft: "12px",
+      fontSize: " 15px",
+      color: "#fff",
+      backgroundColor: "#F6743C",
+      border: "1px solid #F6743C",
+      borderRadius: "20px",
+      cursor: "pointer"
+    }}>
+      Coin Price Evaluation Rule
   </div>
-  <ReactTooltip id="coin-price" place="bottom" type="dark" effect="solid" clickable={true}>
-    <CoinPrice>
-    <div className="title">Coin Price</div>
-    <div className="sub-title">Evaluation of tokens in USD at the end of competition</div>
+    <ReactTooltip id="coin-price" place="bottom" type="dark" effect="solid" clickable={true}>
+      <CoinPrice>
+        <div className="title">Coin Price</div>
+        <div className="sub-title">Evaluation of tokens in USD at the end of competition</div>
 
-    <div className="details">
-      <div className="detail"> - BITSONG<img src="/assets/coins/btsg.png" alt="coin"/>(BTSG), SENTINEL<img src="/assets/coins/dvpn.png" alt="coin"/>(DVPN), PERSISTENCE<img src="/assets/coins/xprt.png" alt="coin"/>(XPRT), AKASH<img src="/assets/coins/akt.png" alt="coin"/>(AKT), TERRA<img src="/assets/coins/luna.png" alt="coin"/>(LUNA), E-Money<img src="/assets/coins/ngm.png" alt="coin"/>(NGM), IRIS<img src="/assets/coins/iris.png" alt="coin"/>(IRIS), ATOM<img src="/assets/coins/atom.png" alt="coin"/>(ATOM) : <span className="bold">coinmarketcap price in USD</span></div>
-      <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin"/>(GCYB) : <span className="bold">ICO price at <a href="https://cyber.page/port/progress" target="_blank" rel="noopener noreferrer">(https://cyber.page/port/progress)</a></span></div>
-      <div className="detail"> - REGEN<img src="/assets/coins/regen.png" alt="coin"/>(REGEN), DESMOS(DSM)<img src="/assets/coins/dsm.png" alt="coin"/> :  <span className="bold">Random price generation by B-Harvest, starting at 10 USD</span></div>
-      <div className="detail"> - RUN<img src="/assets/coins/run.png" alt="coin"/>(RUN) : <span className="bold">Fixed price at 1 USD</span></div>
-      <div className="detail"> - COM<img src="/assets/coins/com.png" alt="coin"/>(COM) :  <span className="bold">1 EUR in USD</span></div>
-    </div>
-    </CoinPrice>
-  </ReactTooltip>
-  
+        <div className="details">
+          <div className="detail"> - BITSONG<img src="/assets/coins/btsg.png" alt="coin" />(BTSG), SENTINEL<img src="/assets/coins/dvpn.png" alt="coin" />(DVPN), PERSISTENCE<img src="/assets/coins/xprt.png" alt="coin" />(XPRT), AKASH<img src="/assets/coins/akt.png" alt="coin" />(AKT), TERRA<img src="/assets/coins/luna.png" alt="coin" />(LUNA), E-Money<img src="/assets/coins/ngm.png" alt="coin" />(NGM), IRIS<img src="/assets/coins/iris.png" alt="coin" />(IRIS), ATOM<img src="/assets/coins/atom.png" alt="coin" />(ATOM) : <span className="bold">coinmarketcap price in USD</span></div>
+          <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin" />(GCYB) : <span className="bold">ICO price at <a href="https://cyber.page/port/progress" target="_blank" rel="noopener noreferrer">(https://cyber.page/port/progress)</a></span></div>
+          <div className="detail"> - REGEN<img src="/assets/coins/regen.png" alt="coin" />(REGEN), DESMOS(DSM)<img src="/assets/coins/dsm.png" alt="coin" /> :  <span className="bold">Random price generation by B-Harvest, starting at 10 USD</span></div>
+          <div className="detail"> - RUN<img src="/assets/coins/run.png" alt="coin" />(RUN) : <span className="bold">Fixed price at 1 USD</span></div>
+          <div className="detail"> - COM<img src="/assets/coins/com.png" alt="coin" />(COM) :  <span className="bold">1 EUR in USD</span></div>
+        </div>
+      </CoinPrice>
+    </ReactTooltip>
+
   </div>
   // eslint-disable-next-line
 
@@ -265,7 +265,7 @@ function Table() {
         const globalRatio = pool.reserveCoins[0].globalPrice / pool.reserveCoins[1].globalPrice
         const internalRatio = pool.reserveCoins[1].amount / pool.reserveCoins[0].amount
 
-        const discrepancyRate = (globalRatio / internalRatio) - 1 > 0 ? (globalRatio / internalRatio ) - 1 : ((globalRatio / internalRatio ) - 1) * -1
+        const discrepancyRate = (globalRatio / internalRatio) - 1 > 0 ? (globalRatio / internalRatio) - 1 : ((globalRatio / internalRatio) - 1) * -1
 
         if (!isNaN(internalRatio)) {
           priceData.push({
