@@ -48,8 +48,8 @@ const columns = [
           </div>)
       }
     },
-    minWidth: "170px",
-    maxWidth: "170px"
+    minWidth: "240px",
+    maxWidth: "240px"
   },
   {
     name: 'Action Score',
@@ -163,6 +163,7 @@ padding: 0 30px 40px 30px;
 
   .account {
     padding-top: 8px;
+    text-align: left;
   }
 }
 
@@ -256,7 +257,7 @@ function Table() {
     let rankData = [];
     const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/scoreboard?address=${userAddress}`)
     response.data.accounts.forEach((account, index) => {
-      const accountAddress = <div>{account.address.substr(0, 10)}...{account.address.substr(-5)} </div>
+      const accountAddress = <div>{account.address.substr(0, 14)}...{account.address.substr(-5)} </div>
       const rank = account.ranking
       const actionScore = cutNumber(account.actionScore, 2)
       const tradingScore = cutNumber(account.tradingScore, 2)
@@ -264,6 +265,7 @@ function Table() {
       rankData.push({
         accountAddress: accountAddress,
         isValid: account.isValid,
+        username: account.username,
         rank: rank,
         actionScore: actionScore,
         tradingScore: tradingScore,
@@ -275,6 +277,7 @@ function Table() {
         ...response.data.me,
         accountAddress: "YOU",
         isValid: account.isValid,
+        username: account.username,
         rank: response.data.me.ranking,
         actionScore: cutNumber(response.data.me.actionScore, 2),
         tradingScore: cutNumber(response.data.me.tradingScore, 2),
