@@ -252,7 +252,7 @@ function Table() {
     async function getPriceData() {
       let priceData = [];
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
-
+      console.log(response.data.pools)
       response.data.pools.forEach((pool, index) => {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
@@ -265,7 +265,7 @@ function Table() {
         const globalRatio = pool.reserveCoins[0].globalPrice / pool.reserveCoins[1].globalPrice
         const internalRatio = pool.reserveCoins[1].amount / pool.reserveCoins[0].amount
 
-        const discrepancyRate = (internalRatio / globalRatio) - 1 > 0 ? (internalRatio / globalRatio) - 1 : ((internalRatio / globalRatio) - 1) * -1
+        const discrepancyRate = (globalRatio / internalRatio) - 1 > 0 ? (globalRatio / internalRatio ) - 1 : ((globalRatio / internalRatio ) - 1) * -1
 
         if (!isNaN(internalRatio)) {
           priceData.push({
