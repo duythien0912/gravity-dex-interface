@@ -60,7 +60,7 @@ const columns = [
   {
     name: <div className="column-with-tooltip">Fees &nbsp;<Tooltip text="USD value of pool swap fee earning (1 hr)" /></div>,
     selector: 'swapFee',
-    minWidth: "160px",
+    minWidth: "120px",
     sortable: true,
     format: row => `$${row.swapFee}`,
     right: true,

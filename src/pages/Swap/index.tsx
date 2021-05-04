@@ -14,6 +14,7 @@ import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, getMinimalDenomCoin } from "../../utils/global-functions"
+import { stat } from 'fs';
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -424,8 +425,17 @@ function SwapCard() {
 
 
     function swap() {
-        const slippageRange = 1 + userSlippage / 100
 
+        if (state.fromCoin === 'atom') {
+            if ((userBalances.uatom / 1000000 - state.fromAmount) < 3) {
+                if (window.confirm('🚨ALERT🚨  If you use all the atom, you can NOT make any transaction. Continue anyway?')) {
+                } else {
+                    return
+                }
+            }
+        }
+
+        const slippageRange = 1 + userSlippage / 100
         BroadcastLiquidityTx({
             type: 'msgSwap',
             data: {
