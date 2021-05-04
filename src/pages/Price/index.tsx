@@ -234,7 +234,7 @@ function Table() {
       <div className="detail"> - CYBER<img src="/assets/coins/gcyb.png" alt="coin"/>(GCYB) : <span className="bold">ICO price at <a href="https://cyber.page/port/progress" target="_blank" rel="noopener noreferrer">(https://cyber.page/port/progress)</a></span></div>
       <div className="detail"> - REGEN<img src="/assets/coins/regen.png" alt="coin"/>(REGEN), DESMOS(DSM)<img src="/assets/coins/dsm.png" alt="coin"/> :  <span className="bold">Random price generation by B-Harvest, starting at 10 USD</span></div>
       <div className="detail"> - RUN<img src="/assets/coins/run.png" alt="coin"/>(RUN) : <span className="bold">Fixed price at 1 USD</span></div>
-      <div className="detail"> - COM<img src="/assets/coins/gcyb.png" alt="coin"/> :  <span className="bold">1 EUR in USD</span></div>
+      <div className="detail"> - COM<img src="/assets/coins/com.png" alt="coin"/>(COM) :  <span className="bold">1 EUR in USD</span></div>
     </div>
     </CoinPrice>
   </ReactTooltip>
