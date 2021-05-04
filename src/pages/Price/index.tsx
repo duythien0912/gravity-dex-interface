@@ -14,43 +14,13 @@ const columns = [
   {
     name: 'Pool',
     selector: 'poolName',
+    format: (row) => {
+      return (
+        getPoolNameWithCoinImages(row.poolName)
+      )
+    },
     minWidth: "120px",
     maxWidth: "140px"
-  },
-  {
-    name: <div className="column-with-tooltip">APY &nbsp;<Tooltip text="Annual percentage yield (updated every hour)" /></div>,
-    selector: 'apy',
-    minWidth: "120px",
-    maxWidth: "120px",
-    sortable: true,
-    format: row => `${cutNumber(row.apy * 100, 2)}%`,
-    right: true,
-  },
-  {
-    name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
-    selector: 'xGlobalPrice',
-    minWidth: "160px",
-    format: row => `$${row.xGlobalPrice} ${row?.poolName?.split('-')[0]}`,
-    right: true,
-  },
-  {
-    name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on coinmarketcap" /></div>,
-    selector: 'yGlobalPrice',
-    minWidth: "160px",
-    format: row => `$${row.yGlobalPrice} ${row?.poolName?.split('-')[1]}`,
-    right: true,
-  },
-  {
-    name: <div className="column-with-tooltip">Global Price Ratio &nbsp;<Tooltip text="Price ratio calculated from global price" /></div>,
-    selector: 'globalRatio',
-    right: true,
-    minWidth: "210px"
-  },
-  {
-    name: <div className="column-with-tooltip">Internal Price Ratio &nbsp;<Tooltip text="Pool price ratio" /></div>,
-    selector: 'internalRatio',
-    minWidth: "210px",
-    right: true,
   },
   {
     name: <div className="column-with-tooltip">Arbitrage Chance &nbsp;<Tooltip text="Diversion of global ratio and internal ratio results in arbitrage chances" /></div>,
@@ -76,9 +46,52 @@ const columns = [
     },
     minWidth: "220px",
     sortable: true,
+    center: true,
+  },
+  {
+    name: <div className="column-with-tooltip">APY &nbsp;<Tooltip text="Annual percentage yield (1 hr)" /></div>,
+    selector: 'apy',
+    minWidth: "120px",
+    maxWidth: "120px",
+    sortable: true,
+    format: row => `${cutNumber(row.apy * 100, 2)}%`,
     right: true,
   },
-];
+  {
+    name: <div className="column-with-tooltip">Fees &nbsp;<Tooltip text="USD value of pool swap fee earning (1 hr)" /></div>,
+    selector: 'swapFee',
+    minWidth: "160px",
+    sortable: true,
+    format: row => `$${row.swapFee}`,
+    right: true,
+  },
+  {
+    name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on the rule" /></div>,
+    selector: 'xGlobalPrice',
+    minWidth: "160px",
+    format: row => {
+      return (
+        <div className="pair-price">
+          <div>${row.xGlobalPrice} {row?.poolName?.split('-')[0]}</div>
+          <div>${row.yGlobalPrice} {row?.poolName?.split('-')[1]}</div>
+        </div>
+      )
+    },
+    right: true,
+  },
+  {
+    name: <div className="column-with-tooltip">Global Price Ratio &nbsp;<Tooltip text="Price ratio calculated from global price" /></div>,
+    selector: 'globalRatio',
+    right: true,
+    minWidth: "210px"
+  },
+  {
+    name: <div className="column-with-tooltip">Internal Price Ratio &nbsp;<Tooltip text="Pool price ratio" /></div>,
+    selector: 'internalRatio',
+    minWidth: "210px",
+    right: true,
+  }
+]
 
 //Styled-components
 const Wrapper = styled.div`
@@ -86,11 +99,57 @@ width: 100%;
 max-width: 1340px;
 margin: 0 auto;
 
+
 padding: 0 30px 60px 30px;
 /* border-radius: 20px; */
 .table {
+  &::-webkit-scrollbar {
+  height: 8px;
+  display: block;
+}
+ 
+&::-webkit-scrollbar-track {
+  background-color:hsla(0, 3.0769230769230664%, 74.50980392156863%, 0.39);
+  border-radius: 8px;
+}
+ 
+&::-webkit-scrollbar-thumb {
+  background-color: hsla(18.064516129032256, 91.17647058823533%, 60%, 0.664);
+  border-radius: 8px;
+}
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  transform:rotateX(180deg);
+  -moz-transform:rotateX(180deg); /* Mozilla */
+  -webkit-transform:rotateX(180deg); /* Safari and Chrome */
+  -ms-transform:rotateX(180deg); /* IE 9+ */
+  -o-transform:rotateX(180deg); /* Opera */
   .rdt_Table {
     background-color: rgba(0, 0, 0, 0.5);
+    
+    transform:rotateX(180deg);
+    -moz-transform:rotateX(180deg); /* Mozilla */
+    -webkit-transform:rotateX(180deg); /* Safari and Chrome */
+    -ms-transform:rotateX(180deg); /* IE 9+ */
+    -o-transform:rotateX(180deg); /* Opera */
+
+    .pair-price {
+      padding: 10px 0;
+      text-align: right;
+      line-height: 1.6;
+    }
+    
+    .coin-image {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    .pool-name {
+      display: flex;
+      align-items: center;
+    }
    
   }
   .rdt_TableHeader, .rdt_TableHead, .rdt_TableRow, .rdt_TableHeadRow{
@@ -124,6 +183,7 @@ padding: 0 30px 60px 30px;
     font-size: 20px;
     font-weight: bold;
     padding-left: 0;
+    margin-bottom: 12px;
   }
 
 .tradingButton {
@@ -151,7 +211,7 @@ padding: 0 30px 60px 30px;
 
 .rdt_TableRow:hover {
 outline: none;
-border: none;
+border-bottom: 1px solid transparent;
 background-color: hsla(36, 100%, 50%, 0.295) !important;
 }
 
@@ -204,6 +264,20 @@ height: auto;
   }
 }
 `
+
+//helpers 
+function getPoolNameWithCoinImages(poolName) {
+  if (!poolName) return 'Loading'
+  const coins = poolName.toLowerCase()?.split('-')
+  console.log(coins)
+  return (
+    <div className="pool-name">
+      <img src={`/assets/coins/${coins[0]}.png`} alt="pool coin A" className="coin-image" />
+      <img src={`/assets/coins/${coins[1]}.png`} alt="pool coin B" className="coin-image" />
+      {poolName}
+    </div>
+  )
+}
 
 
 
@@ -265,12 +339,15 @@ function Table() {
         const globalRatio = pool.reserveCoins[0].globalPrice / pool.reserveCoins[1].globalPrice
         const internalRatio = pool.reserveCoins[1].amount / pool.reserveCoins[0].amount
 
+        const swapFee = Math.ceil((apy / (24 * 365)) * pool.poolCoin.amount * pool.poolCoin.globalPrice * 100) / 100
+
         const discrepancyRate = (globalRatio / internalRatio) - 1 > 0 ? (globalRatio / internalRatio) - 1 : ((globalRatio / internalRatio) - 1) * -1
 
         if (!isNaN(internalRatio)) {
           priceData.push({
             id: index,
             poolName: poolName,
+            swapFee: swapFee,
             apy: apy,
             xGlobalPrice: xGlobalPrice,
             yGlobalPrice: yGlobalPrice,
