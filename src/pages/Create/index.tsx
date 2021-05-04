@@ -21,9 +21,9 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%; */
    
-margin-top: -50px;
-margin-bottom: 50px;
-  width: 100%;
+    margin-top: -50px;
+    margin-bottom: 50px;
+    width: 100%;
 
   @media(max-width: 500px) {
     margin-top: -10px;

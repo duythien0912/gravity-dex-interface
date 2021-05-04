@@ -14,7 +14,6 @@ import { cosmosSelector } from "../../modules/cosmosRest/slice"
 import { liquiditySelector } from "../../modules/liquidityRest/slice"
 import { BroadcastLiquidityTx } from "../../cosmos-amm/tx-client.js"
 import { getSelectedPairsPoolData, getPoolPrice, cutNumber, calculateSlippage, getMinimalDenomCoin } from "../../utils/global-functions"
-import { stat } from 'fs';
 
 //Styled-components
 const SwapWrapper = styled.div`
@@ -321,9 +320,9 @@ function SwapCard() {
 
             case TYPES.SET_MAX_AMOUNT:
                 setAmountCheckVariables()
-                console.log(state[`${counterTargetPair}Coin`])
 
-                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: state[`${counterTargetPair}Coin`] ? (cutNumber(counterPairAmount, 6)) : '', status: getStatus(state) }
+                const maxSlippage = calculateSlippage((realInputAmount * 1000000), selectedPoolData?.reserve_coin_balances[getMinimalDenomCoin(state[`${targetPair}Coin`])])
+                return { ...state, [`${targetPair}Amount`]: inputAmount, [`${counterTargetPair}Amount`]: state[`${counterTargetPair}Coin`] ? (cutNumber(counterPairAmount, 6)) : '', status: getStatus(state), slippage: maxSlippage }
 
             case TYPES.SELECT_COIN:
                 const coinA = state[`${counterTargetPair}Coin`]
@@ -427,7 +426,7 @@ function SwapCard() {
     function swap() {
 
         if (state.fromCoin === 'atom') {
-            if ((userBalances.uatom / 1000000 - state.fromAmount) < 3) {
+            if ((userBalances.uatom / 1000000 - state.fromAmount) < 2) {
                 if (window.confirm('🚨ALERT🚨  If you use all the atom, you can NOT make any transaction. Continue anyway?')) {
                 } else {
                     return
