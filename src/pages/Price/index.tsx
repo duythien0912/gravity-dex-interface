@@ -270,7 +270,7 @@ height: auto;
 function getPoolNameWithCoinImages(poolName) {
   if (!poolName) return 'Loading'
   const coins = poolName.toLowerCase()?.split('-')
-  console.log(coins)
+  // console.log(coins)
   return (
     <div className="pool-name">
       <img src={`/assets/coins/${coins[0]}.png`} alt="pool coin A" className="coin-image" />
@@ -327,7 +327,7 @@ function Table() {
     async function getPriceData() {
       let priceData = [];
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
-      console.log(response.data.pools)
+      // console.log(response.data.pools)
       response.data.pools.forEach((pool, index) => {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
