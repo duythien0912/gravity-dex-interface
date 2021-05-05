@@ -184,7 +184,6 @@ function SwapCard() {
     const [selectedPoolData, setSelectedPoolData] = React.useState(null)
     const [selectedPoolPrice, setSelectedPoolPrice] = React.useState(null)
     const poolData = poolsInfo?.poolsData
-    console.log(poolData)
 
     const [state, dispatch] = React.useReducer(reducer, {
         fromCoin: 'atom',

@@ -69,14 +69,7 @@ const columns = [
     name: <div className="column-with-tooltip">Global Price &nbsp;<Tooltip text="USD price on the rule" /></div>,
     selector: 'xGlobalPrice',
     minWidth: "160px",
-    format: row => {
-      return (
-        <div className="pair-price">
-          <div>${row.xGlobalPrice} {row?.poolName?.split('-')[0]}</div>
-          <div>${row.yGlobalPrice} {row?.poolName?.split('-')[1]}</div>
-        </div>
-      )
-    },
+
     right: true,
   },
   {
@@ -144,7 +137,7 @@ padding: 0 30px;
     .pair-price {
       padding: 10px 0;
       text-align: right;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     
     .coin-image {
@@ -163,6 +156,10 @@ padding: 0 30px;
   .rdt_TableHeader, .rdt_TableHead, .rdt_TableRow, .rdt_TableHeadRow{
     background-color: transparent;
     color: #fff !important;
+  }
+
+  .rdt_TableRow {
+    min-height: 56px;
   }
 
   .rdt_TableHead {
@@ -239,6 +236,7 @@ padding: 0 30px;
 .rdt_TableRow:hover {
 outline: none;
 border-bottom: 1px solid transparent;
+
 background-color: hsla(36, 100%, 50%, 0.295) !important;
 }
 
@@ -298,7 +296,7 @@ function getPoolNameWithCoinImages(poolName) {
   const coins = poolName.toLowerCase()?.split('-')
   // console.log(coins)
   return (
-    <div className="pool-name">
+    <div className="pool-name"  >
       <img src={`/assets/coins/${coins[0]}.png`} alt="pool coin A" className="coin-image" />
       <img src={`/assets/coins/${coins[1]}.png`} alt="pool coin B" className="coin-image" />
       &nbsp;{poolName}
@@ -306,11 +304,10 @@ function getPoolNameWithCoinImages(poolName) {
   )
 }
 
-
-
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
   const history = useHistory();
+
   const title = <div>Pool Price
  <div data-tip data-for="coin-price" data-event="click" style={{
       padding: "4px 12px",
@@ -376,10 +373,28 @@ function Table() {
             poolName: poolName,
             swapFee: swapFee,
             apy: apy,
-            xGlobalPrice: xGlobalPrice,
+            xGlobalPrice: (<div className="pair-price" onClick={() => {
+              goSwapPage(poolName)
+            }}>
+              <div>${xGlobalPrice} {poolName?.split('-')[0]}</div>
+              <div>${yGlobalPrice} {poolName?.split('-')[1]}</div>
+            </div>),
             yGlobalPrice: yGlobalPrice,
-            globalRatio: `${cutNumber(globalRatio, 4)} ${yCoinName} per ${xCoinName}`,
-            internalRatio: `${cutNumber(internalRatio, 4)} ${yCoinName} per ${xCoinName}`,
+            globalRatio: (
+              <div className="pair-price" onClick={() => {
+                goSwapPage(poolName)
+              }}>
+                <div>{cutNumber(globalRatio, 4)} {yCoinName} per {xCoinName}</div>
+                <div>{cutNumber(1 / globalRatio, 4)} {xCoinName} per {yCoinName}</div>
+              </div>),
+            internalRatio: (
+              <div className="pair-price" onClick={() => {
+                goSwapPage(poolName)
+              }}>
+                <div>{cutNumber(internalRatio, 4)} {yCoinName} per {xCoinName}</div>
+                <div>{cutNumber(1 / internalRatio, 4)} {xCoinName} per {yCoinName}</div>
+              </div>
+            ),
             discrepancyRate: Number(`${cutNumber(discrepancyRate * 100, 2)}`),
             history: history
           })
@@ -387,8 +402,15 @@ function Table() {
       })
 
       setTableData(priceData)
-    }
 
+      //helper
+      function goSwapPage(poolName) {
+        const pairA = poolName?.split('-')[0].toLowerCase()
+        const pairB = poolName?.split('-')[1].toLowerCase()
+        history.push(`/swap?from=${pairA}&to=${pairB}`)
+      }
+
+    }
     return () => clearInterval(intervalId)
   }, [history])
 
