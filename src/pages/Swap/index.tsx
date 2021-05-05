@@ -240,7 +240,7 @@ function SwapCard() {
         const { targetPair, counterTargetPair } = getPairs(action)
         const swapFeeRate = 1 - params?.swap_fee_rate / 2 || 0.9985
 
-        const inputAmount = action.payload?.amount || ''
+        const inputAmount = (Number(action.payload?.amount) < 0 ? Number(action.payload?.amount) * -1 : action.payload?.amount) || ''
         const realInputAmount = inputAmount * swapFeeRate// swaprate?
 
         const selectedPairMyBalance = userBalances[state[`${targetPair}Coin`]]
