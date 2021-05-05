@@ -316,8 +316,8 @@ function AddLiquidityCard() {
                 depositorAddress: userAddress,
                 poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                 depositCoins: [
-                    { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(Number(Number(isReverse ? state.toAmount : state.fromAmount).toFixed(6)) * 1000000) },
-                    { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(Number(Number(isReverse ? state.fromAmount : state.toAmount).toFixed(6)) * 1000000) },
+                    { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(Math.ceil(Number(Number(isReverse ? state.toAmount : state.fromAmount).toFixed(6)) * 1000000)) },
+                    { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(Math.ceil(Number(Number(isReverse ? state.fromAmount : state.toAmount).toFixed(6)) * 1000000)) },
                 ]
             }
         }, storeDispatch, { type: 'Add Liquidity', userAddress: userAddress })
