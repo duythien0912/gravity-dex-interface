@@ -344,17 +344,27 @@ function getPoolNameWithCoinImages(poolName) {
 
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: '', }])
-  const [searchWord, setSearchWord] = React.useState('')
+  const [searchWord, setSearchWord] = React.useState([])
   const history = useHistory();
 
   function getCoinNameWithImage(coin) {
     if (coin === "all") {
-      return (<div className={`coin ${searchWord === '' ? 'selected' : ''}`} onClick={() => {
-        setSearchWord('')
+      return (<div className={`coin ${searchWord.length === 0 ? 'selected' : ''}`} onClick={() => {
+        setSearchWord([])
       }}>{coin.toUpperCase()}</div>)
     }
-    return (<div className={`coin ${searchWord === coin.toUpperCase() ? 'selected' : ''}`} onClick={() => {
-      setSearchWord(coin.toUpperCase())
+
+    return (<div className={`coin ${searchWord.includes(coin.toUpperCase()) ? 'selected' : ''}`} onClick={() => {
+      let index = searchWord.indexOf(coin.toUpperCase())
+      if (index !== -1) {
+        setSearchWord(a => {
+          let newArray = [...a]
+          newArray.splice(index, 1)
+          return newArray
+        })
+        return
+      }
+      setSearchWord(a => [...a, coin.toUpperCase()])
     }}><img src={`/assets/coins/${coin}.png`} alt="search pool" /> {coin.toUpperCase()}</div>)
   }
 
@@ -423,10 +433,15 @@ function Table() {
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
         const poolName = `${xCoinName}-${yCoinName}`
-        console.log(searchWord)
-        if (!poolName.includes(searchWord)) {
-          return
+
+        if (searchWord.length !== 0) {
+          if (searchWord.includes(xCoinName) || searchWord.includes(yCoinName)) {
+            // console.log('render', poolName)
+          } else {
+            return
+          }
         }
+
 
         const apy = pool.apy
 
