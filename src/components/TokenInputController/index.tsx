@@ -185,8 +185,7 @@ function TokenInputController({ header, amount, coin, counterPair, dispatch, dis
                         className="left"
                         value={amount}
                         onChange={(e) => {
-                            const value = Number(e.target.value) < 0 ? -1 * Number(e.target.value) : Number(e.target.value)
-                            dispatch({ type: dispatchTypes.amount, payload: { target: header.title, amount: String(value) } })
+                            dispatch({ type: dispatchTypes.amount, payload: { target: header.title, amount: e.target.value } })
                         }}
                         placeholder="0.0"
                         type="number" />
