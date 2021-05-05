@@ -440,7 +440,7 @@ function SwapCard() {
                 swapRequesterAddress: userAddress,
                 poolId: Number(selectedPoolData.id),
                 swapTypeId: 1,
-                offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * (1 - params?.swap_fee_rate / 2) * 1000000)) },
+                offerCoin: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(Number(cutNumber(state.fromAmount, 6)) * (1 - params?.swap_fee_rate / 2) * 1000000)) },
                 demandCoinDenom: getMinimalDenomCoin(state.toCoin),
                 offerCoinFee: { denom: getMinimalDenomCoin(state.fromCoin), amount: String(Math.floor(state.fromAmount * (1 - params?.swap_fee_rate / 2) * 1000000 * 0.001500000000000000)) },
                 orderPrice: String((selectedPoolPrice * (state.isReverse ? 2 - slippageRange : slippageRange)).toFixed(18).replace('.', '').replace(/(^0+)/, ""))
