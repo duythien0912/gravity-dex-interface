@@ -181,19 +181,19 @@ function HeaderTopBanner() {
     getBannerData()
     setInterval(() => {
       getBannerData()
-    }, 30000)
+    }, 300000)
   }, [])
 
   const counter = React.useMemo(() => {
     if (remainingTime > 0 && !mobileCheck()) {
       return (
         <>
-        <div className="timer">Time Remaining - </div>
-        <Countdown
-          date={Date.now() + remainingTime}
-          renderer={renderer}
-        />
-      </>)
+          <div className="timer">Time Remaining - </div>
+          <Countdown
+            date={Date.now() + remainingTime}
+            renderer={renderer}
+          />
+        </>)
     } else {
       return ''
     }
