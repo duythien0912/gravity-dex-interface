@@ -316,6 +316,9 @@ function getResultMessage(type, result) {
                     )
             }
         } else {
+            if (String(result.data).includes('object')) {
+                return <div>Please increase a slippage!(gear button)</div>
+            }
             return <div>{String(result.data)}</div>
         }
     }
