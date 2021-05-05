@@ -19,8 +19,8 @@ const columns = [
         getPoolNameWithCoinImages(row.poolName)
       )
     },
-    minWidth: "150px",
-    maxWidth: "150px"
+    minWidth: "154px",
+    maxWidth: "154px"
   },
   {
     name: <div className="column-with-tooltip">Arbitrage Chance &nbsp;<Tooltip text="Diversion of global ratio and internal ratio results in arbitrage chances" /></div>,
@@ -125,7 +125,7 @@ padding: 0 30px;
     
   .rdt_Table {
     background-color: rgba(0, 0, 0, 0.5);
-    max-height: 75vh;
+    max-height: 73vh;
 
     
     /* transform:rotateX(180deg);
@@ -189,6 +189,10 @@ padding: 0 30px;
     font-weight: bold;
     padding-left: 0;
     margin-bottom: 12px;
+
+   & > div {
+     width: 100%;
+   }
   }
 
 .tradingButton {
@@ -290,6 +294,40 @@ height: auto;
 }
 `
 
+const PoolSelector = styled.div`
+display: flex;
+
+max-width: 1172px;
+flex-wrap: wrap;
+.coin {
+  margin-top: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid gray;
+  border-radius: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: rgb(246, 116, 60);
+  }
+  
+  img {
+    background-color: #fff;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
+  }
+}
+
+.selected {
+  border-color: rgb(246, 116, 60) !important;
+}
+`
+
 //helpers 
 function getPoolNameWithCoinImages(poolName) {
   if (!poolName) return 'Loading'
@@ -305,10 +343,22 @@ function getPoolNameWithCoinImages(poolName) {
 }
 
 function Table() {
-  const [tableData, setTableData] = React.useState([{ id: 1, title: 'Conan the Barbarian', year: '1982' }])
+  const [tableData, setTableData] = React.useState([{ id: 1, title: '', }])
+  const [searchWord, setSearchWord] = React.useState('')
   const history = useHistory();
 
-  const title = <div>Pool Price
+  function getCoinNameWithImage(coin) {
+    if (coin === "all") {
+      return (<div className={`coin ${searchWord === '' ? 'selected' : ''}`} onClick={() => {
+        setSearchWord('')
+      }}>{coin.toUpperCase()}</div>)
+    }
+    return (<div className={`coin ${searchWord === coin.toUpperCase() ? 'selected' : ''}`} onClick={() => {
+      setSearchWord(coin.toUpperCase())
+    }}><img src={`/assets/coins/${coin}.png`} alt="search pool" /> {coin.toUpperCase()}</div>)
+  }
+
+  const title = <div style={{ maxWidth: "1172px" }}>Pool Price
  <div data-tip data-for="coin-price" data-event="click" style={{
       padding: "4px 12px",
       display: "inline-block",
@@ -337,6 +387,23 @@ function Table() {
       </CoinPrice>
     </ReactTooltip>
 
+    <PoolSelector>
+      {getCoinNameWithImage('all')}
+      {getCoinNameWithImage('atom')}
+      {getCoinNameWithImage('akt')}
+      {getCoinNameWithImage('btsg')}
+      {getCoinNameWithImage('com')}
+      {getCoinNameWithImage('dsm')}
+      {getCoinNameWithImage('dvpn')}
+      {getCoinNameWithImage('gcyb')}
+      {getCoinNameWithImage('iris')}
+      {getCoinNameWithImage('luna')}
+      {getCoinNameWithImage('ngm')}
+      {getCoinNameWithImage('xprt')}
+      {getCoinNameWithImage('run')}
+      {getCoinNameWithImage('regen')}
+
+    </PoolSelector>
   </div>
   // eslint-disable-next-line
 
@@ -352,9 +419,15 @@ function Table() {
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
       // console.log(response.data.pools)
       response.data.pools.forEach((pool, index) => {
+
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
         const yCoinName = `${pool.reserveCoins[1].denom.substr(1).toUpperCase()}`
         const poolName = `${xCoinName}-${yCoinName}`
+        console.log(searchWord)
+        if (!poolName.includes(searchWord)) {
+          return
+        }
+
         const apy = pool.apy
 
         const xGlobalPrice = Number(cutNumber(pool.reserveCoins[0].globalPrice * 1000000, 4))
@@ -412,7 +485,7 @@ function Table() {
 
     }
     return () => clearInterval(intervalId)
-  }, [history])
+  }, [history, searchWord])
 
   return (
     <Wrapper>
