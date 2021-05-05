@@ -99,14 +99,14 @@ width: 100%;
 max-width: 1340px;
 margin: 0 auto;
 
-
-padding: 0 30px 60px 30px;
+padding: 0 30px;
 /* border-radius: 20px; */
 .table {
+  
   &::-webkit-scrollbar {
-  height: 8px;
-  display: block;
-}
+    height: 10px;
+    display: block;
+  }
  
 &::-webkit-scrollbar-track {
   background-color:hsla(0, 3.0769230769230664%, 74.50980392156863%, 0.39);
@@ -116,23 +116,30 @@ padding: 0 30px 60px 30px;
 &::-webkit-scrollbar-thumb {
   background-color: hsla(18.064516129032256, 91.17647058823533%, 60%, 0.664);
   border-radius: 8px;
+
+  &:hover {
+    background-color: rgb(246, 116, 60);
+  }
 }
   padding-bottom: 10px;
   margin-bottom: 10px;
 
-  transform:rotateX(180deg);
-  -moz-transform:rotateX(180deg); /* Mozilla */
-  -webkit-transform:rotateX(180deg); /* Safari and Chrome */
-  -ms-transform:rotateX(180deg); /* IE 9+ */
-  -o-transform:rotateX(180deg); /* Opera */
+    /* transform:rotateX(180deg);
+    -moz-transform:rotateX(180deg); 
+    -webkit-transform:rotateX(180deg); 
+    -ms-transform:rotateX(180deg);
+    -o-transform:rotateX(180deg); */
+    
   .rdt_Table {
     background-color: rgba(0, 0, 0, 0.5);
+    max-height: 75vh;
+
     
-    transform:rotateX(180deg);
-    -moz-transform:rotateX(180deg); /* Mozilla */
-    -webkit-transform:rotateX(180deg); /* Safari and Chrome */
-    -ms-transform:rotateX(180deg); /* IE 9+ */
-    -o-transform:rotateX(180deg); /* Opera */
+    /* transform:rotateX(180deg);
+    -moz-transform:rotateX(180deg); 
+    -webkit-transform:rotateX(180deg); 
+    -ms-transform:rotateX(180deg);
+    -o-transform:rotateX(180deg); */
 
     .pair-price {
       padding: 10px 0;
@@ -208,6 +215,25 @@ padding: 0 30px 60px 30px;
 .rdt_TableBody {
   max-height: 100%;
   height: 100%;
+
+  &::-webkit-scrollbar {
+   width: 10px;
+    display: block;
+  }
+ 
+&::-webkit-scrollbar-track {
+  background-color:hsla(0, 3.0769230769230664%, 74.50980392156863%, 0.39);
+  border-radius: 8px;
+}
+ 
+&::-webkit-scrollbar-thumb {
+  background-color: hsla(18.064516129032256, 91.17647058823533%, 60%, 0.664);
+  border-radius: 8px;
+  
+  &:hover {
+    background-color: rgb(246, 116, 60);
+  }
+}
 }
 
 .rdt_TableRow:hover {
