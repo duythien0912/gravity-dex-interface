@@ -179,8 +179,7 @@ function AddLiquidityCard() {
     //reducer for useReducer
     function reducer(state, action) {
         const { targetPair, counterTargetPair } = getPairs(action)
-
-        const selectedPairAmount = action.payload?.amount || ''
+        const selectedPairAmount = (Number(action.payload?.amount) < 0 ? Number(action.payload?.amount) * -1 : action.payload?.amount) || ''
 
         const selectedPairUserBalances = userBalances[getMinimalDenomCoin(state[`${targetPair}Coin`])] / 1000000
         const counterPairUserBalances = userBalances[getMinimalDenomCoin(state[`${counterTargetPair}Coin`])] / 1000000
@@ -317,8 +316,8 @@ function AddLiquidityCard() {
                 depositorAddress: userAddress,
                 poolId: Number(poolsData[`${sortedCoins[0]}/${sortedCoins[1]}`].id),
                 depositCoins: [
-                    { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(isReverse ? state.toAmount * 1000000 : state.fromAmount * 1000000) },
-                    { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(isReverse ? state.fromAmount * 1000000 : state.toAmount * 1000000) },
+                    { denom: getMinimalDenomCoin(isReverse ? state.toCoin : state.fromCoin), amount: String(Number(Number(isReverse ? state.toAmount : state.fromAmount).toFixed(6)) * 1000000) },
+                    { denom: getMinimalDenomCoin(isReverse ? state.fromCoin : state.toCoin), amount: String(Number(Number(isReverse ? state.fromAmount : state.toAmount).toFixed(6)) * 1000000) },
                 ]
             }
         }, storeDispatch, { type: 'Add Liquidity', userAddress: userAddress })
