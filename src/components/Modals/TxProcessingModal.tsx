@@ -316,6 +316,9 @@ function getResultMessage(type, result) {
                     )
             }
         } else {
+            if (result?.data?.depositor?.startsWith('cosmos')) {
+                return <div>Please increase add liquidity amount!</div>
+            }
             if (String(result.data).includes('object')) {
                 return <div>Please increase a slippage!(gear button)</div>
             }
