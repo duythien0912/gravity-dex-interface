@@ -45,9 +45,9 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
     const fee = {
         amount: coins(2000, "uatom"),
         gas: "300000", // 180k
-      };
+    };
     try {
-        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], {fee:fee, memo:"competition-keplr"} )
+        const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], { fee: fee, memo: "competition-keplr" })
         if (txBroadcastResponse.code !== undefined) {
             const failMsg = { type: data.type, resultData: txBroadcastResponse.rawLog }
             dispatch(getTxProcessingStatus('broadcastFail', failMsg))
@@ -165,5 +165,14 @@ function getEndBlockChecks(data) {
 
     if (data.type === "Add Liquidity") {
         return { type: "deposit_to_pool", txAddress: 'depositor', userAddress: data.userAddress }
+    }
+}
+
+export async function getBlockHeight() {
+    try {
+        const response = await axios.get(`${chainInfo.rpc}/abci_info`)
+        return response.data.result.response.last_block_height
+    } catch (e) {
+        console.log(e)
     }
 }

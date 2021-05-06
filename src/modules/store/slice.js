@@ -7,7 +7,7 @@ const initialState = {
         userSlippage: 3,
         walletStatus: 'normal' // normal, pending, error
     },
-
+    blockHeight: null,
     priceData: {
         atom: 1,
         iris: 2,
@@ -39,6 +39,9 @@ const reducers = {
     },
     setCoinPrices: (state, action) => {
         state.priceData = action.payload.prices
+    },
+    setBlockHeight: (state, action) => {
+        state.blockHeight = action.payload.blockHeight
     }
 }
 
@@ -53,8 +56,9 @@ const selectAllState = createSelector(
     state => state.isWallet,
     state => state.isTxModal,
     state => state.txModalData,
-    (userData, priceData, poolsData, isWallet, isTxModal, txModalData) => {
-        return { userData, priceData, poolsData, isWallet, isTxModal, txModalData };
+    state => state.blockHeight,
+    (userData, priceData, poolsData, isWallet, isTxModal, txModalData, blockHeight) => {
+        return { userData, priceData, poolsData, isWallet, isTxModal, txModalData, blockHeight };
     }
 );
 

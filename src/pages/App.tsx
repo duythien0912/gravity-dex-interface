@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import { Route, Switch, useHistory } from 'react-router-dom'
 import { ToastContainer, Flip } from "react-toastify";
+import { getBlockHeight } from "../cosmos-amm/tx-client.js"
 
 import TopBanner from "../components/Banners/HeaderTopBanner"
 import AppHeader from "../components/Header"
@@ -82,40 +83,47 @@ function App() {
       dispatch({ type: 'store/setCoinPrices', payload: { prices: prices.data.prices } })
     }
 
+    async function setBlockHeight() {
+      const height = await getBlockHeight()
+      dispatch({ type: 'store/setBlockHeight', payload: { blockHeight: height } })
+    }
+
     if (window.location.hash === '#/') {
       history.push('/swap')
     }
 
     dispatch(requestQueryParams())
 
-    const visibilityChecker = (function(){
+    const visibilityChecker = (function () {
       let stateKey, eventKey, keys = {
-          hidden: "visibilitychange",
-          webkitHidden: "webkitvisibilitychange",
-          mozHidden: "mozvisibilitychange",
-          msHidden: "msvisibilitychange"
+        hidden: "visibilitychange",
+        webkitHidden: "webkitvisibilitychange",
+        mozHidden: "mozvisibilitychange",
+        msHidden: "msvisibilitychange"
       };
       for (stateKey in keys) {
-          if (stateKey in document) {
-              eventKey = keys[stateKey];
-              break;
-          }
+        if (stateKey in document) {
+          eventKey = keys[stateKey];
+          break;
+        }
       }
-      return function(c?) {
-          if (c) document.addEventListener(eventKey, c);
-          return !document[stateKey];
+      return function (c?) {
+        if (c) document.addEventListener(eventKey, c);
+        return !document[stateKey];
       }
-  })();
+    })();
 
     setInterval(() => {
-      if(visibilityChecker()) {
+      if (visibilityChecker()) {
         dispatch(requestQueryLiquidityPools())
         setCoinPrices()
-      } 
+        setBlockHeight()
+      }
     }, 7000)
 
     dispatch(requestQueryLiquidityPools())
     setCoinPrices()
+    setBlockHeight()
   }, [history, dispatch])
 
 

@@ -3,8 +3,11 @@ import * as React from 'react'
 import styled from "styled-components"
 import { cutNumber } from "../../utils/global-functions"
 import { useHistory } from 'react-router-dom'
+import { useSelector } from "react-redux";
 import { chainInfo } from "../../cosmos-amm/config"
 import ReactTooltip from 'react-tooltip';
+import { storeSelector } from "../../modules/store/slice"
+
 import Tooltip from "../../components/Tooltips/QuestionMarkTooltip"
 
 import DataTable from 'react-data-table-component';
@@ -339,6 +342,52 @@ flex-wrap: wrap;
 }
 `
 
+const AlertAnimation = styled.div`
+display: inline-block;
+.spinner {
+  width: 18px;
+  height: 18px;
+
+  position: relative;
+  margin-left: 6px;
+  /* margin: 100px auto; */
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgb(240, 29, 29);
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+`
+
 //helpers 
 function getPoolNameWithCoinImages(poolName) {
   if (!poolName) return 'Loading'
@@ -356,6 +405,9 @@ function getPoolNameWithCoinImages(poolName) {
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: '', }])
   const [searchWord, setSearchWord] = React.useState([])
+  const [priceNodeBlockHeight, setPriceNodeBlockHeight] = React.useState(null)
+  const { blockHeight } = useSelector(storeSelector.all);
+  const HeightGap = Number(blockHeight) - Number(priceNodeBlockHeight)
   const history = useHistory();
 
   function getCoinNameWithImage(coin) {
@@ -407,6 +459,48 @@ function Table() {
         </div>
       </CoinPrice>
     </ReactTooltip>
+    {HeightGap >= 7 ? (
+      <><div data-tip data-for="coin-price" style={{
+        padding: "4px 12px",
+        display: "inline-flex",
+        alignItems: "center",
+        marginLeft: "12px",
+        fontSize: " 15px",
+        color: "#fd1e1e",
+        backgroundColor: "hsla(0, 68.97959183673468%, 48.03921568627451%, 0.199)",
+        border: "1px solid #cf2626",
+        borderRadius: "20px",
+        cursor: "pointer"
+      }}>
+        Delayed Price Data
+
+      <AlertAnimation>
+          <div className="spinner">
+            <div className="double-bounce1"></div>
+            <div className="double-bounce2"></div>
+          </div>
+        </AlertAnimation>
+
+      </div>
+        <ReactTooltip id="coin-price" place="bottom" type="dark" effect="solid" >
+          <CoinPrice>
+            <div className="title">
+              Network delay occurs
+            </div>
+
+            <div className="details" style={{ fontSize: "15px" }}>
+              There may be distortions in the price due to current network delays.
+              <br />
+              <br />
+              Please check the internal price again on the swap page and trade carefully.
+              <br />
+              <br />
+              <div>Liquidity Node Height: {blockHeight}</div>
+              <div>Price Node Height: {priceNodeBlockHeight}</div>
+              <div>Estimated delay: {4 * HeightGap}s / {HeightGap} blocks</div>
+            </div>
+          </CoinPrice>
+        </ReactTooltip></>) : ''}
 
     <PoolSelector>
       {getCoinNameWithImage('all')}
@@ -437,7 +531,7 @@ function Table() {
     async function getPriceData() {
       let priceData = [];
       const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/pools`)
-      // console.log(response.data.pools)
+      setPriceNodeBlockHeight(response.data.blockHeight)
       response.data.pools.forEach((pool, index) => {
 
         const xCoinName = `${pool.reserveCoins[0].denom.substr(1).toUpperCase()}`
