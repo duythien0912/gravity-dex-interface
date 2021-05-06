@@ -23,11 +23,11 @@ const columns = [
       }
     }
     ,
-    minWidth: "40px",
-    maxWidth: "60px"
+    minWidth: "100px",
+    maxWidth: "100px"
   },
   {
-    name: <div style={{paddingLeft: "40px"}}>Account</div>,
+    name: <div style={{ paddingLeft: "40px" }}>Account</div>,
     selector: 'accountAddress',
     left: true,
     // sortable: true,
@@ -35,10 +35,10 @@ const columns = [
       if (row.accountAddress !== "YOU") {
         return (
           <div className="my-info">
-          <div className="user"><div className="user-name">{row.username ? row.username : 'Trader'}</div><div className="is-valid">({row.isValid ? <span className="green">Eligible</span> : <span className="red">Ineligible</span>})</div> </div>
-          <div className="account">{row.accountAddress}</div>
+            <div className="user"><div className="user-name">{row.username ? row.username : 'Trader'}</div><div className="is-valid">({row.isValid ? <span className="green">Eligible</span> : <span className="red">Ineligible</span>})</div> </div>
+            <div className="account">{row.accountAddress}</div>
           </div>
-      )
+        )
       } else {
         console.log(row.isValid)
         return (
@@ -273,11 +273,12 @@ function Table() {
       })
     })
     if (response.data.me) {
+      console.log(response.data.me)
       rankData.unshift({
         ...response.data.me,
         accountAddress: "YOU",
-        isValid: account.isValid,
-        username: account.username,
+        isValid: response.data.me.isValid,
+        username: response.data.me.username,
         rank: response.data.me.ranking,
         actionScore: cutNumber(response.data.me.actionScore, 2),
         tradingScore: cutNumber(response.data.me.tradingScore, 2),
