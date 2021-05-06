@@ -41,7 +41,14 @@ const columns = [
         isBold = true
       }
 
-      return <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
+      return (
+      <div onClick={() => {
+        row.goSwapPage(`${row.sellCoin}-${row.buyCoin}`)
+      }} style={{textAlign: "center"}}>
+      <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
+      <div style={{marginTop: "4px"}}> <span style={{color:"rgb(2, 192, 118)", fontWeight:"bold"}}>Buy</span> {row.buyCoin} / <span style={{ color: "rgb(248, 73, 96)", fontWeight:"bold"}}>Sell</span> {row.sellCoin}</div>
+      </div>
+      )
 
     },
     minWidth: "220px",
@@ -412,7 +419,6 @@ function Table() {
       {getCoinNameWithImage('xprt')}
       {getCoinNameWithImage('run')}
       {getCoinNameWithImage('regen')}
-
     </PoolSelector>
   </div>
   // eslint-disable-next-line
@@ -454,12 +460,27 @@ function Table() {
         const swapFee = Math.ceil((apy / (24 * 365)) * pool.poolCoin.amount * pool.poolCoin.globalPrice * 100) / 100
 
         const discrepancyRate = (globalRatio / internalRatio) - 1 > 0 ? (globalRatio / internalRatio) - 1 : ((globalRatio / internalRatio) - 1) * -1
+        let buyCoin = null
+        let sellCoin = null
+        //TEST-CODE
+          if(globalRatio > internalRatio) {
+            console.log(poolName, "global 비쌈")
+            console.log(`buy ${xCoinName} sell ${yCoinName}`)
+            buyCoin = xCoinName
+            sellCoin = yCoinName
+          } else {
+            buyCoin = yCoinName
+            sellCoin = xCoinName
+          }
+        //TEST-CODE
 
         if (!isNaN(internalRatio)) {
           priceData.push({
             id: index,
             poolName: poolName,
             swapFee: swapFee,
+            buyCoin: buyCoin,
+            sellCoin: sellCoin,
             apy: apy,
             xGlobalPrice: (<div className="pair-price" onClick={() => {
               goSwapPage(poolName)
@@ -484,7 +505,8 @@ function Table() {
               </div>
             ),
             discrepancyRate: Number(`${cutNumber(discrepancyRate * 100, 2)}`),
-            history: history
+            history: history,
+            goSwapPage: goSwapPage
           })
         }
       })
@@ -510,9 +532,7 @@ function Table() {
         defaultSortField="discrepancyRate"
         defaultSortAsc={false}
         onRowClicked={(row) => {
-          const pairA = row?.poolName?.split('-')[0].toLowerCase()
-          const pairB = row?.poolName?.split('-')[1].toLowerCase()
-          row.history.push(`/swap?from=${pairA}&to=${pairB}`)
+          row.history.push(`/swap?from=${row.sellCoin}&to=${row.buyCoin}`)
         }}
         pointerOnHover={true}
         highlightOnHover={true}
