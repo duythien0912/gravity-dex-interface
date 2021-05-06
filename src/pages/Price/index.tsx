@@ -16,7 +16,11 @@ const columns = [
     selector: 'poolName',
     format: (row) => {
       return (
-        getPoolNameWithCoinImages(row.poolName)
+        <div onClick={() => {
+          row.goSwapPage(`${row.sellCoin}-${row.buyCoin}`)
+        }}>
+          {getPoolNameWithCoinImages(row.poolName)}
+        </div>
       )
     },
     minWidth: "154px",
