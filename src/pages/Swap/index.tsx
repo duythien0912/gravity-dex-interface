@@ -229,7 +229,7 @@ function SwapCard() {
     React.useEffect(() => {
         const searchParams = new URLSearchParams(history.location.search);
         if (searchParams.has('from')) {
-            dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from'), to: searchParams.get('to') } })
+            dispatch({ type: TYPES.SET_FROM_QUERY, payload: { from: searchParams.get('from').toLowerCase(), to: searchParams.get('to').toLowerCase() } })
         }
         // console.log('set Query')
     }, [history.location])

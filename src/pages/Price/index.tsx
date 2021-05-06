@@ -42,12 +42,12 @@ const columns = [
       }
 
       return (
-      <div onClick={() => {
-        row.goSwapPage(`${row.sellCoin}-${row.buyCoin}`)
-      }} style={{textAlign: "center"}}>
-      <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
-      <div style={{marginTop: "4px"}}> <span style={{color:"rgb(2, 192, 118)", fontWeight:"bold"}}>Buy</span> {row.buyCoin} / <span style={{ color: "rgb(248, 73, 96)", fontWeight:"bold"}}>Sell</span> {row.sellCoin}</div>
-      </div>
+        <div onClick={() => {
+          row.goSwapPage(`${row.sellCoin}-${row.buyCoin}`)
+        }} style={{ textAlign: "center" }}>
+          <span style={{ color: color, fontWeight: isBold ? '600' : '400' }}>{row.discrepancyRate + '%'}</span>
+          <div style={{ marginTop: "4px" }}> <span style={{ color: "rgb(2, 192, 118)", fontWeight: "bold" }}>Buy</span> {row.buyCoin} / <span style={{ color: "rgb(248, 73, 96)", fontWeight: "bold" }}>Sell</span> {row.sellCoin}</div>
+        </div>
       )
 
     },
@@ -463,17 +463,17 @@ function Table() {
         let buyCoin = null
         let sellCoin = null
         //TEST-CODE
-          if(globalRatio > internalRatio) {
-            console.log(poolName, "global 비쌈")
-            console.log(`buy ${xCoinName} sell ${yCoinName}`)
-            buyCoin = xCoinName
-            sellCoin = yCoinName
-          } else {
-            buyCoin = yCoinName
-            sellCoin = xCoinName
-          }
+        if (globalRatio > internalRatio) {
+          // console.log(poolName, "global 비쌈")
+          // console.log(`buy ${xCoinName} sell ${yCoinName}`)
+          buyCoin = xCoinName
+          sellCoin = yCoinName
+        } else {
+          buyCoin = yCoinName
+          sellCoin = xCoinName
+        }
         //TEST-CODE
-
+        let modifiedPoolName = `${sellCoin}-${buyCoin}`
         if (!isNaN(internalRatio)) {
           priceData.push({
             id: index,
@@ -483,7 +483,7 @@ function Table() {
             sellCoin: sellCoin,
             apy: apy,
             xGlobalPrice: (<div className="pair-price" onClick={() => {
-              goSwapPage(poolName)
+              goSwapPage(modifiedPoolName)
             }}>
               <div>${xGlobalPrice} {poolName?.split('-')[0]}</div>
               <div>${yGlobalPrice} {poolName?.split('-')[1]}</div>
@@ -491,14 +491,14 @@ function Table() {
             yGlobalPrice: yGlobalPrice,
             globalRatio: (
               <div className="pair-price" onClick={() => {
-                goSwapPage(poolName)
+                goSwapPage(modifiedPoolName)
               }}>
                 <div>{cutNumber(globalRatio, 4)} {yCoinName} per {xCoinName}</div>
                 <div>{cutNumber(1 / globalRatio, 4)} {xCoinName} per {yCoinName}</div>
               </div>),
             internalRatio: (
               <div className="pair-price" onClick={() => {
-                goSwapPage(poolName)
+                goSwapPage(modifiedPoolName)
               }}>
                 <div>{cutNumber(internalRatio, 4)} {yCoinName} per {xCoinName}</div>
                 <div>{cutNumber(1 / internalRatio, 4)} {xCoinName} per {yCoinName}</div>
@@ -532,7 +532,7 @@ function Table() {
         defaultSortField="discrepancyRate"
         defaultSortAsc={false}
         onRowClicked={(row) => {
-          row.history.push(`/swap?from=${row.sellCoin}&to=${row.buyCoin}`)
+          row.history.push(`/swap?from=${row.sellCoin.toLowerCase()}&to=${row.buyCoin.toLowerCase()}`)
         }}
         pointerOnHover={true}
         highlightOnHover={true}
