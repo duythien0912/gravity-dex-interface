@@ -405,11 +405,11 @@ function getPoolNameWithCoinImages(poolName) {
 function Table() {
   const [tableData, setTableData] = React.useState([{ id: 1, title: '', }])
   const [searchWord, setSearchWord] = React.useState([])
-  const [priceNodeBlockHeight, setPriceNodeBlockHeight] = React.useState(null)
+  const [priceNodeBlockHeight, setPriceNodeBlockHeight] = React.useState(0)
   const { blockHeight } = useSelector(storeSelector.all);
   const HeightGap = Number(blockHeight) - Number(priceNodeBlockHeight)
   const history = useHistory();
-
+  // console.log(HeightGap)
   function getCoinNameWithImage(coin) {
     if (coin === "all") {
       return (<div className={`coin ${searchWord.length === 0 ? 'selected' : ''}`} onClick={() => {
@@ -459,7 +459,7 @@ function Table() {
         </div>
       </CoinPrice>
     </ReactTooltip>
-    {HeightGap >= 7 ? (
+    {HeightGap >= 7 && priceNodeBlockHeight !== 0 ? (
       <><div data-tip data-for="coin-price" style={{
         padding: "4px 12px",
         display: "inline-flex",
