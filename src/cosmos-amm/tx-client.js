@@ -44,7 +44,7 @@ export async function BroadcastLiquidityTx(txInfo, dispatch, data) {
     console.log(msg)
     const fee = {
         amount: coins(2000, "uatom"),
-        gas: "300000", // 180k
+        gas: "400000",
     };
     try {
         const txBroadcastResponse = await txGenerator.signAndBroadcast([msg], { fee: fee, memo: "competition-keplr" })

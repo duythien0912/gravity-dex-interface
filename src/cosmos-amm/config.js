@@ -110,8 +110,8 @@ export const chainInfo = {
   ],
   features: ["stargate"],
   gasPriceStep: {
-    low: 0.1,
-    average: 1,
-    high: 10
-}
+    low: 0.00025,
+    average: 0.0025,
+    high: 0.025,
+  }
 };
