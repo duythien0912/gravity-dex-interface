@@ -259,7 +259,7 @@ function Table() {
     response.data.accounts.forEach((account, index) => {
       const accountAddress = <div>{account.address.substr(0, 14)}...{account.address.substr(-5)} </div>
       const rank = account.ranking
-      const actionScore = cutNumber(account.actionScore, 2)
+      const actionScore = account.actionScore === 100 ? account.actionScore : cutNumber(account.actionScore, 2)
       const tradingScore = cutNumber(account.tradingScore, 2)
       const totalScore = cutNumber(account.totalScore, 2)
       rankData.push({
