@@ -1,16 +1,17 @@
 import * as React from 'react';
 import styled from "styled-components";
 import { useHistory } from 'react-router-dom'
-import { chainInfo } from "../../cosmos-amm/config"
 import Countdown from 'react-countdown'
-import axios from "axios"
 import { mobileCheck } from '../../utils/global-functions';
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  text-align: right;
+  /* height: 100%; */
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  right: 0;
+  top: 80px;
   color: #fff;
 
   .timer {
@@ -33,17 +34,17 @@ const Wrapper = styled.div`
 
       .banner-close {
           font-size: 20px;
-          cursor: pointer;
+       
       }
 
       .banner-content {
         text-decoration: none;
-        display: flex;
+        /* display: flex; */
         flex-wrap: wrap;
         color: #fff !important;
         width: 100%;
         font-size: 14px;
-        cursor:pointer;
+       
       }
   }
 
@@ -102,26 +103,39 @@ const Wrapper = styled.div`
 
 const TimeLeft = styled.div`
 display: flex;
-width: 240px;
-margin-left: 4px;
-/* margin: 10px auto 0 auto; */
-/* justify-content: space-around; */
+flex-direction: row;
+align-items: flex-start;
+padding: 4px 8px 4px 8px;
+margin: 8px 0;
+position: relative;
+right: 0;
+width: 182px;
+height: 42px;
+font-size: 24px;
+align-items: center;
+/* top: 29px; */
 
+/* Whites/~200 */
+
+background: rgba(255, 255, 255, 0.2);
+border-radius: 4px;
 div {
-    min-width: 60px;
-    text-align: center;
-    font-size: 14px;
-    padding-right: 8px;
+    display:inline-block;
+    min-width: fit-content;
+    text-align: left;
+    font-size: 24px;
+    /* padding-right: 8px; */
+    margin:0 4px;
 }
 `
 // Renderer callback with condition
-const renderer = ({ days, hours, minutes, completed }) => {
+const renderer = ({ days, hours, minutes, seconds, completed }) => {
   if (completed) {
     // Render a completed state
-    return <TimeLeft><div>0 hour</div><div> 0 min</div></TimeLeft>;
+    return <TimeLeft><div style={{ margin: "0 auto" }}>THE END</div></TimeLeft>;
   } else {
     // Render a countdown
-    return <TimeLeft><div>{hours + days * 24} hour</div><div> {minutes} min</div></TimeLeft>
+    return <TimeLeft><div>00</div> : <div>0{hours + days * 24} </div> : <div> {minutes} </div> : <div style={{ minWidth: "45px" }}>{seconds}</div> </TimeLeft>
   }
 };
 //test data
@@ -134,15 +148,12 @@ const renderer = ({ days, hours, minutes, completed }) => {
 
 function HeaderTopBanner() {
   const [isClose, setIsClose] = React.useState(true)
-  const [bannerData, setBannerData] = React.useState(null)
   const [remainingTime, setRemainingTime] = React.useState(null)
-  const history = useHistory()
-
 
   React.useEffect(() => {
     async function getBannerData() {
       try {
-        const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/banner`)
+        // const response = await axios.get(`${chainInfo.competitionInfoBaseUrl}/banner`)
         // const response = {
         //   data: {
         //     banner: {
@@ -154,25 +165,21 @@ function HeaderTopBanner() {
         //     }
         //   }
         // }
-        if (response.data.banner === null) {
-          setIsClose(true)
-        } else {
-          setBannerData(response.data.banner)
-          const UTCNow = new Date().getTime()
-          const startRemainingTime = new Date(response.data.banner.startsAt).getTime() - UTCNow
-          const endRemainingTime = new Date(response.data.banner.endsAt).getTime() - UTCNow
+        const UTCNow = new Date().getTime()
+        const startRemainingTime = new Date("2021-05-11T00:00:00Z").getTime() - UTCNow
+        const endRemainingTime = new Date("2021-05-11T00:00:00Z").getTime() - UTCNow
 
-          if (startRemainingTime > 0) {
-            setRemainingTime(startRemainingTime)
-            setIsClose(false)
-          } else if (endRemainingTime > 0) {
-            setRemainingTime(endRemainingTime)
-            setIsClose(false)
-          } else {
-            setRemainingTime(0)
-            setIsClose(true)
-          }
+        if (startRemainingTime > 0) {
+          setRemainingTime(startRemainingTime)
+          setIsClose(false)
+        } else if (endRemainingTime > 0) {
+          setRemainingTime(endRemainingTime)
+          setIsClose(false)
+        } else {
+          setRemainingTime(0)
+          setIsClose(true)
         }
+
       } catch {
         setIsClose(true)
       }
@@ -188,11 +195,12 @@ function HeaderTopBanner() {
     if (remainingTime > 0 && !mobileCheck()) {
       return (
         <>
-          <div className="timer">Time Remaining - </div>
+
           <Countdown
             date={Date.now() + remainingTime}
             renderer={renderer}
           />
+
         </>)
     } else {
       return ''
@@ -203,20 +211,15 @@ function HeaderTopBanner() {
 
   return (
     <Wrapper style={{ display: isClose ? 'none' : 'unset' }}>
-      <div className="background">
-        <div className="bg"></div>
-        <div className="bg bg2"></div>
-        <div className="bg bg3"></div>
-      </div>
       <div className="banner">
-        {bannerData?.url?.startsWith('http') ? <a className="banner-content" href={bannerData?.url} target="_blank" rel="noopener noreferrer">{bannerData?.text}  {counter}
-        </a> : <div className="banner-content" onClick={() => {
-          history.push(bannerData?.url)
-        }}>{bannerData?.text} {counter}</div>}
-
-        <div onClick={() => {
-          setIsClose(true)
-        }} className="banner-close">X</div>
+        <div className="banner-content">
+          <div style={{ fontSize: "16px" }}>COMPETITION ENDS SOON</div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div></div>
+            {counter}
+          </div>
+          <div>MAY 11, 00:00 UTC</div>
+        </div>
       </div>
     </Wrapper>
   );

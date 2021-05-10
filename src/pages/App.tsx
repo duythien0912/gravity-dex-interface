@@ -4,7 +4,6 @@ import { Route, Switch, useHistory } from 'react-router-dom'
 import { ToastContainer, Flip } from "react-toastify";
 import { getBlockHeight } from "../cosmos-amm/tx-client.js"
 
-import TopBanner from "../components/Banners/HeaderTopBanner"
 import AppHeader from "../components/Header"
 import Swap from "../pages/Swap"
 import Pool from "../pages/Pool"
@@ -133,7 +132,6 @@ function App() {
       <BackgroundWrapper>
         <Background />
       </BackgroundWrapper>
-      <TopBanner />
       <AppHeader />
 
       <Switch>

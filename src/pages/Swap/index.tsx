@@ -8,6 +8,7 @@ import ChangeArrow from "../../assets/svgs/ChangeArrow"
 import BaseCard from "../../components/Cards/BaseCard"
 import TokenInputController from "../../components/TokenInputController/index"
 import ActionButton from "../../components/Buttons/ActionButton"
+import TopBanner from "../../components/Banners/HeaderTopBanner"
 
 //functions
 import { cosmosSelector } from "../../modules/cosmosRest/slice"
@@ -545,6 +546,7 @@ function SwapCard() {
             {/* {!mobileCheck() ? <SemiFoooter>
                 <a href="https://gravitydex.io/terms-and-conditions.pdf" target="_blank" rel="noopener noreferrer">{"T&C"}</a>
             </SemiFoooter> : ''} */}
+            <TopBanner />
         </>
     )
 }
