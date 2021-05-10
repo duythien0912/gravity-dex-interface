@@ -26,8 +26,11 @@ export function getMyTokenBalance(token, indexer) {
 
 export function cutNumber(number, digitsAfterDot) {
     const str = `${number}`;
-
-    return parseFloat(str.slice(0, str.indexOf('.') + digitsAfterDot + 1))
+    if (str.includes('.')) {
+        return parseFloat(str.slice(0, str.indexOf('.') + digitsAfterDot + 1))
+    } else {
+        return number
+    }
 }
 
 export function getMyCoinBalance(coin, myBalance) {

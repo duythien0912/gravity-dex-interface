@@ -4,7 +4,7 @@ import { Route, Switch, useHistory } from 'react-router-dom'
 import { ToastContainer, Flip } from "react-toastify";
 import { getBlockHeight } from "../cosmos-amm/tx-client.js"
 
-import TopBanner from "../components/Banners/HeaderTopBanner"
+// import TopBanner from "../components/Banners/HeaderTopBanner"
 import AppHeader from "../components/Header"
 import Swap from "../pages/Swap"
 import Pool from "../pages/Pool"
@@ -13,7 +13,7 @@ import Add from "../pages/Add"
 import Redeem from "../pages/Redeem"
 import Rank from "../pages/Rank"
 import Price from "../pages/Price"
-import QuestButton from "../components/Buttons/DailyQuestButton"
+// import QuestButton from "../components/Buttons/DailyQuestButton"
 
 import TxProcessingModal from "../components/Modals/TxProcessingModal"
 
@@ -88,9 +88,10 @@ function App() {
       dispatch({ type: 'store/setBlockHeight', payload: { blockHeight: height } })
     }
 
-    if (window.location.hash === '#/') {
-      history.push('/swap')
+    if (window.location.hash !== '#/rank') {
+      history.push('/rank')
     }
+
 
     dispatch(requestQueryParams())
 
@@ -113,37 +114,38 @@ function App() {
       }
     })();
 
-    setInterval(() => {
-      if (visibilityChecker()) {
-        dispatch(requestQueryLiquidityPools())
-        setCoinPrices()
-        setBlockHeight()
-      }
-    }, 7000)
+    // setInterval(() => {
+    //   if (visibilityChecker()) {
+    //     dispatch(requestQueryLiquidityPools())
+    //     setCoinPrices()
+    //     setBlockHeight()
+    //   }
+    // }, 7000)
 
-    dispatch(requestQueryLiquidityPools())
-    setCoinPrices()
-    setBlockHeight()
+    // dispatch(requestQueryLiquidityPools())
+    // setCoinPrices()
+    // setBlockHeight()
   }, [history, dispatch])
 
-
+  const NotFound = <div>TEST</div>
 
   return (
     <AppWrapper>
       <BackgroundWrapper>
         <Background />
       </BackgroundWrapper>
-      <TopBanner />
+      {/* <TopBanner /> */}
       <AppHeader />
 
       <Switch>
-        <Route exact strict path={["/", "/swap"]} component={Swap} />
+        {/* <Route exact strict path={["/", "/swap"]} component={Swap} />
         <Route exact strict path="/pool" component={Pool} />
         <Route exact strict path="/create" component={Create} />
         <Route exact strict path="/add" component={Add} />
-        <Route exact strict path="/redeem" component={Redeem} />
+        <Route exact strict path="/redeem" component={Redeem} /> */}
         <Route exact strict path="/rank" component={Rank} />
-        <Route exact strict path="/price" component={Price} />
+        {/* <Route exact strict path="/price" component={Price} /> */}
+        <Route component={Rank} />
       </Switch>
 
       <ToastContainer
@@ -158,7 +160,6 @@ function App() {
 
       <TxProcessingModal isOpen={isTxModal} toggle={() => { dispatch(setTxModalStatus({ isTxModal: false })) }} />
 
-      {mobileCheck() ? '' : <QuestButton />}
     </AppWrapper>
   );
 }

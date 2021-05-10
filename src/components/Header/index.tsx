@@ -118,9 +118,8 @@ const WalletWidget = styled.div`
 display:flex;
 align-items: center;
 justify-content: space-between;
-margin-left: 12px;
 background-color:  #812056;
-padding: 1px 1px 1px 12px;
+padding: 1px 1px 1px 0;
 border-radius: 12px;
 color: #fff;
 
@@ -144,7 +143,6 @@ color: #fff;
 
 const ConnectedWallet = styled.button`
 padding: 0.5rem;
-margin-left: 12px;
 border-radius: 12px;
 background-color: #F6743C;
 font-size: 16px;
@@ -252,10 +250,10 @@ function AppHeader() {
   function navigationLinks() {
     return (
       <Navigation>
-        <StyledNavLink to={"/swap"}>Swap</StyledNavLink>
+        {/* <StyledNavLink to={"/swap"}>Swap</StyledNavLink>
         <StyledNavLink to={"/pool"}>Pool</StyledNavLink>
-        <StyledNavLink to={"/price"}>Price</StyledNavLink>
-        <StyledNavLink to={"/rank"}>Rank</StyledNavLink>
+        <StyledNavLink to={"/price"}>Price</StyledNavLink> */}
+        {/* <StyledNavLink to={"/rank"}>Rank</StyledNavLink> */}
       </Navigation>
     )
   }
@@ -286,12 +284,7 @@ function AppHeader() {
         <WalletWidget>
           {/* determine pending status with local tx data */}
 
-          <div className="total-value">
-            <img src={wallet} className="wallet" alt="wallet from www.flaticon" onClick={() => {
-              walletModalToggle()
-            }} />
-            ${getTotalValue(userBalances)}
-          </div>
+
 
           <ConnectedWallet onClick={() => { showStatusDetail() }}>
             {walletStatus !== "pending" ? <div>{walletAddress.substr(0, 10)}...{walletAddress.substr(-5)}</div> : <div style={{ margin: 0, paddingRight: "6px" }}><div style={{ margin: "0 0 0 12px" }}>Pending</div><GridSpinner size={19} /></div>}
@@ -304,13 +297,13 @@ function AppHeader() {
 
   return (
     <HeaderFrame>
-      {logoFrame(logoMobile, logoDesktop)}
+      <div></div>
 
       <NavigationFrame>
         {navigationLinks()}
         {walletWidget()}
-        {mobileCheck() ? '' : <GearButton onClick={() => { settingModalToggle() }} />}
-        <ListButton onClick={() => { settingModalToggle() }} />
+        {/* {mobileCheck() ? '' : <GearButton onClick={() => { settingModalToggle() }} />}
+        <ListButton onClick={() => { settingModalToggle() }} /> */}
       </NavigationFrame>
 
 
